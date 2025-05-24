@@ -3,6 +3,7 @@ export const articleDetails = [
     {
       id: 1,
       title: '밴드캠프, 스트리밍의 대안이 될까?',
+      subtitle: '소제목',
       category: 'Data for Fun',
       tagColor: '#EF4444',
       imageUrl: '/placeholder.png',
