@@ -1,18 +1,29 @@
 // app/article/[id]/page.tsx
 
-'use client';
-
-import { useParams } from 'next/navigation';
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
-export default function ArticleContentView() {
-  const params = useParams();
-  const articleId = parseInt(params.id as string);
+export async function generateMetadata({ params }: { params: { id: string } }) {
+  const articleId = parseInt(params.id);
   const article = articleDetails.find((a) => a.id === articleId);
 
-  if (!article) return <div className="p-10 text-center bg-white min-h-screen">아티클을 찾을 수 없습니다.</div>;
+  if (!article) {
+    return { title: '아티클 없음 | Lab Chasm' };
+  }
+
+  return {
+    title: `${article.title} | Lab Chasm`,
+    description: article.subtitle || article.summary || '음악 산업 인사이트',
+  };
+}
+
+export default function ArticleContentView({ params }: { params: { id: string } }) {
+  const articleId = parseInt(params.id);
+  const article = articleDetails.find((a) => a.id === articleId);
+
+  if (!article) return notFound();
 
   return (
     <div className="bg-white min-h-screen w-full">
@@ -64,9 +75,8 @@ export default function ArticleContentView() {
           </div>
         )}
 
-    <hr className="w-full max-w-[700px] mx-auto mt-20 border-t border-gray-200" />
+        <hr className="w-full max-w-[700px] mx-auto mt-20 border-t border-gray-200" />
 
-        {/* 하단 버튼 */}
         <div className="text-center mt-20">
           <Link href="/article">
             <button className="border border-black px-6 py-2 text-sm">전체 아티클 보기</button>
