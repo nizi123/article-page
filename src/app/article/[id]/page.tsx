@@ -1,45 +1,35 @@
+// src/app/article/[id]/page.tsx
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-// ✅ 정적 생성 경로
+// ✅ 정적 생성 경로 설정
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
   return articleDetails.map((article) => ({
     id: article.id.toString(),
   }));
 }
 
-// ✅ 메타데이터 함수
-export async function generateMetadata(
-  propsPromise: Promise<{ params: { id: string } }>
-): Promise<Metadata> {
-  const { params } = await propsPromise;
+// ✅ 페이지 메타데이터 설정
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
   const article = articleDetails.find((a) => a.id === parseInt(params.id, 10));
   return {
     title: article?.title || 'Lab Chasm',
   };
 }
 
-// ✅ 아티클 상세 페이지
-export default async function ArticleContentView(
-  propsPromise: Promise<{ params: { id: string } }>
-) {
-  const { params } = await propsPromise;
+// ✅ 페이지 본문
+export default function ArticleContentView({ params }: { params: { id: string } }) {
   const articleId = parseInt(params.id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
   if (!article) {
-    return (
-      <div className="p-10 text-center bg-white min-h-screen">
-        아티클을 찾을 수 없습니다.
-      </div>
-    );
+    return <div className="p-10 text-center bg-white min-h-screen">아티클을 찾을 수 없습니다.</div>;
   }
 
   return (
     <div className="bg-white min-h-screen w-full">
-      {/* 상단 이미지 */}
       <div className="relative h-[400px] w-full mb-10">
         <Image
           src={article.imageUrl}
@@ -55,26 +45,19 @@ export default async function ArticleContentView(
           >
             {article.category}
           </span>
-          <h1 className="text-[28px] font-extrabold mt-3 leading-tight">
-            {article.title}
-          </h1>
+          <h1 className="text-[28px] font-extrabold mt-3 leading-tight">{article.title}</h1>
           {article.subtitle && (
             <p className="text-sm text-gray-300 mt-1">{article.subtitle}</p>
           )}
-          <p className="text-xs text-gray-400 mt-1">
-            {article.date} • {article.author}
-          </p>
+          <p className="text-xs text-gray-400 mt-1">{article.date} • {article.author}</p>
         </div>
       </div>
 
-      {/* 본문 내용 */}
       <div className="max-w-3xl mx-auto px-4 pb-20">
         <div className="space-y-6">
           {article.content.map((section, index) => (
             <div key={index}>
-              {section.title && (
-                <h2 className="text-lg font-bold mb-1">{section.title}</h2>
-              )}
+              {section.title && <h2 className="text-lg font-bold mb-1">{section.title}</h2>}
               <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
                 {section.text}
               </p>
@@ -82,7 +65,6 @@ export default async function ArticleContentView(
           ))}
         </div>
 
-        {/* 본문 중간 이미지 */}
         {article.bodyImage && (
           <div className="my-10">
             <Image
@@ -95,15 +77,11 @@ export default async function ArticleContentView(
           </div>
         )}
 
-        {/* 구분선 */}
         <div className="h-px w-full bg-gray-100 my-20" />
 
-        {/* 뒤로가기 */}
         <div className="text-center">
           <Link href="/article">
-            <button className="border border-black px-6 py-2 text-sm">
-              전체 아티클 보기
-            </button>
+            <button className="border border-black px-6 py-2 text-sm">전체 아티클 보기</button>
           </Link>
         </div>
       </div>
