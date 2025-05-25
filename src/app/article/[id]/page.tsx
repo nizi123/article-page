@@ -1,3 +1,4 @@
+// src/app/article/[id]/page.tsx
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,10 +12,11 @@ export async function generateStaticParams(): Promise<Array<{ id: string }>> {
 }
 
 // ✅ 메타데이터 함수
-export async function generateMetadata(
-  propsArg: { params: { id: string } } | Promise<{ params: { id: string } }>
-): Promise<Metadata> {
-  const { params } = await propsArg;
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
   const article = articleDetails.find(
     (a) => a.id === parseInt(params.id, 10)
   );
@@ -24,10 +26,11 @@ export async function generateMetadata(
 }
 
 // ✅ 아티클 상세 페이지
-export default async function ArticleContentView(
-  propsArg: { params: { id: string } } | Promise<{ params: { id: string } }>
-) {
-  const { params } = await propsArg;
+export default async function ArticleContentView({
+  params,
+}: {
+  params: { id: string };
+}) {
   const articleId = parseInt(params.id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
