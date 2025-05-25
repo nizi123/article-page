@@ -1,4 +1,3 @@
-// app/article/[id]/page.tsx
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,11 +9,15 @@ type PageProps = {
 };
 
 export default function ArticleContentView({ params }: PageProps) {
-  const articleId = parseInt(params.id);
+  const articleId = parseInt(params.id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
   if (!article) {
-    return <div className="p-10 text-center bg-white min-h-screen">아티클을 찾을 수 없습니다.</div>;
+    return (
+      <div className="p-10 text-center bg-white min-h-screen">
+        아티클을 찾을 수 없습니다.
+      </div>
+    );
   }
 
   return (
@@ -27,7 +30,7 @@ export default function ArticleContentView({ params }: PageProps) {
           fill
           className="object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70"></div>
         <div className="absolute inset-x-0 bottom-10 flex flex-col justify-end items-center text-white text-center px-4">
           <span
             className="text-[11px] font-medium px-3 py-1 bg-white text-center rounded-sm"
@@ -41,6 +44,7 @@ export default function ArticleContentView({ params }: PageProps) {
         </div>
       </div>
 
+      {/* 본문 내용 */}
       <div className="max-w-3xl mx-auto px-4 pb-20">
         <div className="space-y-6">
           {article.content.map((section, index) => (
@@ -51,6 +55,7 @@ export default function ArticleContentView({ params }: PageProps) {
           ))}
         </div>
 
+        {/* 중간 이미지 */}
         {article.bodyImage && (
           <div className="my-10">
             <Image
