@@ -5,7 +5,9 @@ import { Youtube, Instagram } from 'lucide-react';
 
 export default function Footer() {
   return (
-    <footer className="h-[230px] bg-black text-white px-20 py-10 flex flex-col">
+    <footer 
+    id = "footer"
+    className="h-[230px] bg-black text-white px-20 py-10 flex flex-col">
       {/* 상단 로고 */}
       <div>
         <Link href="/">

@@ -1,6 +1,7 @@
 // src/app/article/[id]/page.tsx
 
 import { articleDetails } from '@/lib/articleDetails';
+import ScrollProgressBar from '@/components/ScrollProgressBar';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -46,8 +47,14 @@ export default async function ArticleContentView({
 
   return (
     <div className="bg-white min-h-screen w-full">
+        <ScrollProgressBar 
+        title={article.title}
+        color={article.tagColor}
+        fadeDistance={150} />
       {/* 상단 이미지 */}
-      <div className="relative h-[400px] w-full mb-10">
+      <div 
+      id = "article-top-image"
+      className="relative h-[400px] w-full mb-10">
         <Image
           src={article.imageUrl}
           alt={article.title}
