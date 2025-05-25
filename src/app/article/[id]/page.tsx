@@ -2,23 +2,24 @@
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Metadata } from 'next';
 
-// ✅ 정적 생성 경로 설정 (정상적으로 string 변환 포함)
-export async function generateStaticParams(): Promise<{ id: string }[]> {
+// ✅ 정적 생성 경로 설정
+export async function generateStaticParams() {
   return articleDetails.map((article) => ({
     id: article.id.toString(),
   }));
 }
 
-// ✅ 타입 정의 명확하게 (params는 string으로 설정)
-type Props = {
-  params: {
-    id: string;
+// ✅ 페이지 메타데이터 설정 (선택사항)
+export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
+  const article = articleDetails.find((a) => a.id === parseInt(params.id));
+  return {
+    title: article?.title || 'Lab Chasm',
   };
-};
+}
 
-// ✅ 서버 컴포넌트 방식으로 구현
-export default function ArticleContentView({ params }: Props) {
+export default function ArticleContentView({ params }: { params: { id: string } }) {
   const articleId = parseInt(params.id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
