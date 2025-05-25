@@ -16,7 +16,13 @@ export default function Header() {
           className="h-[50px] w-auto object-contain"
         />
       </Link>
-      <button className="text-black font-extrabold text-lg tracking-wide">MENU</button>
+      <button>
+        <img
+          src="/menuimg.png"
+          alt="Menu"
+          className="h-[25px] w-auto object-contain"
+        />
+      </button>
     </header>
   );
 }
