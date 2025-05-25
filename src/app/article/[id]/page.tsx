@@ -3,19 +3,22 @@ import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export async function generateStaticParams() {
+// ✅ 정적 생성 경로 설정 (정상적으로 string 변환 포함)
+export async function generateStaticParams(): Promise<{ id: string }[]> {
   return articleDetails.map((article) => ({
     id: article.id.toString(),
   }));
 }
 
+// ✅ 타입 정의 명확하게 (params는 string으로 설정)
 type Props = {
   params: {
     id: string;
   };
 };
 
-export default function ArticlePage({ params }: Props) {
+// ✅ 서버 컴포넌트 방식으로 구현
+export default function ArticleContentView({ params }: Props) {
   const articleId = parseInt(params.id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
@@ -25,7 +28,6 @@ export default function ArticlePage({ params }: Props) {
 
   return (
     <div className="bg-white min-h-screen w-full">
-      {/* 헤더 이미지 전체 너비 */}
       <div className="relative h-[400px] w-full mb-10">
         <Image
           src={article.imageUrl}
