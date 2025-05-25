@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 
 // ✅ 정적 생성 경로 설정
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Array<{ id: string }>> {
   return articleDetails.map((article) => ({
     id: article.id.toString(),
   }));
