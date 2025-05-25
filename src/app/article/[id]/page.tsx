@@ -2,7 +2,8 @@
 
 import { articleDetails } from '@/lib/articleDetails';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
-import ArticleNavigator from '@/components/ArticleNavigatro';
+import ArticleNavigator from '@/components/ArticleNavigator';
+import RandomArticleGrid from '@/components/RandomArticleGrid';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
@@ -127,6 +128,12 @@ export default async function ArticleContentView({
         prevArticle={prevArticle}
         nextArticle={nextArticle}
         logoSrc="/footerlogo.png"
+      />
+
+      <RandomArticleGrid
+        articles={articleDetails}
+        currentId={articleId}
+        count={3}
       />
       </div>
     </div>

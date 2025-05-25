@@ -1,3 +1,4 @@
+//page.tsx
 'use client';
 
 import React, { useState } from "react";
@@ -76,14 +77,31 @@ const sampleArticles: Article[] = [
     tagColor: "#10B981",
     imageUrl: "/placeholder.png",
   },
+  {
+    id: 10,
+    title: "추가 기사5",
+    summary: "더 많은 테스트4",
+    category: "Case Study",
+    tagColor: "#10B981",
+    imageUrl: "/placeholder.png",
+  },
+  {
+    id: 11,
+    title: "추가 기사6",
+    summary: "더 많은 테스트5",
+    category: "Case Study",
+    tagColor: "#10B981",
+    imageUrl: "/placeholder.png",
+  },
 ];
 
 const ITEMS_PER_PAGE = 9;
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
-  const totalPages = Math.ceil(sampleArticles.length / ITEMS_PER_PAGE);
-  const currentItems = sampleArticles.slice(
+  const sortedArticles = [...sampleArticles].sort((a, b) => b.id - a.id);
+  const totalPages = Math.ceil(sortedArticles.length / ITEMS_PER_PAGE);
+  const currentItems = sortedArticles.slice(
     (page - 1) * ITEMS_PER_PAGE,
     page * ITEMS_PER_PAGE
   );
