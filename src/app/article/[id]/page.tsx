@@ -1,37 +1,39 @@
 // src/app/article/[id]/page.tsx
+
 import { articleDetails } from '@/lib/articleDetails';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
-// ✅ 정적 생성 경로
+// ✅ 정적 생성 경로 (params는 여전히 동기적으로 id:string 배열을 리턴)
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
   return articleDetails.map((article) => ({
     id: article.id.toString(),
   }));
 }
 
-// ✅ 메타데이터 함수
+// ✅ 메타데이터 함수 (params를 Promise<{ id: string }>로 받습니다)
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const article = articleDetails.find(
-    (a) => a.id === parseInt(params.id, 10)
-  );
+  const { id } = await params;
+  const article = articleDetails.find((a) => a.id === parseInt(id, 10));
+
   return {
     title: article?.title || 'Lab Chasm',
   };
 }
 
-// ✅ 아티클 상세 페이지
+// ✅ 아티클 상세 페이지 (여기도 params를 Promise<{ id: string }>로 받습니다)
 export default async function ArticleContentView({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const articleId = parseInt(params.id, 10);
+  const { id } = await params;
+  const articleId = parseInt(id, 10);
   const article = articleDetails.find((a) => a.id === articleId);
 
   if (!article) {
