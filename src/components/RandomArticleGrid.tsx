@@ -2,10 +2,10 @@
 'use client';
 import { useMemo } from 'react';
 import ArticleCard, { Article as CardArticle } from './ArticleCard';
-import { ArticleDetail } from '@/lib/articleDetails';
+import { articleDetails } from '@/lib/articleDetails';
 
 type Props = {
-  articles: ArticleDetail[];
+  articles: articleDetails[];
   currentId?: number;
   count?: number;
 };
