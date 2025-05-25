@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   icons:{
     icon: '/labchasmfavi.png'
   },
-  description: "한국 인디음악 기반의 음악 생태계 연구소, Lab CHASM",
+  description: "한국 인디음악 기반의 음악 생태계 연구소, Lab CHASM ",
 };
 
 export default function RootLayout({
