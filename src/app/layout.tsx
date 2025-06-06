@@ -30,10 +30,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black dark:bg-white dark:text-black`}
       >
         <Header />
-        <div className="pt-[110px]">
+        <div>
         {children}
         </div>
         <Footer /> 

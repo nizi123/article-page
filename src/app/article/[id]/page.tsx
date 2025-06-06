@@ -98,9 +98,9 @@ export default async function ArticleContentView({
           {article.content.map((section, index) => (
             <div key={index}>
               {section.title && (
-                <h2 className="text-lg font-bold mb-1">{section.title}</h2>
+                <h2 className="text-lg font-bold mb-1 text-black">{section.title}</h2>
               )}
-              <p className="text-sm leading-relaxed text-gray-700 whitespace-pre-wrap">
+              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-[190%]">
                 {section.text}
               </p>
             </div>

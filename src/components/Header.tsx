@@ -7,7 +7,7 @@ export default function Header() {
   return (
     <header
       id="header"
-      className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-20 py-[30px] bg-transparent"
+      className="fixed top-0 left-0 w-full h-[70px] z-50 flex items-center justify-between bg-white px-4"
     >
       <Link href="/">
         <img

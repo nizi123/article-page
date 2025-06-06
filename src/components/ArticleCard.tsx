@@ -29,11 +29,11 @@ const ArticleCard = ({ article }: Props) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <div className="aspect-[4/3] w-full relative">
+        <div className="aspect-[4/3] relative overflow-hidden rounded-xl">
           <img
             src={article.imageUrl}
             alt={article.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-all duration-300"
           />
           {isHovered && (
             <div
