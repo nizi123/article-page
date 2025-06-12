@@ -16,8 +16,8 @@ export default function ArticleListPage() {
     title: a.title,
     // subtitle 이 summary 역할을 한다고 가정, 없으면 본문 첫 문단을 대체로 사용
     summary:
-      a.subtitle ??
-      a.content?.[0]?.text.slice(0, 80).trim().replace(/\n/g, " ") + "...",
+      a.subtitle,
+      //a.content?.[0]?.text.slice(0, 80).trim().replace(/\n/g, " ") + "...",
     category: a.category,
     tagColor: a.tagColor,
     imageUrl: a.imageUrl,
