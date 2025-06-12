@@ -7,6 +7,10 @@ import RandomArticleGrid from '@/components/RandomArticleGrid';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import reactMarkdown from '@/../node_modules/react-markdown/index';
+import remarkGfm from '@/../node_modules/remark-gfm/index';
+import ReactMarkdown from '@/../node_modules/react-markdown/index';
+import rehypeRaw from '@/../node_modules/rehype-raw/index';
 
 // ✅ 정적 생성 경로 (params는 여전히 동기적으로 id:string 배열을 리턴)
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
@@ -72,7 +76,7 @@ export default async function ArticleContentView({
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70" />
         <div className="absolute inset-x-0 bottom-10 flex flex-col justify-end items-center text-white text-center px-4">
           <span
-           className="inline-block border-1 px-6 py-1 bg-white font-medium text-xs"
+           className="inline-block border-1 px-6 py-1 bg-black font-medium text-xs"
            style={{
                  color: article.tagColor,
                 borderColor: article.tagColor,
@@ -94,31 +98,19 @@ export default async function ArticleContentView({
 
       {/* 본문 내용 */}
       <div className="max-w-5xl mx-auto px-4 pb-20">
-        <div className="space-y-6">
-          {article.content.map((section, index) => (
-            <div key={index}>
-              {section.title && (
-                <h2 className="text-lg font-bold mb-1 text-black">{section.title}</h2>
-              )}
-              <p className="text-sm text-gray-700 whitespace-pre-wrap leading-[190%]">
-                {section.text}
-              </p>
-            </div>
-          ))}
+        <div className="prose space-y-6 leading-[1.8]">
+          <ReactMarkdown
+             components={{
+              h2: ({node, ...props}) => <h1 className="text-2xl font-bold my-4 text-black" {...props} />,
+              p: ({node, ...props}) => <p className="text-base leading-[1.8] my-2 text-black" {...props} />,
+              a: ({node, ...props}) => <a className="text-blue-500 underline" {...props} />,
+              // 등등 필요한 태그 추가
+            }}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}>
+              {article.content}
+            </ReactMarkdown>
         </div>
-
-        {/* 본문 중간 이미지 */}
-        {article.bodyImage && (
-          <div className="my-10">
-            <Image
-              src={article.bodyImage}
-              alt="본문 이미지"
-              width={800}
-              height={600}
-              className="mx-auto"
-            />
-          </div>
-        )}
 
         {/* 구분선 */}
         <div className="h-px w-full bg-gray-100 mt-20" />

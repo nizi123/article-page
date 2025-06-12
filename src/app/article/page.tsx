@@ -34,7 +34,7 @@ export default function ArticleListPage() {
   );
 
   return (
-    <div className="flex flex-col items-center bg-white text-black dark:bg-white dark:text-black">
+    <div className="flex flex-col items-center bg-white text-black dark:bg-white dark:text-black mt-10">
       <section className="flex flex-col items-center pt-[60px] pb-[40px] gap-5">
       <svg
           width="60"
