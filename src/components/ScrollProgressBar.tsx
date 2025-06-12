@@ -18,6 +18,8 @@ interface ScrollProgressBarProps {
   baselineColor?: string;
   /** 제목 텍스트 색상 */
   titleColor?: string;
+  /** 배경 색상 */
+  background?: string;
 }
 
 export default function ScrollProgressBar({
