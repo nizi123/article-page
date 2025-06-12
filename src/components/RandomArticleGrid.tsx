@@ -35,8 +35,7 @@ export default function RandomArticleGrid({
       title: a.title,
       summary:
         a.subtitle ??
-        (a.content?.[0]?.text.trim().replace(/\n/g, ' ') || '').slice(0, 80) +
-          '...',
+        a.content?.slice(0, 80).trim().replace(/\n/g, " ") + "…",
       category: a.category,
       tagColor: a.tagColor,
       imageUrl: a.imageUrl,
