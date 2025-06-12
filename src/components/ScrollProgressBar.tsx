@@ -80,7 +80,7 @@ export default function ScrollProgressBar({
   return (
     <div
       style={{
-        backgroud: 'white',
+        background: 'white',
         position: 'fixed',
         top: topOffset,
         left: 0,
