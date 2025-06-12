@@ -15,7 +15,9 @@ export default function ArticleListPage() {
     id: a.id,
     title: a.title,
     // subtitle 이 summary 역할을 한다고 가정, 없으면 본문 첫 문단을 대체로 사용
-    summary: a.subtitle,
+    summary:
+      a.subtitle ??
+      a.content?.slice(0, 80).trim().replace(/\n/g, " ") + "…",
     category: a.category,
     tagColor: a.tagColor,
     imageUrl: a.imageUrl,
@@ -32,7 +34,7 @@ export default function ArticleListPage() {
   );
 
   return (
-    <div className="flex flex-col items-center bg-white text-black dark:bg-white dark:text-black mt-10">
+    <div className="flex flex-col items-center bg-white text-black dark:bg-white dark:text-black m-2">
       <section className="flex flex-col items-center pt-[60px] pb-[40px] gap-5">
       <svg
           width="60"
