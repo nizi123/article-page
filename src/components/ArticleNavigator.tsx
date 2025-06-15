@@ -44,7 +44,8 @@ export default function ArticleNavigator({
         <p className="text-gray-500">자생가능한 음악 생태계</p>
 
       {/* 3. 아티클 더보기 버튼 */}
-      <Link href="/article">
+      {/* <Link href="/article">  */}
+      <Link href="https://labchasm.framer.website/article">
         <button className="mt-2 px-6 py-2 bg-black text-white">
           아티클 더보기
         </button>
