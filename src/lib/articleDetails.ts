@@ -278,5 +278,76 @@ Opium 팬덤은 비교적 폐쇄적인 성향을 지니지만, 내부로 편입�
 
     },
 
+
+    {
+      id: 4,
+      title: '음악의 나라, 영국의 인디씬을 만나다.',
+      subtitle: 'UK-인디를 경험하면서 마주한 현실',
+      category: 'Case Study',
+      tagColor: '#18D85F',
+      imageUrl: '/engindie/card.png',
+      date: '2025-03-01',
+      author: '이찬민',
+      bodyImage: '/placeholder.png',
+      content: ``,
+
+    },
+
+    {
+      id: 5,
+      title: 'K-POP은 5세대? 그럼 K-Indie는?',
+      subtitle: '한국 대중음악의 비즈니스모델을 세대별로 나누어보기',
+      category: 'Music Business',
+      tagColor: '#1393FD',
+      imageUrl: '/indiegen/card.png',
+      date: '2025-03-15',
+      author: 'Kitsh',
+      bodyImage: '/placeholder.png',
+      content: ``,
+
+    },
+
+    {
+      id: 6,
+      title: '밴드캠프, 스트리밍의 대안이 될까?',
+      subtitle: '스트리밍 시대에 인디 아티스트가 살아남는 방법',
+      category: 'Music Business',
+      tagColor: '#1393FD',
+      imageUrl: '/bandcamp/card.png',
+      date: '2025-04-05',
+      author: '준하',
+      bodyImage: '/placeholder.png',
+      content: ``,
+
+    },
+
+    {
+      id: 9,
+      title: '재미로 보는 K-Indie 가사 분석',
+      subtitle: '',
+      category: 'Data for fun',
+      tagColor: '#FB2E46',
+      imageUrl: '/lyrics/card.png',
+      date: '2025-06-15',
+      author: '이연지',
+      bodyImage: '/placeholder.png',
+      content: ``,
+
+    },
+
+    {
+      id: 10,
+      title: '재미로 보는 K-Indie 가사 분석',
+      subtitle: '',
+      category: 'Data for fun',
+      tagColor: '#FB2E46',
+      imageUrl: '/lyrics/card.png',
+      date: '2025-06-15',
+      author: '이연지',
+      bodyImage: '/placeholder.png',
+      content: ``,
+
+    },
+
     // 다른 아티클들도 여기에 추가
   ];

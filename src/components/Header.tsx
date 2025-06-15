@@ -9,7 +9,7 @@ export default function Header() {
       id="header"
       className="fixed top-0 left-0 w-full h-[70px] z-50 flex items-center justify-between bg-white px-4"
     >
-      <Link href="/">
+      <Link href="https://labchasm.framer.website/">
         <img
           src="/labchasm-logo.png"
           alt="Lab Chasm"

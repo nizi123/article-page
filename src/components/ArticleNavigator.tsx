@@ -27,20 +27,20 @@ export default function ArticleNavigator({
     <div className="flex flex-col items-center w-full py-10 space-y-4">
       {/* 1. 로고 클릭 시 홈 */}
       <Link
-        href="/"
-        className="rounded-full border-2 border-gray-300 p-2 hover:border-gray-500 transition"
+        href="https://labchasm.framer.website/"
+        className="rounded-full border-2 border-gray-300 p-3 hover:border-gray-500 transitio"
       >
         <Image
-          src={logoSrc}
+          src='/logoblack.png'
           alt="홈으로"
           width={80}
           height={80}
-          className="rounded-full"
+          className="object-cotain"
         />
       </Link>
 
       {/* 2. 현재 아티클 제목 & 부제 */}
-      <h2 className="text-2xl font-bold">랩 캐즘</h2>
+      <h2 className="text-2xl font-bold text-black">랩 캐즘</h2>
         <p className="text-gray-500">자생가능한 음악 생태계</p>
 
       {/* 3. 아티클 더보기 버튼 */}
