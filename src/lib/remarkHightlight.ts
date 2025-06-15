@@ -1,6 +1,6 @@
 import { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import { Literal } from 'mdast';
+import { Literal, Parent } from 'unist';
 
 export const remarkHighlight = (tagColor: string): Plugin => {
   return () => (tree) => {
@@ -24,7 +24,6 @@ export const remarkHighlight = (tagColor: string): Plugin => {
           });
         }
 
-        // 하이라이팅된 부분을 <mark>로 감쌈 (tagColor의 10% 투명도: 1A)
         children.push({
           type: 'html',
           value: `<mark style="background-color: ${tagColor}1A; padding: 0 0.2em; border-radius: 0.25rem;">${match[1]}</mark>`,
@@ -40,7 +39,7 @@ export const remarkHighlight = (tagColor: string): Plugin => {
         });
       }
 
-      parent.children.splice(index, 1, ...children);
+      (parent as Parent).children.splice(index, 1, ...children);
     });
   };
 };
