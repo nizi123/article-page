@@ -11,6 +11,7 @@ import reactMarkdown from '@/../node_modules/react-markdown/index';
 import remarkGfm from '@/../node_modules/remark-gfm/index';
 import ReactMarkdown from '@/../node_modules/react-markdown/index';
 import rehypeRaw from '@/../node_modules/rehype-raw/index';
+import remarkImageToFigure from '@/lib/remarkImageToFigure';
 
 // ✅ 정적 생성 경로 (params는 여전히 동기적으로 id:string 배열을 리턴)
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
@@ -101,12 +102,17 @@ export default async function ArticleContentView({
         <div className="prose space-y-6 leading-[1.8]">
           <ReactMarkdown
              components={{
-              h2: ({node, ...props}) => <h1 className="text-2xl font-bold my-4 text-black" {...props} />,
+              h2: ({node, ...props}) => <h1 className="text-2xl font-bold my-4 text-black mt-20" {...props} />,
               p: ({node, ...props}) => <p className="text-base leading-[1.8] my-2 text-black" {...props} />,
               a: ({node, ...props}) => <a className="text-blue-500 underline" {...props} />,
+              blockquote: ({ children }) => (
+                <blockquote className="border-l-4 border-gray-400 pl-4 my-4 text-base font-normal text-gray-800">
+                  {children}
+                </blockquote>
+              ),
               // 등등 필요한 태그 추가
             }}
-            remarkPlugins={[remarkGfm]}
+            remarkPlugins={[remarkGfm, remarkImageToFigure]}
             rehypePlugins={[rehypeRaw]}>
               {article.content}
             </ReactMarkdown>
