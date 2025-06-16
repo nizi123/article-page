@@ -68,15 +68,67 @@ export default async function ArticleContentView({
       {/* 상단 이미지 */}
       <div 
       id = "article-top-image"
-      className="relative h-[550px] w-full mb-10">
+      className="relative h-[300px] sm:h-[800px] w-full mb-10">
         <Image
           src={article.imageUrl}
           alt={article.title}
           fill
           className="object-cover"
+          sizes="100vw"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/70" />
-        <div className="absolute inset-x-0 bottom-10 flex flex-col justify-end items-center text-white text-center px-4">
+
+        {/* 📌 Desktop & Tablet 오버레이: sm 이상에서만 보이도록 */}
+  <div
+    className="hidden sm:flex absolute inset-x-0 bottom-10 flex-col justify-end items-center text-white text-center px-4"
+  >
+    <span
+      className="inline-block border px-6 py-1 bg-black font-medium text-xs"
+      style={{
+        color: article.tagColor,
+        borderColor: article.tagColor,
+      }}
+    >
+      {article.category}
+    </span>
+    <h1 className="text-[48px] font-extrabold mt-3 leading-tight">
+      {article.title}
+    </h1>
+    {article.subtitle && (
+      <p className="text-[32px] text-gray-300 mt-1">{article.subtitle}</p>
+    )}
+    <p className="text-[24px] text-gray-400 mt-1">
+      {article.date} • {article.author}
+    </p>
+  </div>
+</div>
+
+{/* 📌 Mobile 전용 static 텍스트: sm 미만에서만 보이도록 */}
+<div className="sm:hidden px-4 mt-6 text-center">
+  <span
+    className="inline-block border px-4 py-1 font-medium text-xs"
+    style={{
+      color: article.tagColor,
+      borderColor: article.tagColor,
+    }}
+  >
+    {article.category}
+  </span>
+  <h1 className="text-[32px] sm:text-[48px] font-extrabold mt-4 leading-tight text-black">
+    {article.title}
+  </h1>
+  {article.subtitle && (
+    <p className="text-[20px] text-gray-700 mt-2">{article.subtitle}</p>
+  )}
+  <p className="text-[16px] text-gray-500 mt-1">
+    {article.date} • {article.author}
+  </p>
+</div>
+
+
+
+
+        {/* <div className="absolute inset-x-0 bottom-10 flex flex-col justify-end items-center text-white text-center px-4">
           <span
            className="inline-block border-1 px-6 py-1 bg-black font-medium text-xs"
            style={{
@@ -95,8 +147,8 @@ export default async function ArticleContentView({
           <p className="text-[24px] text-gray-400 mt-1">
             {article.date} • {article.author}
           </p>
-        </div>
-      </div>
+        </div> */}
+      {/* </div> */}
 
       {/* 본문 내용 */}
       <div className="max-w-5xl mx-auto px-4 pb-20">
