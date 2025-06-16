@@ -92,6 +92,16 @@ export default function ScrollProgressBar({
     return () => window.removeEventListener('scroll', onScroll);
   }, [fadeDistance]);
 
+  useEffect(() => {
+    const headerEl = document.getElementById('header');
+    const updateOffset = () => {
+      setTopOffset(headerEl?.offsetHeight || 0);
+    };
+    updateOffset();
+    window.addEventListener('resize', updateOffset);
+    return () => window.removeEventListener('resize', updateOffset);
+  }, []);
+
   if (!visible) return null;
 
   // 모바일이면 좌측 마진을 16px, 폰트는 흰색으로
