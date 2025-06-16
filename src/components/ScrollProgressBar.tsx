@@ -1,6 +1,7 @@
 // components/ScrollProgressBar.tsx
 'use client';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface ScrollProgressBarProps {
   color: string;
@@ -20,6 +21,8 @@ interface ScrollProgressBarProps {
   titleColor?: string;
   /** 배경 색상 */
   background?: string;
+  /** 오른쪽 여백 */
+  sharePaddingRight?: number; 
 }
 
 export default function ScrollProgressBar({
@@ -31,12 +34,26 @@ export default function ScrollProgressBar({
   baselineThickness = 1,
   baselineColor = '#e5e7eb',
   titleColor = '#000000',
+  sharePaddingRight = 80,
 }: ScrollProgressBarProps) {
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
   const [opacity, setOpacity] = useState(1);
   const [topOffset, setTopOffset] = useState(0);
-
+  // 모바일
+  const [isMobile, setIsMobile] = useState(false);
+  // 토스트 상태
+  const [showToast, setShowToast] = useState(false);
+  
+  // 모바일 체크
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    setIsMobile(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  
   useEffect(() => {
     const headerEl = document.getElementById('header');
     setTopOffset(headerEl?.offsetHeight || 0);
@@ -77,7 +94,20 @@ export default function ScrollProgressBar({
 
   if (!visible) return null;
 
+  // 모바일이면 좌측 마진을 16px, 폰트는 흰색으로
+  const left = isMobile ? 16 : titlePaddingLeft;
+  const shareRight = isMobile ? 16 : sharePaddingRight;
+
+    // 공유 버튼 핸들러
+    const handleShare = () => {
+      navigator.clipboard.writeText(window.location.href);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2000);
+    };
+  
+
   return (
+    <>
     <div
       style={{
         background: 'white',
@@ -122,7 +152,7 @@ export default function ScrollProgressBar({
           style={{
             position: 'absolute',
             top: '50%',
-            left: `${titlePaddingLeft}px`,
+            left: `${left}px`,
             transform: 'translateY(-50%)',
             color: titleColor,
             fontWeight: 500,
@@ -132,6 +162,60 @@ export default function ScrollProgressBar({
           {title}
         </div>
       )}
+
+
+      {/* 공유 버튼 */}
+      <button
+        onClick={handleShare}
+        style={{
+          position: 'absolute',
+          top: '50%',
+          right: `${shareRight}px`,
+          transform: 'translateY(-50%)',
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          margin: 0,
+          cursor: 'pointer',
+          pointerEvents: 'auto',  // 중요!
+          color: 'lightgray'
+        }}
+        aria-label="이 페이지 링크 복사"
+      >
+        <Image
+          src="/shareicon.png"
+          alt="공유하기"
+          width={24}
+          height={24}
+          priority={true}
+        />
+      </button>
     </div>
+
+  {/* 토스트 */}
+  {showToast && (
+    <div
+      style={{
+        position: 'fixed',
+        bottom: 32,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        backgroundColor: '#333',
+        color: '#fff',
+        padding: '8px 16px',
+        borderRadius: 4,
+        fontSize: 14,
+        pointerEvents: 'none',
+        zIndex: 1100,
+        opacity: showToast ? 1 : 0,
+        transition: 'opacity 0.3s',
+      }}
+    >
+      링크가 복사되었습니다!
+    </div>
+  )}
+</>
+
+
   );
 }
