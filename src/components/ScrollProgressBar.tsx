@@ -127,7 +127,7 @@ export default function ScrollProgressBar({
         width: '100%',
         height: `${thickness + baselineThickness}px`,
         pointerEvents: 'none',
-        zIndex: 1000,
+        zIndex: 30,
       }}
     >
       {/* 베이스라인 */}
