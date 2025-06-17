@@ -23,6 +23,12 @@ function MenuItem({ id, href, src, hoverSrc, onClick }: MenuItemProps) {
         className="h-[50px] lg:h-[50px] w-auto object-contain"
         onHoverStart={() => setIsHovered(true)}
         onHoverEnd={() => setIsHovered(false)}
+         // 모바일 터치
+        onPointerDown={() => setIsHovered(true)}
+        onPointerUp={() => setIsHovered(false)}
+        onPointerLeave={() => setIsHovered(false)}
+
+        whileTap={{ scale: 1.1 }}
         whileHover={{ scale: 1.1 }}
         transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       />
