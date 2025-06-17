@@ -83,7 +83,7 @@ export default async function ArticleContentView({
     className="hidden sm:flex absolute inset-x-0 bottom-10 flex-col justify-end items-center text-white text-center px-4"
   >
     <span
-      className="inline-block border px-6 py-1 bg-black font-medium text-xs"
+      className="inline-block border px-6 py-1 bg-black/50 font-medium text-xs"
       style={{
         color: article.tagColor,
         borderColor: article.tagColor,

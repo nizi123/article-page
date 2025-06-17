@@ -10,8 +10,8 @@ export default function remarkImageToFigure() {
       const url = node.url;
       const alt = node.alt || '';
 
-      const figureHtml = `<figure style="text-align: center; margin: 2rem 0;">
-  <img src="${url}" alt="${alt}" />
+      const figureHtml = `<figure class="flex flex-col items-center my-8">
+  <img src="${url}" alt="${alt}"  class="block max-w-full" />
   <figcaption style="font-size: 16px; color: #9ca3af; margin-top: 0.5rem;">${alt}</figcaption>
 </figure>`;
 
