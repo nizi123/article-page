@@ -323,6 +323,7 @@ export const articleDetails = [
 
  그는 기존의 장르 문법을 따르지 않으면서도 대중성과 실험성 사이에서 아슬아슬하게 줄타기를 합니다. 그의 노래를 듣는 순간 ‘이건 2hollis다’라고 느낄 수밖에 없는 정확한 지점이 있는 듯 합니다. 이러한 독창적인 음악 세계와 함께, 2hollis는 현재 음악 시장에서 가장 빠르게 성장하는 아티스트 중 한 명으로 자리 잡아가고 있습니다.
 
+
 ## **2. 2hollis의 음악**
 
 2hollis의 가장 최근 앨범 **boy (2024)** 는 전자 음악적 요소를 적극 활용하면서도 감정적인 깊이를 유지하여 평단의 주목을 받았습니다. 일반적으로 사람들은 전자 음악이 감정을 전달하는 데 한계가 있다고 생각합니다. 디지털로 가공된 신디사이저와 오토튠, 과장된 이펙트가 인간적인 감정보다는 차갑고 기계적인 느낌을 준다고 여기기 때문입니다.
@@ -331,9 +332,9 @@ export const articleDetails = [
 
 2hollis는 단순히 악기와 사운드로만 감정을 전달하는 데 그치지 않고, 보컬을 또 하나의 강력한 도구로 삼아 음악적 서사를 완성합니다.  보컬리스트로서의 가장 큰 강점 중 하나는 **단순해 보이는 방식으로도 강렬한 감정을 전달할 수 있는 능력**입니다. 몽환적인 낮은 톤의 속삭임으로 긴장감을 고조시킨 뒤, 클라이맥스에서는 날카로운 외침과 왜곡된 보컬을 활용해 감정을 극대화하는 연출 등이 돋보입니다. 마치 평온한 대화 중 갑작스러운 감정 폭발로 긴장감을 고조시키는 영화 속 명장면을 연상케 합니다. **단순히 노래를 부르는 데 그치지 않고, 다양한 보컬 디자인을 통해 감정의 흐름을 섬세하게 조율하며 청자를 몰입하게 만듭니다.** 
 
-https://youtu.be/PwxZQ3CrSvo?si=D13gbYG_PzUdKhW0
+<iframe width="560" height="315" src="https://www.youtube.com/embed/PwxZQ3CrSvo?si=VispwGLJKRzpc1L1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-https://youtu.be/WRWC7VyDCAM?si=6wJvGdKVhkXuS2Ov
+<iframe width="560" height="315" src="https://www.youtube.com/embed/WRWC7VyDCAM?si=A4hdn_t90yvLaUoC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 특히 **"you once said my name for the first time"** 에서는 보컬의 질감을 변화시키며 서사를 완성합니다. 초반에는 조용하고 나직하게 읊조리지만, 점점 감정을 끌어올리다가 후반부에서는 찢어질 듯한 외침과 함께 극적인 변화를 선사합니다. **"lie"** 에서는 과장된 오토튠과 비트크러시된 보컬을 사용해 감정이 왜곡되는 듯한 느낌을 주고, **"say it again"** 에서는 단조로운 반복을 통해 집착적인 감정을 집요하게 전달합니다.
 
@@ -342,7 +343,7 @@ https://youtu.be/WRWC7VyDCAM?si=6wJvGdKVhkXuS2Ov
 ## 3. 2hollis의 성공 요인 분석
 
 
-![/2hoilse/1.png](/2holise/1.png)
+![](/2holise/1.png)
 
 2hollis의 Spotify 청취자 데이터를 분석한 결과, **7월~8월**과 **10월~11월** 두 시점에서 스트리밍 수치가 급격히 상승한 구간이 확인됩니다. 특히, 각각의 시점에서 청취자 수가 두 배 가까이 증가하는 놀라운 성장을 확인할 수 있는데 이는 단순한 우연이라고 보기는 어렵습니다. 분명 그 배경에는 특정한 요인들이 작용했을 것입니다.
 
@@ -350,67 +351,53 @@ https://youtu.be/WRWC7VyDCAM?si=6wJvGdKVhkXuS2Ov
 
 2hollis의 최근 Spotify 청취자 증가와 플레이리스트 도달 수 변화는 여러 요인이 맞물린 결과로 분석됩니다. 그 시작은 **6월 발매된 정규 앨범 *boy*로 거슬러 올라갑니다.** 이 앨범은 전작에 비해 팝적인 요소가 한층 강화되어, 그의 음악이 기존 팬층뿐만 아니라 더 넓은 대중에게 다가갈 수 있는 기반을 마련했습니다. 그러나 *boy* 발매 직후 스트리밍 수치는 완만한 상승세를 보였으며, 앨범 자체가 단기적인 폭발보다는 장기적인 성장을 위한 발판으로 작용한 것으로 보입니다.
 
-[Ken Carson, Chaos Tour, Opening](https://youtube.com/shorts/B7jTIkbEt7s?si=ltA1xviO2QfD_Umx)
-
-Ken Carson, Chaos Tour, Opening
-
-[Ken Carson, Chaos Tour, Opening (임시영상)](https://youtu.be/sVvqXzo0i1g?si=oalPn14fPaBQrNz-)
-
-Ken Carson, Chaos Tour, Opening (임시영상)
-
 그리고 **7월에 시작된 Ken Carson의 Chaos Tour 오프닝 공연**은 그의 음악 경력에서 중요한 도약점이 되었습니다. Ken Carson은 현재 힙합 씬에서 가장 영향력 있는 Opium 레이블 소속 아티스트로, 그의 투어는 2hollis가 현재 음악씬에서 가장 컬트적인 Opium 팬덤들에게 각인되는 중요한 이벤트였습니다. 2hollis의 오프닝 공연은 강렬한 조명 연출과 에너지 넘치는 그의 곡들과 결합되어 관객들에게 시각적, 청각적 몰입감을 선사했습니다. 
 
-![2. Reddit 2hollis 퍼포먼스 관련 언급량 추이 (2024년).png](/2holise/2.png)
+![](/2holise/2.png)
 
 강렬한 퍼포먼스와 무대 장악력은 관객들에게 깊은 인상을 남겼습니다. 그의 무대는 SNS와 커뮤니티에서도 바이럴 되었습니다. Reddit의 2hollis 관련 게시글에서도 그의 퍼포먼스와 관련된 언급량이 순간적으로 늘어난 것을 확인할 수 있었습니다. TikTok과 같은 소셜 미디어 플랫폼에서도 퍼포먼스에 대한 긍정적인 반응이 다수 확인되었습니다. 이는 그의 무대 연출이 관객들에게 깊은 인상을 남겼으며 ,그를 단순 스트리밍 아티스트에서 퍼포먼스형 아티스트로 인지되는데 큰 역할을 했습니다. 
 
-![3. 2hollis Spotify 플레이리스트 도달율 (2024년).png](attachment:e84c261e-678e-4a00-924b-c1af5f2b1f9d:3._2hollis_Spotify_플레이리스트_도달율_(2024년).png)
+![](/2holise/3.png)
 
 **8월에 접어들면서 편집 플레이리스트 도달률이 사용자 생성 플레이리스트를 추월하며 '골든 크로스'를 기록한 것**은 이런 투어 효과가 Spotify 에디토리얼 팀에게도 영향을 미쳤음을 보여줍니다. 2hollis의 곡은 주요 편집 플레이리스트에 다수 추가되었고, 이는 그의 음악이 더 넓은 대중에게 노출될 수 있는 발판이 되었습니다. 특히, 편집 플레이리스트는 높은 팔로워 수와 노출 빈도로 그의 스트리밍 수 증가에 결정적인 역할을 했습니다.
 
-<aside>
-💡
 
-***“gold”의 도입부는 마치 롤러코스터가 윙 하고 깨어나더니 삐걱이며 앞으로 나아가는 순간을 연상하게 합니다. 저항할 수 없는 불안감이 강하게 밀려옵니다.***
-
-*“기다릴 이유가 없어,”라고 홀리스가 외치면, 금속이 긁히는 듯한 날카로운 소리가 점점 커지며 더욱 강렬한 긴장감을 조성합니다. 이어서 트랙은 뼈를 울리는 808 베이스, 삐걱거리는 하이햇, 그리고 저크(Jerk) 스타일의 타격감 있는 박수 소리와 함께 폭발적으로 전개됩니다. A Great Chaos의 거친 매력을 그대로 계승한 듯, 2hollis는 속삭임과 절규 사이를 오가며 곡의 흐름을 이끌어 갑니다.*
-
-*.
-.
-.*
-
-***트랙의 눈부신 개버(gabber) 코다가 흐를 때, 2hollis는 마치 몸에 폭탄이라도 묶인 듯 목소리를 한껏 쥐어짭니다. 등골이 서늘해질 정도로 강렬합니다. Chaos 이후, 뭔가가 끓어오르고 있습니다.***
+>***“gold”의 도입부는 마치 롤러코스터가 윙 하고 깨어나더니 삐걱이며 앞으로 나아가는 순간을 연상하게 합니다. 저항할 수 없는 불안감이 강하게 밀려옵니다.***  
+> <br><br>
+>*“기다릴 이유가 없어,”라고 홀리스가 외치면, 금속이 긁히는 듯한 날카로운 소리가 점점 커지며 더욱 강렬한 긴장감을 조성합니다.
+>이어서 트랙은 뼈를 울리는 808 베이스, 삐걱거리는 하이햇, 그리고 저크(Jerk) 스타일의 타격감 있는 박수 소리와 함께 폭발적으로 전개됩니다.
+>A Great Chaos의 거친 매력을 그대로 계승한 듯, 2hollis는 속삭임과 절규 사이를 오가며 곡의 흐름을 이끌어 갑니다.*    
+>*...*  
+>***트랙의 눈부신 개버(gabber) 코다가 흐를 때, 2hollis는 마치 몸에 폭탄이라도 묶인 듯 목소리를 한껏 쥐어짭니다. 등골이 서늘해질 정도로 강렬합니다. Chaos 이후, 뭔가가 끓어오르고 있습니다.***
 *- Pitchfork*
 
-</aside>
+<br>
 
-**진정한 도약점은 10월 발매된 싱글 *Gold*였습니다.** *Gold*는 기존 앨범의 연장선에서, 2hollis 특유의 강렬한 보컬과 실험적인 사운드를 한층 더 부각한 곡으로, 주요 음악 매체와 소셜 미디어에서 큰 주목을 받았습니다. **Pitchfork**는 이 곡에 대해 ***"의도적으로 강렬하고 자극적인 곡으로 설계되었다"***며 호평을 보냈고, **TikTok에서는 약 9,000개의 게시물이 생성**되며 바이럴 효과를 얻었습니다. 비록 TikTok에서의 바이럴이 폭발적이라고 볼 수는 없지만, 이 관심이 **Spotify 편집 플레이리스트 추가와 스트리밍 증가로 이어졌다는 점**에서 중요한 역할을 했습니다.
+**진정한 도약점은 10월 발매된 싱글 *Gold*였습니다.** *Gold*는 기존 앨범의 연장선에서, 2hollis 특유의 강렬한 보컬과 실험적인 사운드를 한층 더 부각한 곡으로, 주요 음악 매체와 소셜 미디어에서 큰 주목을 받았습니다. **Pitchfork**는 이 곡에 대해 **"의도적으로 강렬하고 자극적인 곡으로 설계되었다"** 며 호평을 보냈고, **TikTok에서는 약 9,000개의 게시물이 생성**되며 바이럴 효과를 얻었습니다. 비록 TikTok에서의 바이럴이 폭발적이라고 볼 수는 없지만, 이 관심이 **Spotify 편집 플레이리스트 추가와 스트리밍 증가로 이어졌다는 점**에서 중요한 역할을 했습니다.
 
-![4. Spotify _ 2hollis, 상위 플레이리스트 성과.png](attachment:13c4db1c-b071-40ac-88ab-f0bdeba16f2b:4._Spotify___2hollis_상위_플레이리스트_성과.png)
+![](/2holise/4.png)
 
 *Gold*는 Spotify의 큰 팔로워를 보유한 주요 편집 플레이리스트에 다수 포함되었을 뿐 아니라, 높은 포지션(Top 10권 내)을 기록하며 스트리밍 수를 크게 끌어올렸습니다. 이 곡은 단순히 알고리즘의 선택을 받은 곡이 아니라, 그 자체로도 큐레이터들에게 높은 평가를 받으며 그의 음악적 입지를 더욱 단단히 굳혔습니다. 
 
 **10월 한 달 동안 편집 플레이리스트 도달률이 폭발적으로 증가한 현상**은 *Gold*의 음악적 완성도와 Chaos Tour로 시작된 주목도가 맞물리며 플랫폼에서 큰 시너지를 이뤄냈습니다.  
 
-![5. Reddit _ 2hollis 카테고리 별 감성분석 (2024년).png](attachment:fb895b1d-0272-453b-b7e5-7aa7c881ae34:5._Reddit___2hollis_카테고리_별_감성분석_(2024년).png)
+![](/2holise/5.png)
 
 실제 2024년 Reddit에서 2hollis 관련 카테고리 별 언급 감성 분석 결과를 살펴보면, ‘sound’와 ‘performance’는 높은 긍정적 평가를 받았습니다. 이는 2hollis가 음악적으로나 퍼포먼스 면에서 상당한 강점을 가지고 있으며, 팬들이 그의 사운드와 무대 매너를 상당히 긍정적으로 받아들이고 있음을 확인할 수 있습니다.
 
 결론적으로, 2hollis의 성장 곡선은 단순하지 않았습니다. **정규 앨범 *boy*를 통해 대중적 음악적 기반을 다지고, Chaos Tour로 퍼포먼스를 통해 새로운 팬층을 확보하며, 싱글 *Gold*로 이를 확실히 굳히는 3단계 전략이 절묘하게 맞아떨어졌습니다.**
-
+ 
 ## 4. 팬덤 분석 : Reddit
-
----
 
 2hollis의 급격한 성장세를 분석하면서 한 가지 분명해진 사실이 있습니다. 그는 단순한 바이럴 히트가 아니라, 특정 팬덤의 유입과 전략적인 노출을 통해 자신의 입지를 확장하고 있다는 점입니다.
 
 ### 4.1. Opium 팬덤의 반응
 
-![6.Reddit subreddit 2hollis 언급량 추이 (2024년).png](attachment:4c86b254-7962-4aa7-b1e8-6d41ea64c43d:6.Reddit_subreddit_2hollis_언급량_추이_(2024년).png)
+![](/2holise/6.png)
 
 특히 주목할 점은 Opium 레이블 팬덤, 즉 **Ken Carson과 Playboi Carti의 팬층에서 2hollis가 점점 더 언급되기 시작했다는 점**입니다. 서브레딧별 언급량을 분석한 결과, Chaos Tour 시작 시점인 7월에서는 Ken Carson 팬덤층에서 언급이 크게 증가했다가, 이후 10월 ***Gold*** 발매 이후 **Opium**의 핵심 아티스트인 **Playboi Carti 팬덤층에서도 언급이 확산되는 모습**을 확인할 수 있습니다. 
 
-![부정 언급량 추이 (2024년).png](attachment:50a16ec9-1398-45c5-9154-8549c8838b30:부정_언급량_추이_(2024년).png)
+![](/2holise/7.png)
 
 **단순한 언급량을 넘어, Opium 관련 서브레딧에서 2hollis에 대한 긍정적인 언급 비율 또한 서서히 증가하는 것을 확인할 수 있습니다.** **그리고 현재 2025년 시점에서는 긍정적 언급이 압도하고 있습니다.**
 
@@ -420,23 +407,20 @@ Ken Carson, Chaos Tour, Opening (임시영상)
 
 ### 4.2. 2hollis와 Opium 팬덤의 교차점
 
-![Reddit _ 2hollis vs Opium 카테고리 별 언급 비율 (2024년).png](attachment:1f891238-4065-4aa0-a068-b9bdc3282732:Reddit___2hollis_vs_Opium_카테고리_별_언급_비율_(2024년).png)
+![](/2holise/8.png)
 
-Reddit에서 두 팬덤이 공유하는 코드가 뚜렷하게 드러나고 있습니다. ****r/playboicarti, r/2hollis와 같은 서브레딧에서 2hollis와 Opium 관련 키워드의 언급 비율을 분석한 결과, **특정 주제에서 두 팬덤이 유사한 관심을 보이고 있음이 확인되었습니다.**
+Reddit에서 두 팬덤이 공유하는 코드가 뚜렷하게 드러나고 있습니다. r/playboicarti, r/2hollis와 같은 서브레딧에서 2hollis와 Opium 관련 키워드의 언급 비율을 분석한 결과, **특정 주제에서 두 팬덤이 유사한 관심을 보이고 있음이 확인되었습니다.**
 
 이러한 공통점은 단순한 장르적 유사성을 넘어, **음악을 단순히 소비하는 것이 아니라 ‘경험’하고, 이를 통해 특정한 정체성을 공유하는 방식**에서 비롯됩니다.
 
 ### ㅁ 사운드 중심의 팬덤 형성
 
-[*2hollis, crush*](https://youtu.be/bx5vUFzN4a8?si=qtE0Q22lIMzLOZkl)
 
-*2hollis, crush*
+<iframe width="560" height="315" src="https://www.youtube.com/embed/bx5vUFzN4a8?si=Xngi4XzVGbcl9Q-P" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-[*Ken Carson, Fighting My Demons*](https://youtu.be/G3QCk9sD3JY?si=lhjLAtL4Fw6Wq1eu)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/G3QCk9sD3JY?si=zK30frJhKm45PNDP" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-*Ken Carson, Fighting My Demons*
-
-두 팬덤에서 **sound(사운드)**에 대한 언급 비율이 높은 것은 2hollis와 Opium 모두 음악적 스타일에서 **기존 힙합의 전형적인 문법을 탈피하고, 새로운 방식으로 사운드를 구성하는 아티스트들**이라는 점을 보여줍니다.
+두 팬덤에서 **sound(사운드)** 에 대한 언급 비율이 높은 것은 2hollis와 Opium 모두 음악적 스타일에서 **기존 힙합의 전형적인 문법을 탈피하고, 새로운 방식으로 사운드를 구성하는 아티스트들**이라는 점을 보여줍니다.
 
 Opium 아티스트들은 무거운 베이스라인, 왜곡된 보컬, 글리치적 요소 등을 활용하며 기존 트랩 음악의 흐름을 재구성하고 있습니다. 한편, 2hollis는 하이퍼팝, 클라우드 랩, 일렉트로닉적 요소를 결합해 감정적 서사를 강조하는 방식으로 사운드를 구성합니다.
 
@@ -444,15 +428,11 @@ Opium 아티스트들은 무거운 베이스라인, 왜곡된 보컬, 글리치�
 
 ### ㅁ 음악적 진정성과 퍼포먼스 중심의 경험
 
-[*2hollis, Live in Houston, All of the lights Snippet*](https://youtu.be/rMsuQwInDAs?si=uCYesttJ_F0ysO62)
+<iframe width="560" height="315" src="https://www.youtube.com/embed/rMsuQwInDAs?si=rqW6p4NHkXUdJ0GE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-*2hollis, Live in Houston, All of the lights Snippet*
+<iframe width="560" height="315" src="https://www.youtube.com/embed/f-w99XrPCtQ?si=EeLHZ4eDPUlq3L59" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-[*Playboi Carti, Rolling Loud 2024, EVILJORDAN*](https://youtu.be/f-w99XrPCtQ?si=87p4l-Nc03-OZA9x)
-
-*Playboi Carti, Rolling Loud 2024, EVILJORDAN*
-
-두 팬덤에서 **authenticity(진정성)**과 **performance(퍼포먼스)**가 주요 키워드로 언급된다는 점은, 2hollis와 Opium이 단순히 ‘좋은 음악을 만드는 아티스트’가 아니라, **공연 자체를 강력한 정체성의 일부로 활용하는 퍼포머로 인식되고 있음을 의미**합니다.
+두 팬덤에서 **authenticity(진정성)** 과 **performance(퍼포먼스)** 가 주요 키워드로 언급된다는 점은, 2hollis와 Opium이 단순히 ‘좋은 음악을 만드는 아티스트’가 아니라, **공연 자체를 강력한 정체성의 일부로 활용하는 퍼포머로 인식되고 있음을 의미**합니다.
 
 이들의 공연은 **단순히 음악을 들려주는 것이 아니라, 관객이 공연 자체에 빠져들도록 설계된 극적인 연출과 에너지를 바탕으로 팬덤에게 다가가는 방식**을 택합니다. **2hollis와 Opium 아티스트들은 ‘공연’이라는 무대를 통해 아티스트와 팬덤 간의 강력한 연결을 형성하며, 이를 통해 더욱 충성도 높은 팬덤을 구축하고 있습니다.**
 
@@ -460,13 +440,8 @@ Opium 아티스트들은 무거운 베이스라인, 왜곡된 보컬, 글리치�
 
 ### ㅁ 비주얼 아이덴티티와 스타일
 
-![*2hollis, Instagram*](attachment:0e644e5a-c2fe-4972-a624-ceffba5f8a39:image.png)
+![(1)Playboi Carti, DONDA2 Listening Experience (2) 2hollis, Instagram](/2holise/9.png)
 
-*2hollis, Instagram*
-
-![Playboi Carti, DONDA2 Listening Experience](attachment:71b9783d-8a07-4822-b0e3-cd9181034cde:334a2bf3-f349-463a-a417-f338c52178e4.png)
-
-Playboi Carti, DONDA2 Listening Experience
 
 **fashion(패션)** 카테고리는 두 팬덤에서 모두 중요한 키워드로 등장합니다. 이는 2hollis와 Opium 아티스트들이 단순히 음악뿐만 아니라 **스타일과 비주얼을 통해 강력한 정체성을 구축하고 있음을 보여줍니다.**
 
