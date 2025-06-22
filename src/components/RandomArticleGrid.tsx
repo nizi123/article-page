@@ -52,8 +52,12 @@ export default function RandomArticleGrid({
   }, [articles, currentId, count]);
 
   return (
-    <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-      {items.map((article) => (
+    <div className="mt-16 grid 
+                        grid-cols-1 sm:grid-cols-2 md:grid-cols-3 
+                        gap-x-6 gap-y-12
+                        justify-items-center    /* 모바일에서 가운데 정렬 */
+                        sm:justify-items-stretch /* sm 이상에선 셀 전체 채우기 */"> 
+                             {items.map((article) => (
         <ArticleCard key={article.id} article={article} />
       ))}
     </div>
