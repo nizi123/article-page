@@ -22,6 +22,7 @@ export const metadata: Metadata = {
     icon: '/labchasmfavi.png'
   },
   verification: {
+    google: "g6vRsKyBv0T81ioqLSaA5ahU95lClmEjl51TOGEAbdg",
     other: {
       "naver-site-verification": "bb18df70dc0a23382337c76363d52080322a99ed",
     },
