@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from 'next/script'
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "./globals.css";
@@ -20,6 +21,11 @@ export const metadata: Metadata = {
   icons:{
     icon: '/labchasmfavi.png'
   },
+  verification: {
+    other: {
+      "naver-site-verification": "bb18df70dc0a23382337c76363d52080322a99ed",
+    },
+  },
   description: "한국 인디음악 기반의 음악 생태계 연구소, Lab CHASM ",
 };
 
@@ -38,6 +44,13 @@ export default function RootLayout({
         {children}
         </div>
         <Footer /> 
+
+        <Script
+          src="https://cloud.umami.is/script.js"
+          data-website-id="99ebff8e-ae77-4f5e-8fe5-1b664a5209c5"
+          strategy="beforeInteractive"
+          defer
+        />
       </body>
     </html>
   );
