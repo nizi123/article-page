@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   verification: {
     google: "g6vRsKyBv0T81ioqLSaA5ahU95lClmEjl51TOGEAbdg",
     other: {
-      "naver-site-verification": "bb18df70dc0a23382337c76363d52080322a99ed",
+      "naver-site-verification": "704d9fba7179d0f6159806a44d796832ea18dd25",
     },
   },
   description: "한국 인디음악 기반의 음악 생태계 연구소, Lab CHASM ",
@@ -48,7 +48,7 @@ export default function RootLayout({
 
         <Script
           src="https://cloud.umami.is/script.js"
-          data-website-id="99ebff8e-ae77-4f5e-8fe5-1b664a5209c5"
+          data-website-id="80dfdabd-ebfc-4511-a4c0-db6141f372f6"
           strategy="beforeInteractive"
           defer
         />
