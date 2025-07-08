@@ -156,7 +156,7 @@ export default async function ArticleContentView({
           <ReactMarkdown
              components={{
               h2: ({node, ...props}) => <h1 className="text-2xl font-bold my-4 text-black mt-20" {...props} />,
-              h3: ({node, ...props}) => <h1 className="text-xl font-bold my-4 text-black mt-20" {...props} />,
+              h3: ({node, ...props}) => <h1 className="text-xl font-bold my-4 text-black mt-10" {...props} />,
               p: ({node, ...props}) => <p className="text-base leading-[1.8] my-2 text-black" {...props} />,
               ul: ({ node, ...props }) => (
                 <ul className="list-disc list-inside pl-6 mb-4" {...props} />
