@@ -1607,22 +1607,139 @@ CoLLage 프로젝트는 음악과 타 산업군의 협업 그 이상의 가치�
 ## CoLLage : _____ ___
 
 앞으로의 CoLLage는 또 어떤 산업과 인디 음악을 결합할 수 있을까요? 무한히 뻗어나가는 프로젝트 CoLLage의 다음 행보를 지켜봐주세요!
-
-
-
-
-
-
-
-      
-      
-      
-      
       `
     },
 
 
 
+    {
+      id: 12,
+      title: '팬도 공연도 없는데, 매달 수십만 명이 듣는 밴드',
+      subtitle: 'Spotify 상위에 오른 AI 밴드 The Velvet Sundown 추적기',
+      category: 'Music Business',
+      tagColor: '#1393FD',
+      imageUrl: '/AI1/card.png',
+      date: '2025-07-12',
+      author: '정영희',
+      bodyImage: '/placeholder.png',
+      content: `
+## 존재하지 않는 밴드가 스포티파이 추천에?
+
+2025년 여름, Spotify의 Discover Weekly 추천에 정체불명의 밴드가 등장했습니다. 레트로한 질감, 꿈같은 사운드, 70년대 사이키델릭을 연상케 하는 미학으로 포장된 이 밴드는, 단 두 개의 앨범만으로 **월간 120만 명의 청취자 수**를 기록했습니다. 하지만 정작 검색을 해보면 이들에 대한 **공식 웹사이트도, 인터뷰도, 공연 일정도 없는** 상태였습니다.
+      
+뮤지션도, 팬덤도, 공연도 없는 ‘유령 밴드’가 **어떻게 추천 상위에 오르고 스트리밍 수익까지 창출하게 되었을까요?**  너무나 수상한 이 밴드, The velvet Sundown은 지금의 음악 산업이 맞닥뜨리고 있는 **AI와의 구조적 문제**를 적나라하게 드러내고 있습니다.
+
+
+![](/AI1/1.png)
+
+## Reddit에서 시작된 의혹:  AI로 제작한 ‘가짜 밴드’
+
+의혹은 Reddit의 한 게시글로부터 시작됩니다. 2025년 6월 25일, Reddit의 [r/truespotify](https://www.reddit.com/r/truespotify/comments/1lk9ag2/ai_band_in_recommended_with_300k_monthly_with/) 포럼에서 “곡은 겨우 두 개뿐인데 청취자가 30만 명이 넘는다”며 *The Velvet Sundown*의 **실존 여부에 대한 의문**을 제기했습니다. 이후 AI 콘텐츠를 비판하는 [r/antiai](https://www.reddit.com/r/antiai/comments/1ljqpiq/this_band_is_100_ai/) 커뮤니티에서도 이 밴드는 큰 화제가 됩니다. “소개 문구조차 ChatGPT가 쓴 것처럼 느껴진다”며, Spotify가 **로열티 지불을 줄이기 위해 직접 AI 밴드를 푸시하고 있다**는 주장까지 등장했습니다.
+
+> “I’m 100% sure this content is pushed by Spotify itself to further minimize the amount of money they pay artists.”
+> 
+> 
+> — Reddit 유저
+> 
+
+## 허구뿐인 프로필
+
+이 밴드는 파헤칠수록 수상한 점만 나왔습니다. 실제로 Spotify에 들어가 확인해보면, *The Velvet Sundown*의 프로필에는 이런 문장이 적혀있었습니다.
+
+> *“they sound like the memory of something you never lived, and somehow make it feel real”*
+> 
+> 
+> *“경험한 적 없는 기억처럼 들리지만, 왠지 진짜처럼 느껴진다.”* 
+> 
+
+**Billboard에서 극찬한 문구라고** 소개돼 있었지만, 실제로 Billboard를 비롯한 **어떠한 매체에서도 이 문장을 사용한 기록은 확인되지 않았습니다.** 밴드 멤버로 소개된 “Milo Rains”, “Orion Del Mar” 역시 마찬가지였습니다. 어떤 활동 이력도 확인 되지 않았고, Rolling stones, Futurism을 비롯한 여러 언론은 **이 밴드가 AI로 생성됐을 가능성**을 강하게 제기했습니다. 사진은 어딘가 부자연스럽고, 앨범 커버 이미지 생성도 AI 특유의 느낌을 풍기기 때문이었죠.
+
+하지만 밴드 측은 공식 X계정을 통해 “우리는 AI를 사용한 적이 없다”며 강하게 반박했습니다.
+
+“기자들은 아무도 우리에게 연락하지 않았고, 공연을 본 적도 없으며, 알고리즘 바깥에서 우리 음악을 제대로 들어보지도 않았다”는 입장을 전하기도 했습니다.
+    
+![](/AI1/2.png)
+
+그러나 이 해명은 오히려 더 많은 의문을 남겼습니다. Instagram에 올라온 사진은 누가 봐도 AI 이미지처럼 보였고, 프로필 소개 또한 생성형 AI가 자주 사용하는 어투 그대로였습니다. 밴드 측은 “[우리는 진짜 악기로, 땀 흘리며 곡을 만들었다](https://futurism.com/the-byte/indie-band-hoax-ai-admit)”며 반박했지만, 이를 뒷받침할 **어떤 라이브 영상, 제작 과정, 인터뷰도 확인되지 않았습니다.**
+
+논란이 정점을 찍고 있을 때 쯤,  *The Velvet Sundown*은 X 계정을 통해 새로운 입장을 밝혔습니다.
+
+> “The Velvet Sundown는 인간의 창의적 디렉션에 따라 운영되는 합성 음악 프로젝트입니다.  
+작곡, 보컬, 이미지 모두 생성형 AI의 도움을 받아 제작되었습니다.”
+> 
+
+결국, 자신들의 정체가 AI 기반 프로젝트임을 공식적으로 인정한 것입니다.
+
+![변경된 The Velvet Sundown의 Spotify 프로필](/AI1/3.png)
+
+더불어 이들은 자신들이 단순히 ‘속이려는 프로젝트’가 아니라, **AI 시대의 창작과 진정성, 그리고 저작권과 정체성의 경계**에 질문을 던지는 실험적 예술 행위였다고 주장했습니다.
+
+> *“Not quite human. Not quite machine. The Velvet Sundown lives somewhere in between.”*  
+“이건 트릭이 아니라, 거울입니다. 저작권, 정체성, 그리고 AI 시대의 음악의 미래에 대한 예술적 도발입니다.”
+>
+
+![출처: The velvet sundown X(@tvs_music)](/AI1/4.png)
+
+
+## 사실은 스트리밍 플랫폼이 키워준 AI 밴드?
+
+그렇다면, 누구의 정체도 알 수 없는 이 밴드가 어떻게 Spotify 상위에 오를 수 있었을까요? [*Rolling Stone*과의 인터뷰](https://www.rollingstone.com/music/music-features/velvet-sundown-ai-band-suno-1235377652/)에서, Spotify의 전직 데이터 분석가 **Glenn McDonald**는 이 현상을 이렇게 설명합니다. “요즘 Spotify는 음향 특성을 분석해 곡을 추천하는 **AI 기반 큐레이션 시스템**을 확대하고 있다” 즉, **사람이든 AI든 알고리즘에 잘 맞게 만들어진 곡이라면 추천 상위에 오를 수 있는 구조**라는 것입니다. 게다가 일부 플레이리스트는 **유료 홍보성 큐레이션**으로 구성돼 있을 가능성도 크다고 지적합니다.
+
+Spotify의 **“Discovered On”** 섹션은 사용자가 어떤 플레이리스트를 통해 해당 아티스트를 발견했는지를 보여주는데, 상위 30개의 플레이리스트 중 25개가 [단 4개의 큐레이터 계정에서 집중적으로 운영](https://musically.com/2025/06/26/velvet-sundown-are-a-seemingly-ai-generated-band-with-325k-spotify-listeners/)되고 있음을 확인할 수 있었습니다.
+
+> 대표적인 큐레이터 계정: **Extra Music**, **Solitude Collective**, **KULTPOP!**, **In-between**, **Lost Records**
+> 
+
+예를 들어 Extra Music의 **‘Vietnam War Music’** 플레이리스트는 팔로워 수는 3천 명도 채 되지 않지만, 저장 횟수는 62만 회가 넘습니다. The Rolling Stones, Buffalo Springfield, Jimi Hendrix 같은 1960~70년대 밴드들의 곡이 다수 포함돼 있는데, 그 사이에 *The Velvet Sundown*의 곡이 무려 **26곡이나 들어가있었습니다**. 이는 전체 330곡 중 **7.9%**에 해당하는 수치로, 전쟁과 아무 관련 없는 2025년 발매곡들이 이렇게나 많이 포함된 건 꽤 이상한 일입니다.
+
+![](/AI1/5.png)
+
+**Solitude Collective**의 ‘The OC Soundtrack [All Seasons]’ 플레이리스트 역시 비슷합니다. 이 리스트는 *The O.C.*라는 미국 드라마의 명곡들을 모은 콘셉트인데, Jeff Buckley, Imogen Heap, Oasis 등 실제 등장했던 아티스트의 곡들과 함께 *The Velvet Sundown*의 곡이 총 **22곡**이나 삽입돼있었습니다.(현재는 수정되었습니다) 즉, 전체 165곡 중 약 **13.3%**를 차지한다는 것입니다. 더구나 The O.C.는 2003~2007년에 방영된 드라마이고, *The Velvet Sundown*의 모든 앨범은 2025년 발매된 곡이라는 점에서 **시기조차 맞지 않습니다.  즉, 알고리즘을 위한, 조작된 큐레이션일 가능성이 높다는 뜻입니다.**
+
+Spotify뿐만이 아닙니다. The Velvet sundown의 음악은 **Apple Music, Amazon Music, YouTube, Deezer** 등 주요 스트리밍 플랫폼 전반에 등록돼 있으며, **DistroKid**를 통해 유통되고 있습니다. 특히 **Deezer**는 최근 AI 생성 음악을 감지하고 표시하는 기능을 도입했는데, *The Velvet Sundown*의 두 앨범에는 모두 다음과 같은 문구가 표시되어 있습니다.
+
+“Some tracks on this album may have been created using artificial intelligence”
+
+즉, Deezer조차 이 밴드의 음악이 AI에 의해 생성됐을 가능성을 공식적으로 인정한 셈입니다. 또한 YouTube에서는 **DistroKid를 통한 업로드**임이 명시되어 있으며, 해당 유통사의 **HyperFollow 기능**을 통해 다양한 스트리밍 플랫폼 링크가 자동으로 연동돼 있습니다. 이는 **특정 제작자가 이 밴드의 콘텐츠를 유통 플랫폼을 통해 체계적으로 배포하고 있음**을 시사합니다.
+
+**단 Spotify를 제외한 플랫폼에서는 청취자 수나 실시간 반응 등 공개 지표가 없기 때문에, 실제 청취 규모는 파악하기 어렵습니다.*
+
+
+## 알고리즘을 노린 AI 음악 사기
+
+
+![](/AI1/6.png)
+
+
+사실 알고리즘을 악용해 AI 음악으로 수익을 노리는 사례는 처음이 아닙니다.  이미 2024년, 미국 매체 Slate는 [**컨트리 음악 장르에서 AI 음악과 알고리즘을 악용한 사례를**](https://slate.com/technology/2024/08/spotify-stream-farming-fake-cover-bands-artificial-intelligence.html) 조명한 바 있습니다.
+
+당시 보도에 따르면 *“Highway Outlaws”*, *“Waterfront Wranglers”* 같은 **전형적인 이름의 가짜 컨트리 밴드들**이 AI 커버곡만으로 수십만 회의 스트리밍을 기록하고 있었고, 팬 활동이나 SNS 흔적도 전혀 없는 점에서 ‘AI 조작 의혹’이 제기됐습니다.
+
+[커뮤니티 유저들](https://www.reddit.com/r/CountryMusic/comments/1e7b8ug/latest_artistrobbing_scam_on_spotify_or_by/)이 한 밴드를 추적하는 과정에서 **수십 개의 유사한 가짜 밴드 네트워크**가 존재한다는 사실도 드러났습니다. 이들은 공통적으로 *“summer country vibes”* 같은 무드형 플레이리스트에 묻혀 있었고, 모두 높은 월간 청취자 수를 기록하고 있었습니다.
+이 밴드들을 대표한다고 주장한 인디 레이블 *11A*는 “인간 아티스트가 참여했음을 증명하는 문서가 있다”고 밝혔지만, 구체적인 증거는 없었고, **웹사이트는 만료된 상태**였습니다. 이후 이들의 곡은 Slate 보도 직후 플랫폼에서 사라졌지만, Spotify 측은 “우리가 삭제한 것이 아니라 콘텐츠 제공자가 내린 것”이라며 책임을 회피했습니다.
+
+## 진짜 음악의 기준은 무엇인가?
+
+현재 스트리밍 플랫폼은 콘텐츠를 유통해주고 수익을 배분하지만, **AI로 생성된 음악을 명확히 구분하지도**, 책임을 지지도 않습니다. 결국 피해를 입은 아티스트나 레이블이 직접 나서서 삭제 요청을 하지 않으면, AI가 만든 콘텐츠가 **“진짜인 척하며” 생태계에 섞이는 걸 막기는 어렵습니다.**
+
+*The Velvet Sundown* 사태는 단순한 ‘AI 밴드’의 해프닝이 아닙니다. 지금 우리가 듣고 있는 음악이 어디서, 어떻게 만들어졌는지조차 알 수 없는 구조가 **스트리밍 플랫폼 위에서 어떻게 작동하고 있는지**를 보여주는 사례입니다. 
+
+그리고 동시에, 우리에게 묻고 있습니다
+
+**‘진짜 음악’이란 무엇인가?** 
+
+팬도 없고, 공연도 없는데, 매달 수십만 명이 곡을 듣는 밴드.
+
+여러분은 어떻게 생각하시나요?
+
+단순한 해프닝처럼 보일 수 있지만, 이 사건은 **AI 음악이 실제 수익을 창출하고 있다는 점**, 그리고 그 수익이 **플랫폼 알고리즘을 타고 확산된다는 점**에서 더 큰 파장을 예고합니다. 마침 최근 유튜브도 7월 15일부터 **AI 생성 콘텐츠에 대한 본격적인 규제**에 나서며, AI 음악을 둘러싼 **수익 구조와 책임 문제**가 다시금 조명을 받고 있죠.
+
+> 👉 다음 편에서는 *The Velvet Sundown*의 **실제 수익**, 그리고 **Spotify, YouTube 같은 플랫폼은 이 사태에 어떤 역할을 했는지** 깊이 들여다봅니다.
+
+
+      
+      `
+    },
 
 
     // 다른 아티클들도 여기에 추가
