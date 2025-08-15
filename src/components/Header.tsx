@@ -61,7 +61,7 @@ export default function Header() {
   }, [isOpen, scrollY]);
 
   const items = [
-    { id: 'About', href: 'https://labchasm.framer.website/about_us', src: '/aboutimg.png', hoverSrc: '/aboutimg_cor.png' },
+    { id: 'About', href: '/about', src: '/aboutimg.png', hoverSrc: '/aboutimg_cor.png' },
     { id: 'Project', href: 'https://labchasm.framer.website/project', src: '/projectimg.png', hoverSrc: '/projectimg_cor.png' },
     { id: 'Article', href: '/article', src: '/articleimg.png', hoverSrc: '/articleimg_cor.png' },
     { id: 'Contact', href: 'https://labchasm.framer.website/contact', src: '/contactimg.png', hoverSrc: '/contactimg_cor.png' },

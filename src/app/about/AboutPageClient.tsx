@@ -26,8 +26,8 @@ export default function AboutPageClient() {
 
   return (
     <main className="w-full min-h-screen bg-white mx-auto max-w-6xl px-6 md:px-8
-                 pt-28 md:pt-40 pb-16 md:pb-24">      <AboutTabsMobile active={tab} onChange={setTab} />
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-14">
+                 pt-28 md:pt-40 pb-16 md:pb-24">     <AboutTabsMobile active={tab} onChange={setTab} />
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-20 md:gap-30">
         <div className="md:col-span-3 lg:col-span-2">
           <AboutSideNav active={tab} onChange={setTab} />
         </div>

@@ -10,13 +10,13 @@ type Props = {
 
 export default function AboutSideNav({ active, onChange }: Props) {
   return (
-    <aside className="hidden md:block md:sticky md:top-24 md:self-start bg-white">
+    <aside className="hidden md:block md:sticky md:top-24 md:self-start bg-white  md:pr-12 lg:pr-14">
       <nav aria-label="About navigation">
-        <ul className="flex md:flex-col gap-4 text-sm">
+        <ul className="flex md:flex-col gap-4 text-md font-bold">
           {(['about', 'member'] as AboutTab[]).map((t) => {
             const isActive = active === t;
             const base = 'block text-left transition-colors';
-            const on = 'text-neutral-900 font-semibold underline underline-offset-2 decoration-2 cursor-default';
+            const on = 'text-neutral-900 font-bold underline underline-offset-2 decoration-2 cursor-default';
             const off = 'text-neutral-400 hover:text-neutral-900 hover:underline underline-offset-2';
             return (
               <li key={t}>
