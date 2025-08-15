@@ -4,15 +4,15 @@ import Image from 'next/image';
 export default function AboutContent() {
   return (
     <>
-      <h1 className="mb-6 text-[44px] md:text-[68px] leading-[1.05] font-extrabold tracking-tight text-neutral-900">
+      <h1 className="mb-6 text-[44px] md:text-[64px] leading-[1.05] font-extrabold tracking-tight text-neutral-900">
         About Lab CHASM
       </h1>
 
-      <h2 className="text-[20px] md:text-[22px] font-semibold text-neutral-900">
+      <h2 className="text-[20px] md:text-[28px] text-neutral-900">
         한국 인디음악 기반의 음악 생태계 연구소
       </h2>
 
-      <p className="mt-5 border-l-4 border-neutral-300 pl-5 text-[22px] md:text-base text-neutral-600 leading-7">
+      <p className="mt-5 border-l-4 border-neutral-300 pl-5 text-[16px] md:text-[20px] text-neutral-600 leading-7">
         왜 우리가 듣는 음악은 항상 마이너할까? 왜 더 퍼져나갈 수 없을까?<br/>
         무엇인가 가로막고 있는 것 같아.
       </p>
