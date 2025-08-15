@@ -42,18 +42,18 @@ export default function AboutSideNav({ active, onChange }: Props) {
       {/* 연락처 */}
       <div className="mt-10 space-y-6 text-[13px] leading-6">
         <div>
-          <div className="text-neutral-400">mail</div>
-          <a href="mailto:labchasm2022@gmail.com" className="text-neutral-700 hover:underline">
+          <div className="text-neutral-900">mail</div>
+          <a href="mailto:labchasm2022@gmail.com" className="text-neutral-400 hover:underline">
             labchasm2022@gmail.com
           </a>
         </div>
         <div>
-          <div className="text-neutral-400">instagram</div>
+          <div className="text-neutral-900">instagram</div>
           <a
             href="https://instagram.com/lab_chasm"
             target="_blank"
             rel="noreferrer"
-            className="text-neutral-700 hover:underline"
+            className="text-neutral-400 hover:underline"
           >
             @lab_chasm
           </a>
