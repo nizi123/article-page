@@ -25,13 +25,31 @@ export default function AboutPageClient() {
   }, []);
 
   return (
-    <main className="w-full min-h-screen bg-white mx-auto max-w-6xl px-6 md:px-8
-                 pt-28 md:pt-40 pb-16 md:pb-24">     <AboutTabsMobile active={tab} onChange={setTab} />
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-20 md:gap-30">
-        <div className="md:col-span-3 lg:col-span-2">
+    <main
+      className="
+        not-prose w-full min-h-screen bg-white mx-auto max-w-6xl
+        px-6 md:px-8 pt-28 md:pt-40 pb-16 md:pb-24
+        overflow-x-visible
+      "
+    >
+      <AboutTabsMobile active={tab} onChange={setTab} />
+
+      {/* ✅ 두 컬럼: 사이드바 고정폭 + 본문 minmax(0,1fr)  */}
+      <div
+        className="
+          grid grid-cols-1
+          md:grid-cols-[236px_minmax(0,1fr)]
+          lg:grid-cols-[248px_minmax(0,1fr)]
+          gap-8 md:gap-12
+        "
+      >
+        {/* 사이드바 */}
+        <div className="md:pr-6 lg:pr-8">
           <AboutSideNav active={tab} onChange={setTab} />
         </div>
-        <div className="md:col-span-9 lg:col-span-10 not-prose">
+
+        {/* 본문: 우측 잘림 방지 */}
+        <div className="min-w-0 not-prose">
           {tab === 'about' ? <AboutContent /> : <MemberContent />}
         </div>
       </div>
