@@ -2313,7 +2313,7 @@ P: 간접적인 상호작용으로 인한 관심도 상승의 정도
       subtitle: '2025 펜타포트 페스티벌에 대한 몇 가지 숫자와 이야기들',
       category: 'Music Business',
       tagColor: '#1393FD',
-      imageUrl: '/penta/card.png',
+      imageUrl: '/penta/card.jpg',
       date: '2025-09-06',
       author: '김준하',
       bodyImage: '/placeholder.png',
