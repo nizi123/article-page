@@ -5,7 +5,7 @@ import { AboutTab } from '@/types/about';
 import AboutTabsMobile from '@/components/AboutTabsMobile';
 import AboutSideNav from '@/components/AboutSideNav';
 import AboutContent from '@/components/about/AboutContent';
-import MemberContent from '@/components/about/MemberContent';
+import MemberContent from '@/components/member/MemberContent';
 
 export default function AboutPageClient() {
   const initialTab: AboutTab = useMemo(() => {
