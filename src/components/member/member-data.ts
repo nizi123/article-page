@@ -73,7 +73,7 @@ export interface Member {
     name: string;
     aka?: string;          // 영문명/별칭
     role: string;
-    lab: Exclude<SubLab, 'all'>;
+    lab: SubLab,
     labLabel: string;
     photo: string;
     tagline?: string;      // ⬅️ 추가: 모달 상단 굵은 문장
