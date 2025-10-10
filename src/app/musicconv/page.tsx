@@ -57,9 +57,11 @@ export default function MusicConvPage() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   // 엔드포인트
-  const SEARCH_URL =
-    (process.env.NEXT_PUBLIC_MUSICCONV_SEARCH as string) ||
-    "http://54.180.46.82:5000/api/search";
+  //const SEARCH_URL =
+  //  (process.env.NEXT_PUBLIC_MUSICCONV_SEARCH as string) ||
+  //  "http://54.180.46.82:5000/api/search";
+  // MixedContents  
+  const SEARCH_URL = "/api/search";
   // CORS 프록시 (Next API Routes)
   const GUESTBOOK_PROXY = "/api/guestbook";
 
