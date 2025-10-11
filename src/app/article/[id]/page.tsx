@@ -13,6 +13,7 @@ import ReactMarkdown from '@/../node_modules/react-markdown/index';
 import rehypeRaw from '@/../node_modules/rehype-raw/index';
 import remarkImageToFigure from '@/lib/remarkImageToFigure';
 import { remarkHighlight } from '@/lib/remarkHightlight';
+import remarkTextColor from '@/lib/remarkTextColor';
 
 // ✅ 정적 생성 경로 (params는 여전히 동기적으로 id:string 배열을 리턴)
 export async function generateStaticParams(): Promise<Array<{ id: string }>> {
@@ -178,7 +179,7 @@ export default async function ArticleContentView({
               ),
               // 등등 필요한 태그 추가
             }}
-            remarkPlugins={[remarkGfm, remarkImageToFigure, remarkHighlight(article.tagColor)]}
+            remarkPlugins={[remarkGfm, remarkImageToFigure, remarkHighlight(article.tagColor), remarkTextColor, ]}
             rehypePlugins={[rehypeRaw]}>
               {article.content}
             </ReactMarkdown>
