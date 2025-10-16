@@ -107,13 +107,8 @@ export default function MusicConvClient() {
   const textAtMax = text.length === textMax;
   const textWarn = textTooShort || textAtMax;
 
-  /* ===== URL 내비게이터 (push/replace 선택) ===== */
-  const navigateView = (
-    v: View,
-    sid?: string | null,
-    extras?: Record<string, string | number | undefined | null>,
-    mode: "push" | "replace" = "replace"
-  ) => {
+  /* ===== URL 변경 ===== */
+  const replaceViewURL = (v: View, sid?: string | null, extras?: Record<string, string | number | undefined | null>) => {
     let base = pathForView(v, sid);
     const sp = new URLSearchParams();
 
@@ -127,8 +122,8 @@ export default function MusicConvClient() {
         sp.set(k, String(val));
       }
     }
-    const url = sp.toString() ? `${base}?${sp.toString()}` : base;
-    mode === "push" ? router.push(url, { scroll: false }) : router.replace(url, { scroll: false });
+    const q = sp.toString();
+    router.replace(q ? `${base}?${q}` : base, { scroll: false });
   };
 
   /* ===== 공용: 검색 실행 ===== */
@@ -154,18 +149,16 @@ export default function MusicConvClient() {
     const sid = genSid();
     setResultSid(sid);
     setView("loading");
-    // 로딩은 replace (히스토리 X)
-    navigateView("loading", sid, { q: text, n: nickname }, "replace");
+    replaceViewURL("loading", sid, { q: text, n: nickname });
 
     try {
       await runSearch(text);
       setView("result");
-      // 결과는 push (뒤로가기 → form)
-      navigateView("result", sid, { q: text, n: nickname }, "push");
+      replaceViewURL("result", sid, { q: text, n: nickname });
     } catch (err: any) {
       setErrMsg(err?.message || "요청 실패");
       setView("form");
-      navigateView("form", undefined, undefined, "replace");
+      replaceViewURL("form");
     } finally {
       setSubmitting(false);
     }
@@ -176,8 +169,7 @@ export default function MusicConvClient() {
     setResultSid(null);
     setSearchItems([]);
     setErrMsg(null);
-    // 다시 입력도 push로 가면, 결과 → 뒤로가기 시 다시 결과로 복귀 가능
-    navigateView("form", undefined, undefined, "push");
+    replaceViewURL("form");
   }
 
   async function saveGuestbook() {
@@ -215,8 +207,7 @@ export default function MusicConvClient() {
 
       setSavedId(newId);
       setView("saved");
-      // 저장 진입은 push (뒤로가기 → 결과)
-      navigateView("saved", null, { id: newId ?? undefined }, "push");
+      replaceViewURL("saved", null, { id: newId ?? undefined });
       setGuestItems([]);
       setFirstLoad(true);
       setLastId(null);
@@ -234,7 +225,6 @@ export default function MusicConvClient() {
 
     try {
       const params = new URLSearchParams();
-      // 최초 + 최신순이면 lastGuestbookId 생략
       if (!(firstLoad && sortBy === SortBy.LATEST)) {
         const anchorId = lastId ?? 2147483647;
         params.set("lastGuestbookId", String(anchorId));
@@ -248,11 +238,11 @@ export default function MusicConvClient() {
       const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
       const next = json.readGuestbookResponses || [];
 
-      // ✅ id 중복 제거 병합
-      setGuestItems((prev) => {
+      // dedup
+      setGuestItems(prev => {
         const map = new Map<number, ReadGuestbookItem>();
-        prev.forEach((it) => map.set(it.id, it));
-        next.forEach((it) => { if (!map.has(it.id)) map.set(it.id, it); });
+        prev.forEach(it => map.set(it.id, it));
+        next.forEach(it => { if (!map.has(it.id)) map.set(it.id, it); });
         return Array.from(map.values());
       });
 
@@ -286,7 +276,7 @@ export default function MusicConvClient() {
     }
 
     if (v === "saved") {
-      const idx = parts.findIndex((p) => p === "guestbook");
+      const idx = parts.findIndex(p => p === "guestbook");
       const idPart = idx >= 0 ? parts[idx + 1] : undefined;
       if (idPart && /^\d+$/.test(idPart)) setSavedId(Number(idPart));
       else {
@@ -309,7 +299,7 @@ export default function MusicConvClient() {
   useEffect(() => {
     const q = searchParams?.get("q") ?? "";
     if (view !== "result") return;
-    if (!q || q.length < 5 || q.length > 120) return;
+    if (!q || q.length < textMin || q.length > textMax) return;
     if (searchItems.length > 0 || submitting) return;
 
     (async () => {
@@ -325,7 +315,7 @@ export default function MusicConvClient() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view]);
 
-  // 저장: 첫 로드 1회 → 이후 IO 부착
+  // 저장 화면: 첫 로드 1회 → 이후 IO 부착
   useEffect(() => {
     if (view !== "saved" || !firstLoad) return;
     loadMore();
@@ -338,7 +328,7 @@ export default function MusicConvClient() {
     if (!el) return;
 
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((entry) => entry.isIntersecting && loadMore()),
+      entries => entries.forEach(entry => entry.isIntersecting && loadMore()),
       { rootMargin: "200px" }
     );
 
