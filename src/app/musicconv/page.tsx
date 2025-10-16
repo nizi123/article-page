@@ -1,8 +1,17 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
+import { useRouter, usePathname, useSearchParams } from "next/navigation";
 
-// ===== Types =====
+/* ===== Asset Consts ===== */
+const TITLE_IMG = "/musicconv/musicconv-title.png";
+const CLEANBOT_IMG = "/musicconv/cleanbot.png";
+const IG_BANNER_IMG = "/musicconv/chasmad.png";
+const TIP_PIN_IMG = "/musicconv/pin.png";
+const TIP_CHECK_PINK_IMG = "/musicconv/check.png";
+const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
+
+/* ===== Types ===== */
 type View = "form" | "loading" | "result" | "saved";
 
 interface SearchItem {
@@ -29,18 +38,48 @@ enum SortBy {
   LIKES = "LIKES",
 }
 
-// ===== Component =====
+/* ===== Helpers ===== */
+const BASE = "/musicconv";
+const genSid = () => {
+  try {
+    const bytes = new Uint8Array(6); // 8자 정도의 짧은 id
+    crypto.getRandomValues(bytes);
+    return Array.from(bytes)
+      .map((b) => b.toString(36).padStart(2, "0"))
+      .join("")
+      .slice(0, 8);
+  } catch {
+    return Math.random().toString(36).slice(2, 10);
+  }
+};
+
+const pathForView = (v: View, sid?: string | null) => {
+  switch (v) {
+    case "form":
+      return BASE;
+    case "loading":
+      return sid ? `${BASE}/loading/${sid}` : `${BASE}/loading`;
+    case "result":
+      return sid ? `${BASE}/result/${sid}` : `${BASE}/result`;
+    case "saved":
+      return `${BASE}/guestbook`; // 전용 피드 경로
+  }
+};
+
 export default function MusicConvPage() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   // 입력값
   const [nickname, setNickname] = useState("");
   const [text, setText] = useState("");
-  
-  //const [captcha, setCaptcha] = useState(false);
 
   // 화면/상태
   const [view, setView] = useState<View>("form");
   const [submitting, setSubmitting] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null);
+  const [resultSid, setResultSid] = useState<string | null>(null);
 
   // 검색 결과
   const [searchItems, setSearchItems] = useState<SearchItem[]>([]);
@@ -54,25 +93,12 @@ export default function MusicConvPage() {
   const [lastId, setLastId] = useState<number | null>(null);
   const [hasMore, setHasMore] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [firstLoad, setFirstLoad] = useState(true); // LATEST 첫 로드: id 없이 질의
+  const [firstLoad, setFirstLoad] = useState(true); // LATEST 첫 로드 트리거
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  // 엔드포인트
-  // Mixed Contents 방지: Next API Route 프록시 사용
+  // 엔드포인트 (Next API Route 프록시)
   const SEARCH_URL = "/api/search";
   const GUESTBOOK_PROXY = "/api/guestbook";
-
-  // 상단에 추가(원하는 경로로 바꿔도 됨)
-const TITLE_IMG = "/musicconv/musicconv-title.png";
-const CLEANBOT_IMG = "/musicconv/cleanbot.png";
-
-
-// 파일 상단(컴포넌트 밖)
-const IG_BANNER_IMG = "/musicconv/chasmad.png";
-const TIP_PIN_IMG = "/musicconv/pin.png";
-const TIP_CHECK_PINK_IMG = "/musicconv/check.png";
-const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
-
 
   // 유효성
   const nickMax = 16;
@@ -82,33 +108,67 @@ const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
   const textValid = text.length >= textMin && text.length <= textMax;
   const canSubmit = nickValid && textValid && !submitting;
 
-  const textTooShort = text.length > 0 && text.length < textMin; // 5자 미만
-const textAtMax   = text.length === textMax;                   // 120자 도달
-const textWarn    = textTooShort || textAtMax;                 // 경고 표시 조건
+  const textTooShort = text.length > 0 && text.length < textMin;
+  const textAtMax = text.length === textMax;
+  const textWarn = textTooShort || textAtMax;
 
-  // ===== Handlers =====
+  /* ===== URL 변경 ===== */
+  const replaceViewURL = (
+    v: View,
+    sid?: string | null,
+    extras?: Record<string, string | number | undefined | null>
+  ) => {
+    let base = pathForView(v, sid);
+    const sp = new URLSearchParams();
+
+    // saved는 /guestbook/:id 형태
+    if (v === "saved" && extras?.id !== undefined && extras?.id !== null && extras?.id !== "") {
+      base = `${BASE}/guestbook/${extras.id}`;
+    }
+    if (extras) {
+      for (const [k, val] of Object.entries(extras)) {
+        if (k === "id") continue; // 경로에 반영됨
+        if (val === undefined || val === null || val === "") continue;
+        sp.set(k, String(val));
+      }
+    }
+    const q = sp.toString();
+    router.replace(q ? `${base}?${q}` : base, { scroll: false });
+  };
+
+  /* ===== 공용: 검색 실행 ===== */
+  async function runSearch(input: string) {
+    const res = await fetch(SEARCH_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user_input: input }),
+    });
+    if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
+    const data = (await res.json()) as { data?: SearchItem[] };
+    setSearchItems(Array.isArray(data?.data) ? data.data! : []);
+  }
+
+  /* ===== Handlers ===== */
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
 
     setErrMsg(null);
     setSubmitting(true);
+
+    const sid = genSid();
+    setResultSid(sid);
     setView("loading");
+    replaceViewURL("loading", sid, { q: text, n: nickname });
 
     try {
-      const res = await fetch(SEARCH_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_input: text }),
-      });
-      if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
-
-      const data = (await res.json()) as { data?: SearchItem[] };
-      setSearchItems(Array.isArray(data?.data) ? data.data! : []);
+      await runSearch(text);
       setView("result");
+      replaceViewURL("result", sid, { q: text, n: nickname });
     } catch (err: any) {
       setErrMsg(err?.message || "요청 실패");
       setView("form");
+      replaceViewURL("form");
     } finally {
       setSubmitting(false);
     }
@@ -116,8 +176,10 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
 
   function onReset() {
     setView("form");
+    setResultSid(null);
     setSearchItems([]);
     setErrMsg(null);
+    replaceViewURL("form");
   }
 
   async function saveGuestbook() {
@@ -151,15 +213,13 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
       try {
         const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
         newId = json.readGuestbookResponses?.[0]?.id ?? null;
-        console.log("[guestbook] saved id:", newId);
-      } catch {
-        console.log("[guestbook] no JSON body");
-      }
+      } catch {}
 
       setSavedId(newId);
       setView("saved");
+      replaceViewURL("saved", null, { id: newId ?? undefined }); // /guestbook/:id 로 이동
       setGuestItems([]);
-      setFirstLoad(true);
+      setFirstLoad(true); // 첫 페이징 트리거
       setLastId(null);
       setHasMore(true);
     } catch (err: any) {
@@ -183,19 +243,26 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
       params.set("sortBy", sortBy);
 
       const url = `${GUESTBOOK_PROXY}?${params.toString()}`;
-      console.log("[guestbook] fetch:", url);
-
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error("목록 조회 실패");
 
       const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
       const next = json.readGuestbookResponses || [];
 
-      setGuestItems((prev) => [...prev, ...next]);
+      // ✅ id 중복 제거 병합
+      setGuestItems((prev) => {
+        const map = new Map<number, ReadGuestbookItem>();
+        prev.forEach((it) => map.set(it.id, it));
+        next.forEach((it) => {
+          if (!map.has(it.id)) map.set(it.id, it);
+        });
+        return Array.from(map.values());
+      });
+
       const tail = next[next.length - 1];
       if (tail) setLastId(tail.id);
 
-      if (firstLoad) setFirstLoad(false);
+      if (firstLoad) setFirstLoad(false); // ✅ 첫 로드 종료
       if (next.length === 0) setHasMore(false);
     } catch (err) {
       console.warn(err);
@@ -205,9 +272,67 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
     }
   }
 
-  // ===== Effects =====
+  /* ===== Effects ===== */
+  // URL → 상태 복원
   useEffect(() => {
-    if (view !== "saved") return;
+    let v: View = "form";
+    let sid: string | null = null;
+
+    if (pathname?.startsWith(`${BASE}/loading`)) v = "loading";
+    else if (pathname?.startsWith(`${BASE}/result`)) v = "result";
+    else if (pathname?.startsWith(`${BASE}/guestbook`)) v = "saved";
+
+    // /result/<sid>, /loading/<sid> 처리
+    const parts = pathname?.split("/") ?? [];
+    const last = parts[parts.length - 1];
+    if (v === "result" || v === "loading") {
+      sid = last && last !== "result" && last !== "loading" ? last : null;
+    }
+
+    // /guestbook/<id> 저장 상세 추출
+    if (v === "saved") {
+      const idx = parts.findIndex((p) => p === "guestbook");
+      const idPart = idx >= 0 ? parts[idx + 1] : undefined;
+      if (idPart && /^\d+$/.test(idPart)) setSavedId(Number(idPart));
+      else {
+        const idParam = searchParams?.get("id");
+        setSavedId(idParam ? Number(idParam) : null);
+      }
+    }
+
+    const q = searchParams?.get("q") ?? "";
+    const n = searchParams?.get("n") ?? "";
+
+    if (v !== view) setView(v);
+    if (sid && sid !== resultSid) setResultSid(sid);
+    if (q && q !== text) setText(q);
+    if (n && n !== nickname) setNickname(n);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams]);
+
+  // 결과 페이지로 직접 접근/새로고침 시 자동 검색
+  useEffect(() => {
+    const q = searchParams?.get("q") ?? "";
+    if (view !== "result") return;
+    if (!q || q.length < textMin || q.length > textMax) return;
+    if (searchItems.length > 0 || submitting) return;
+
+    (async () => {
+      try {
+        setSubmitting(true);
+        await runSearch(q);
+      } catch (err: any) {
+        setErrMsg(err?.message || "요청 실패");
+      } finally {
+        setSubmitting(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view]);
+
+  // 저장 화면에서만 무한 스크롤 옵저버 활성화 (첫 로드 끝난 뒤)
+  useEffect(() => {
+    if (view !== "saved" || firstLoad) return; // ✅ 첫 페이지 로딩 이후에만
     const el = sentinelRef.current;
     if (!el) return;
 
@@ -218,33 +343,36 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
 
     io.observe(el);
     return () => io.disconnect();
-  }, [view, sortBy, lastId, hasMore]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, sortBy, lastId, hasMore, firstLoad]);
 
+  // 저장 화면: firstLoad=true인 경우 1회만 로드
   useEffect(() => {
-    if (view !== "saved") return;
+    if (view !== "saved" || !firstLoad) return;
     loadMore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view]);
+  }, [view, firstLoad]);
 
+  // 정렬 변경 시 리셋 (첫 로드 트리거 유지)
   useEffect(() => {
     if (view !== "saved") return;
     setGuestItems([]);
     setHasMore(true);
-    setFirstLoad(true);
+    setFirstLoad(true); // ✅ 이후 effect가 1회 로드
     setLastId(null);
   }, [sortBy, view]);
 
-  // ===== UI =====
+  /* ===== UI ===== */
   return (
     <main className="min-h-[100dvh] w-full bg-[#fafafa]">
       {/* 상단 로고 */}
       <div className="border-b border-slate-200 bg-white/80 backdrop-blur">
         <div className="mx-auto max-w-5xl px-4 py-5">
           <div className="flex items-center justify-center">
-            <span className="font-black tracking-widest text-xl text-[#ff2a6d]">Mu</span>
-            <span className="font-black tracking-widest text-xl text-slate-900">sic</span>
-            <span className="font-black tracking-widest text-xl text-[#20c997]">C</span>
-            <span className="font-black tracking-widest text-xl text-slate-900">onv</span>
+            <span className="text-xl font-black tracking-widest text-[#ff2a6d]">Mu</span>
+            <span className="text-xl font-black tracking-widest text-slate-900">sic</span>
+            <span className="text-xl font-black tracking-widest text-[#20c997]">C</span>
+            <span className="text-xl font-black tracking-widest text-slate-900">onv</span>
           </div>
         </div>
       </div>
@@ -253,134 +381,127 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
         {(view === "form" || view === "loading" || view === "result") && (
           <header className="text-center">
             {/* 타이틀 이미지 */}
-    <img
-      src={TITLE_IMG}
-      alt="텍스트 음악 변환기"
-      className="mx-auto w-[260px] sm:w-[340px] h-auto"
-    />
-    {/* 설명문 컬러/행간 조정 */}
-    <p className="mt-5 text-[15px] leading-7 text-[#3B3B3B]">
-      온라인에서 모든 텍스트들을 무료로 음악으로
-      <br/> 변환할 수 있는 최고의 음악 변환기입니다.
-      <br />
-      텍스트를 빠르고 안전하게 음악으로 변환하세요.
-    </p>
+            <img src={TITLE_IMG} alt="텍스트 음악 변환기" className="mx-auto h-auto w-[260px] sm:w-[340px]" />
+            {/* 설명문 */}
+            <p className="mt-5 text-[15px] leading-7 text-[#3B3B3B]">
+              온라인에서 모든 텍스트들을 무료로 음악으로
+              <br /> 변환할 수 있는 최고의 음악 변환기입니다.
+              <br />
+              텍스트를 빠르고 안전하게 음악으로 변환하세요.
+            </p>
           </header>
         )}
 
-{view === "form" && (
-  <section className="mt-6">
- {/* ✅ 바깥 카드 래퍼 없애고, 간격만 */}
- <form onSubmit={onSubmit} className="space-y-6">
-      {/* 닉네임: 단독 박스 */}
-      <input
-        value={nickname}
-        onChange={(e) => setNickname(e.target.value.slice(0, nickMax))}
-        placeholder="닉네임 (공백 포함 16자 이내)"
-        maxLength={nickMax}
-        className={`w-full rounded-[12px] border px-5 py-4 text-[16px] leading-6
+        {/* ===== FORM ===== */}
+        {view === "form" && (
+          <section className="mt-6">
+            <form onSubmit={onSubmit} className="space-y-6">
+              {/* 닉네임 */}
+              <input
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value.slice(0, nickMax))}
+                placeholder="닉네임 (공백 포함 16자 이내)"
+                maxLength={nickMax}
+                className={`w-full rounded-[12px] border px-5 py-4 text-[16px] leading-6
                     text-[#2B2B2B] placeholder-[#B5B5B5]
                     shadow-[0_4px_12px_rgba(0,0,0,0.10)]
                     outline-none transition
-                    ${!nickValid
-                      ? "border-rose-400 ring-4 ring-rose-100"
-                      : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"}`}
-      />
+                    ${
+                      !nickValid
+                        ? "border-rose-400 ring-4 ring-rose-100"
+                        : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"
+                    }`}
+              />
 
-      {/* 문장 입력: 내부에 클린봇/카운트 포함 */}
-      <div
-  className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
+              {/* 문장 입력 (내부 카운터 + 클린봇) */}
+              <div
+                className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
   ${textWarn ? "border-[1.5px] border-[#F26D7D] ring-4 ring-[#FFE9ED]" : "border border-[#D7D7D7]"}`}
->
-  <textarea
-    value={text}
-    onChange={(e) => setText(e.target.value.slice(0, textMax))}
-    className="block w-full min-h-[260px] resize-none rounded-[inherit] border-0 bg-transparent
+              >
+                <textarea
+                  value={text}
+                  onChange={(e) => setText(e.target.value.slice(0, textMax))}
+                  className="block w-full min-h-[260px] resize-none rounded-[inherit] border-0 bg-transparent
                px-5 pt-5 pb-[96px] text-[18px] leading-8 text-[#2B2B2B] placeholder-[#B5B5B5] outline-none"
-    placeholder="텍스트를 입력하세요. (공백 포함 5자 이상)"
-    maxLength={textMax}
-    aria-invalid={textWarn}
-  />
+                  placeholder="텍스트를 입력하세요. (공백 포함 5자 이상)"
+                  maxLength={textMax}
+                  aria-invalid={textWarn}
+                />
 
-  {/* 글자수 카운트 (우하단) */}
-  <div
-    className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px]
-    ${textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"}`}
-  >
-    ({text.length}/{textMax})
-  </div>
-        {/* 클린봇 줄: 텍스트 박스 내부 하단 */}
-        <div className="absolute left-5 right-5 bottom-4">
-          <div className="flex items-center gap-3 rounded-[10px] border border-[#E9E9E9] bg-white px-4 py-3
-                          shadow-[0_4px_10px_rgba(0,0,0,0.06)]">
-            {/* 아이콘을 이미지로 사용 */}
-            <img src="/musicconv/cleanbot.png" alt="클린봇" className="h-6 w-6" />
-            <span className="text-[15px] text-[#4A4A4A]">클린봇이 악성댓글을 감시합니다.</span>
-          </div>
-        </div>
-      </div>
+                {/* 글자수 */}
+                <div
+                  className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px] ${
+                    textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"
+                  }`}
+                >
+                  ({text.length}/{textMax})
+                </div>
 
-      {/* 변환하기: 자동 활성화(체크박스 없음) */}
-      <div className="flex justify-end">
-        <button
-          type="submit"
-          disabled={!(nickValid && textValid) || submitting}
-          className={`inline-flex items-center gap-2 rounded-[12px] px-7 py-4 text-[16px] font-bold text-white transition-all
-            ${nickValid && textValid && !submitting
-              ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
-              : "bg-[#D9D9D9] cursor-not-allowed"}`}
-        >
-          <SwapIcon />
-          변환하기
-        </button>
-      </div>
+                {/* 클린봇 안내(내부) */}
+                <div className="absolute left-5 right-5 bottom-4">
+                  <div className="flex items-center gap-3 rounded-[10px] border border-[#E9E9E9] bg-white px-4 py-3 shadow-[0_4px_10px_rgba(0,0,0,0.06)]">
+                    <img src={CLEANBOT_IMG} alt="클린봇" className="h-6 w-6" />
+                    <span className="text-[15px] text-[#4A4A4A]">클린봇이 악성댓글을 감시합니다.</span>
+                  </div>
+                </div>
+              </div>
 
-      {errMsg && (
-        <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">
-          {errMsg}
-        </div>
-      )}
-    </form>
+              {/* 변환하기 */}
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  disabled={!textValid || !nickValid || submitting}
+                  className={`inline-flex items-center gap-2 rounded-[12px] px-7 py-4 text-[16px] font-bold text-white transition-all
+            ${
+              textValid && nickValid && !submitting
+                ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
+                : "bg-[#D9D9D9] cursor-not-allowed"
+            }`}
+                >
+                  <SwapIcon />
+                  변환하기
+                </button>
+              </div>
 
+              {errMsg && (
+                <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{errMsg}</div>
+              )}
+            </form>
 
-           {/* 인스타그램 배너 - 이미지로 대체 */}
-<a
-  href="https://instagram.com/lab_chasm"  // 필요 시 링크 변경
-  target="_blank"
-  rel="noreferrer"
-  className="mt-6 block overflow-hidden rounded-2xl shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
->
-  <img
-    src={IG_BANNER_IMG}
-    alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기"
-    className="h-auto w-full"
-  />
-</a>
-{/* 문장입력 Tip - 이미지 아이콘 & 취소선 */}
-<div className="mt-6 rounded-[16px] border border-[#E5E5E5] bg-white p-5 shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
-  <div className="mb-3 flex items-center gap-2">
-    <img src={TIP_PIN_IMG} alt="핀" className="h-5 w-5" />
-    <div className="text-[15px] font-semibold text-[#3B3B3B]">문장입력 Tip</div>
-  </div>
+            {/* 인스타그램 배너(이미지) */}
+            <a
+              href="https://instagram.com/lab_chasm"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 block overflow-hidden rounded-2xl shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
+            >
+              <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-auto w-full" />
+            </a>
 
-  <ul className="space-y-3 text-[15px] leading-7 text-[#4A4A4A]">
-    <li className="flex items-start gap-3">
-      <img src={TIP_CHECK_PINK_IMG} alt="체크" className="mt-1 h-4 w-4" />
-      <span>나만의 ‘페스티벌 법칙’을 정해 보세요.</span>
-    </li>
-    <li className="flex items-start gap-3">
-      <img src={TIP_CHECK_PINK_IMG} alt="체크" className="mt-1 h-4 w-4" />
-      <span>오늘 그민페를 한마디로 요약해 보세요.</span>
-    </li>
-    <li className="flex items-start gap-3">
-      <img src={TIP_CHECK_GRAY_IMG} alt="체크(회색)" className="mt-1 h-4 w-4" />
-      {/* 굵은 컬러 취소선 */}
-      <span className="text-[#8C8C8C] line-through decoration-grat decoration-[1px]">
-        사실 아무 말이나 해도 됩니다.
-      </span>
-    </li>
-  </ul>
-</div>
+            {/* 문장입력 Tip */}
+            <div className="mt-6 rounded-[16px] border border-[#E5E5E5] bg-white p-5 shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
+              <div className="mb-3 flex items-center gap-2">
+                <img src={TIP_PIN_IMG} alt="핀" className="h-5 w-5" />
+                <div className="text-[15px] font-semibold text-[#3B3B3B]">문장입력 Tip</div>
+              </div>
+
+              <ul className="space-y-3 text-[15px] leading-7 text-[#4A4A4A]">
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_PINK_IMG} alt="체크" className="mt-1 h-4 w-4" />
+                  <span>나만의 ‘페스티벌 법칙’을 정해 보세요.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_PINK_IMG} alt="체크" className="mt-1 h-4 w-4" />
+                  <span>오늘 그만페를 한마디로 요약해 보세요.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_GRAY_IMG} alt="체크(회색)" className="mt-1 h-4 w-4" />
+                  <span className="text-[#8C8C8C] line-through decoration-[#3BA6FF] decoration-2">
+                    사실 아무 말이나 해도 됩니다.
+                  </span>
+                </li>
+              </ul>
+            </div>
           </section>
         )}
 
@@ -405,75 +526,67 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
 
         {/* ===== RESULT ===== */}
         {view === "result" && (
-  <section className="mt-6">
-    {/* 입력 문장 헤더 */}
-    <div className="text-center">
-      <div className="text-[12px] font-semibold text-slate-500">
-        <span className="text-pink-500">{nickname || "익명"}</span>님이 입력한 문장
-      </div>
-      <h2 className="mt-1 text-[20px] sm:text-[22px] font-bold text-slate-900">{text}</h2>
-    </div>
-
-    {/* 변환 성공 카드 */}
-    <div className="mt-3 rounded-[10px] border border-[#b7ecea] bg-[#e9fbfa] p-5 text-center">
-      <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-teal-600 shadow">
-        <SwapIcon />
-      </div>
-      <div className="font-extrabold text-teal-700">변환 성공!</div>
-      <div className="mt-1 text-sm text-teal-700">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
-    </div>
-
-    {/* 액션 버튼 */}
-    <div className="mt-3 flex gap-2">
-      <button
-        className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm"
-        onClick={onReset}
-      >
-        다시 입력
-      </button>
-      <button
-        className="flex-1 rounded-md bg-[#51c4c1] px-4 py-3 text-sm font-semibold text-white shadow-sm"
-        onClick={saveGuestbook}
-        disabled={submitting}
-      >
-        방명록에 저장
-      </button>
-    </div>
-
-    {/* 결과 리스트 */}
-    <div className="mt-4 space-y-3">
-      {searchItems.map((it, idx) => (
-        <article key={idx} className="rounded-[10px] border border-slate-200 bg-white p-4 shadow-sm">
-          <div className="text-[15px] font-semibold text-slate-900">
-            {it.artist_name} - {it.song_name}
-          </div>
-
-          <div className="mt-1 text-[12px] font-semibold text-rose-600">유사도 {it.similarity}%</div>
-
-          <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-            <div className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
-              <ScissorsIcon className="h-4 w-4" />
-              <span>가사 요약</span>
+          <section className="mt-6">
+            <div className="text-center">
+              <div className="text-[12px] font-semibold text-slate-500">
+                <span className="text-pink-500">{nickname || "익명"}</span>님이 입력한 문장
+              </div>
+              <h2 className="mt-1 text-[20px] sm:text-[22px] font-bold text-slate-900">{text}</h2>
             </div>
-            <p className="mt-1 text-sm leading-6 text-slate-700">
-              {it.summary_3 || it.summary_1}
-            </p>
-          </div>
-        </article>
-      ))}
-    </div>
 
-    {/* 하단 인스타 배너 (이미지) */}
-    <a
-      href="https://instagram.com/labchasm"
-      target="_blank"
-      rel="noreferrer"
-      className="mt-6 block overflow-hidden rounded-2xl shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
-    >
-      <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-auto w-full" />
-    </a>
-  </section>
-)}
+            <div className="mt-3 rounded-[10px] border border-[#b7ecea] bg-[#e9fbfa] p-5 text-center">
+              <div className="mx-auto mb-2 flex h-10 w-10 items-center justify-center rounded-full bg-white text-teal-600 shadow">
+                <SwapIcon />
+              </div>
+              <div className="font-extrabold text-teal-700">변환 성공!</div>
+              <div className="mt-1 text-sm text-teal-700">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
+            </div>
+
+            <div className="mt-3 flex gap-2">
+              <button
+                className="flex-1 rounded-md border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm"
+                onClick={onReset}
+              >
+                다시 입력
+              </button>
+              <button
+                className="flex-1 rounded-md bg-[#51c4c1] px-4 py-3 text-sm font-semibold text-white shadow-sm"
+                onClick={saveGuestbook}
+                disabled={submitting}
+              >
+                방명록에 저장
+              </button>
+            </div>
+
+            <div className="mt-4 space-y-3">
+              {searchItems.map((it, idx) => (
+                <article key={idx} className="rounded-[10px] border border-slate-200 bg-white p-4 shadow-sm">
+                  <div className="text-[15px] font-semibold text-slate-900">
+                    {it.artist_name} - {it.song_name}
+                  </div>
+                  <div className="mt-1 text-[12px] font-semibold text-rose-600">유사도 {it.similarity}%</div>
+
+                  <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+                    <div className="flex items-center gap-1 text-[12px] font-semibold text-slate-700">
+                      <ScissorsIcon className="h-4 w-4" />
+                      <span>가사 요약</span>
+                    </div>
+                    <p className="mt-1 text-sm leading-6 text-slate-700">{it.summary_3 || it.summary_1}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
+            <a
+              href="https://instagram.com/lab_chasm"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-6 block overflow-hidden rounded-2xl shadow-[0_8px_22px_rgba(0,0,0,0.12)]"
+            >
+              <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-auto w-full" />
+            </a>
+          </section>
+        )}
 
         {/* ===== SAVED + FEED ===== */}
         {view === "saved" && (
@@ -528,6 +641,7 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
                   </article>
                 ))}
 
+                {/* Infinite scroll sentinel */}
                 <div ref={sentinelRef} />
                 {!hasMore && guestItems.length === 0 && (
                   <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-600">
@@ -536,24 +650,16 @@ const textWarn    = textTooShort || textAtMax;                 // 경고 표시 
                 )}
               </div>
 
-              {loadingMore && (
-                <div className="mt-4 text-center text-sm text-slate-500">불러오는 중...</div>
-              )}
+              {loadingMore && <div className="mt-4 text-center text-sm text-slate-500">불러오는 중...</div>}
             </div>
           </section>
-        )}
-
-        {/* 기타 공용 하단(폼 외 화면에서만 표시되는 옛 배너 영역) */}
-        {view !== "form" && (
-          <>
-          </>
         )}
       </div>
     </main>
   );
 }
 
-// ===== Icons =====
+/* ===== Icons ===== */
 function SwapIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden>
@@ -561,22 +667,6 @@ function SwapIcon() {
     </svg>
   );
 }
-
-function InstagramIcon({ className = "h-6 w-6" }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden xmlns="http://www.w3.org/2000/svg">
-      <path
-        d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.5"
-      />
-      <circle cx="12" cy="12" r="3.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
-      <circle cx="17.5" cy="6.5" r="1.25" />
-    </svg>
-  );
-}
-
 
 function ScissorsIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
