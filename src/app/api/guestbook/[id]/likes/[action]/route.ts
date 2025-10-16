@@ -1,13 +1,12 @@
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-// .env.local 예시: GUESTBOOK_UPSTREAM=http://54.180.46.82:8080
+// .env.local 예) GUESTBOOK_UPSTREAM=http://54.180.46.82:8080
 const RAW = process.env.GUESTBOOK_UPSTREAM || "http://54.180.46.82:8080";
 
-// RAW 가 .../guestbook 으로 끝나도/안 끝나도 안전하게 보정
+// RAW가 /guestbook으로 끝나든 말든 안전하게 보정
 function buildTarget(base: string, id: string, action: "add" | "cancel", search: string) {
   let b = base.trim().replace(/\/+$/, "");
-  // base에 /guestbook이 없으면 붙여준다
   if (!/\/guestbook$/i.test(b)) b = `${b}/guestbook`;
   return `${b}/${id}/likes/${action}${search}`;
 }
@@ -24,10 +23,12 @@ function toProxyResponse(r: Response, body: string | ArrayBuffer) {
   return new Response(body, { status: r.status, headers });
 }
 
-export async function POST(req: Request, { params }: { params: { id: string; action: string } }) {
+// ✅ 두 번째 인자 타입 주석 제거(또는 any 사용) → 빌드 에러 해결 포인트
+export async function POST(req: Request, context: any) {
   try {
-    const { id, action } = params;
-    if (!/^\d+$/.test(id) || !["add", "cancel"].includes(action)) {
+    const { id, action } = (context?.params ?? {}) as { id?: string; action?: string };
+
+    if (!id || !/^\d+$/.test(id) || !["add", "cancel"].includes(String(action))) {
       return new Response("Not found", { status: 404 });
     }
 
@@ -37,7 +38,7 @@ export async function POST(req: Request, { params }: { params: { id: string; act
     const r = await fetch(target, {
       method: "POST",
       headers: proxyHeadersFrom(req),
-      body: await req.text(), // 대부분 빈 바디
+      body: await req.text(), // 대개 빈 바디
       cache: "no-store",
     });
 
