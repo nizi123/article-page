@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
-/* 이미지 경로 */
+/** 이미지 경로 */
 const TITLE_IMG = "/musicconv/musicconv-title.png";
 const CLEANBOT_IMG = "/musicconv/cleanbot.png";
 const IG_BANNER_IMG = "/musicconv/chasmad.png";
@@ -13,7 +13,7 @@ const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
 const SUCCESS_ICON_IMG = "/musicconv/success-icon.png";
 const AI_SUMMARY_ICON_IMG = "/musicconv/ai-summary.png";
 
-/* 타입 */
+/** 타입 */
 type View = "form" | "loading" | "result" | "saved";
 interface SearchItem {
   artist_name: string;
@@ -45,8 +45,9 @@ type Props = {
   initialText?: string;
 };
 
-/* 유틸 */
+/** 유틸 */
 const BASE = "/musicconv";
+const LS_KEY = "musicconv:last"; // { sid, q, n }
 const genSid = () =>
   (typeof window !== "undefined" && window.crypto?.getRandomValues
     ? (() => {
@@ -65,20 +66,20 @@ export default function MusicConvClient({
 }: Props) {
   const router = useRouter();
 
-  /* 입력값 */
+  /** 입력값 */
   const [nickname, setNickname] = useState(initialNickname);
   const [text, setText] = useState(initialText);
 
-  /* 화면/상태 */
+  /** 화면/상태 */
   const [view, setView] = useState<View>(initialView);
   const [sid, setSid] = useState<string | null>(initSid);
   const [submitting, setSubmitting] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
-  /* 검색 결과 */
+  /** 검색 결과 */
   const [searchItems, setSearchItems] = useState<SearchItem[]>([]);
 
-  /* 방명록 */
+  /** 방명록 */
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.LATEST);
   const [guestItems, setGuestItems] = useState<ReadGuestbookItem[]>([]);
   const [lastId, setLastId] = useState<number | null>(null);
@@ -88,11 +89,11 @@ export default function MusicConvClient({
   const [savedId, setSavedId] = useState<number | null>(initSavedId);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  /* API 프록시 */
+  /** API 프록시 */
   const SEARCH_URL = "/api/search";
   const GUESTBOOK_PROXY = "/api/guestbook";
 
-  /* 유효성 */
+  /** 유효성 */
   const nickMax = 16;
   const textMin = 5;
   const textMax = 120;
@@ -102,42 +103,7 @@ export default function MusicConvClient({
   const textWarn =
     (text.length > 0 && text.length < textMin) || text.length === textMax;
 
-  /* 라우팅 helper */
-  const goto = (next: View, opts?: { sid?: string | null; id?: number | null; n?: string; q?: string }) => {
-    const s = opts?.sid ?? sid;
-    const n = (opts?.n ?? nickname) || "";
-    const q = (opts?.q ?? text) || "";
-
-    switch (next) {
-      case "form":
-        router.replace(`${BASE}`);
-        break;
-      case "loading":
-        router.replace(`${BASE}/loading/${s ?? ""}?q=${encodeURIComponent(q)}&n=${encodeURIComponent(n)}`);
-        break;
-      case "result":
-        router.replace(`${BASE}/result/${s ?? ""}?q=${encodeURIComponent(q)}&n=${encodeURIComponent(n)}`);
-        break;
-      case "saved":
-        if (opts?.id) router.replace(`${BASE}/guestbook/${opts.id}`);
-        else router.replace(`${BASE}/guestbook`);
-        break;
-    }
-  };
-
-  /* 통신 */
-  async function runSearch(input: string) {
-    const res = await fetch(SEARCH_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_input: input }),
-    });
-    if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
-    const data = (await res.json()) as { data?: SearchItem[] };
-    setSearchItems(Array.isArray(data?.data) ? data.data! : []);
-  }
-
-  /* 제출 */
+  /** 제출 */
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
@@ -147,17 +113,34 @@ export default function MusicConvClient({
 
     const newsid = genSid();
     setSid(newsid);
+
+    // 새로고침 대비 상태 저장
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify({ sid: newsid, q: text, n: nickname }));
+    } catch {}
+
+    // 1) 로딩 라우트로 이동
     setView("loading");
-    goto("loading", { sid: newsid });
+    router.replace(`${BASE}/loading/${newsid}?q=${encodeURIComponent(text)}&n=${encodeURIComponent(nickname)}`);
 
     try {
-      await runSearch(text);
+      // 2) 검색
+      const res = await fetch(SEARCH_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_input: text }),
+      });
+      if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
+      const data = (await res.json()) as { data?: SearchItem[] };
+      setSearchItems(Array.isArray(data?.data) ? data.data! : []);
+
+      // 3) 결과 라우트로 이동
       setView("result");
-      goto("result", { sid: newsid });
+      router.replace(`${BASE}/result/${newsid}?q=${encodeURIComponent(text)}&n=${encodeURIComponent(nickname)}`);
     } catch (err: any) {
       setErrMsg(err?.message || "요청 실패");
       setView("form");
-      goto("form");
+      router.replace(`${BASE}`);
     } finally {
       setSubmitting(false);
     }
@@ -168,7 +151,8 @@ export default function MusicConvClient({
     setSid(null);
     setSearchItems([]);
     setErrMsg(null);
-    goto("form");
+    try { localStorage.removeItem(LS_KEY); } catch {}
+    router.replace(`${BASE}`);
   }
 
   async function saveGuestbook() {
@@ -206,7 +190,7 @@ export default function MusicConvClient({
 
       setSavedId(newId);
       setView("saved");
-      goto("saved", { id: newId ?? undefined });
+      router.replace(newId ? `${BASE}/guestbook/${newId}` : `${BASE}/guestbook`);
       setGuestItems([]);
       setFirstLoad(true);
       setLastId(null);
@@ -218,7 +202,7 @@ export default function MusicConvClient({
     }
   }
 
-  /* 방명록 무한 스크롤 */
+  /** 방명록 무한 스크롤 */
   async function loadMore() {
     if (loadingMore || !hasMore) return;
     setLoadingMore(true);
@@ -231,8 +215,7 @@ export default function MusicConvClient({
       }
       params.set("sortBy", sortBy);
 
-      const url = `/api/guestbook?${params.toString()}`;
-      const res = await fetch(url, { cache: "no-store" });
+      const res = await fetch(`/api/guestbook?${params.toString()}`, { cache: "no-store" });
       if (!res.ok) throw new Error("목록 조회 실패");
 
       const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
@@ -257,57 +240,75 @@ export default function MusicConvClient({
     }
   }
 
-  /* 마운트 시 상태별 초기동작 */
+  /** 새로고침 복원: URL 쿼리가 비어 있으면 LS로 보강 (네비게이션 없음!) */
   useEffect(() => {
-    if (initialView === "loading") {
-      // 로딩 페이지에 직접 진입한 경우 → 바로 검색 후 결과로 이동
-      (async () => {
-        if (!initialText || initialText.length < 5) return;
-        try {
-          setSubmitting(true);
-          await runSearch(initialText);
-          setView("result");
-          goto("result", { sid: initSid ?? sid ?? genSid(), q: initialText, n: initialNickname });
-        } finally {
-          setSubmitting(false);
-        }
-      })();
-    }
+    if (initialView !== "loading" && initialView !== "result") return;
+    const hasQ = !!initialText && initialText.length >= 1;
+    if (hasQ) return;
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { sid?: string; q?: string; n?: string };
+      if (saved?.q) setText(saved.q);
+      if (saved?.n) setNickname(saved.n || "");
+      if (saved?.sid) setSid(saved.sid);
+    } catch {}
+    // 여기서 절대 router.replace 호출하지 않음
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /** 결과 화면: 검색 자동 실행(네비 X) */
   useEffect(() => {
-    if (initialView === "result" && initialText && searchItems.length === 0) {
-      (async () => {
-        try {
-          setSubmitting(true);
-          await runSearch(initialText);
-        } finally {
-          setSubmitting(false);
-        }
-      })();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialView]);
+    const q =
+      initialView === "result" || initialView === "loading"
+        ? text || initialText || ""
+        : "";
+    if (view !== "result") return;
+    if (!q || q.length < 5 || q.length > 120) return;
+    if (searchItems.length > 0 || submitting) return;
 
+    (async () => {
+      try {
+        setSubmitting(true);
+        const res = await fetch("/api/search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_input: q }),
+        });
+        if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
+        const data = (await res.json()) as { data?: SearchItem[] };
+        setSearchItems(Array.isArray(data?.data) ? data.data! : []);
+      } catch (e: any) {
+        setErrMsg(e?.message || "요청 실패");
+      } finally {
+        setSubmitting(false);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, text]);
+
+  /** 방명록: 첫 로드 */
   useEffect(() => {
     if (view !== "saved" || !firstLoad) return;
     loadMore();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, firstLoad]);
 
+  /** 방명록: 무한스크롤 옵저버 */
   useEffect(() => {
     if (view !== "saved" || firstLoad) return;
     const el = sentinelRef.current;
     if (!el) return;
-    const io = new IntersectionObserver((ents) => ents.forEach((e) => e.isIntersecting && loadMore()), {
-      rootMargin: "200px",
-    });
+    const io = new IntersectionObserver(
+      (ents) => ents.forEach((e) => e.isIntersecting && loadMore()),
+      { rootMargin: "200px" }
+    );
     io.observe(el);
     return () => io.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, sortBy, lastId, hasMore, firstLoad]);
 
+  /** 방명록: 정렬 변경 시 리셋 */
   useEffect(() => {
     if (view !== "saved") return;
     setGuestItems([]);
@@ -316,7 +317,7 @@ export default function MusicConvClient({
     setLastId(null);
   }, [sortBy, view]);
 
-  /* UI */
+  /** UI */
   return (
     <main className="min-h-[100dvh] w-full bg-white">
       {/* 상단 바 */}
@@ -332,7 +333,6 @@ export default function MusicConvClient({
       </div>
 
       <div className="mx-auto max-w-3xl px-4 py-10">
-        {/* 헤더는 form/loading 에서만 */}
         {(view === "form" || view === "loading") && (
           <header className="text-center">
             <img src={TITLE_IMG} alt="텍스트 음악 변환기" className="mx-auto h-auto w-[260px] sm:w-[340px]" />
@@ -348,62 +348,22 @@ export default function MusicConvClient({
         {/* ===== FORM ===== */}
         {view === "form" && (
           <section className="mt-6">
-            <form onSubmit={onSubmit} className="space-y-6">
-              <input
-                value={nickname}
-                onChange={(e) => setNickname(e.target.value.slice(0, nickMax))}
-                placeholder="닉네임 (공백 포함 16자 이내)"
-                maxLength={nickMax}
-                className={`w-full rounded-[12px] border px-5 py-4 text-[16px] leading-6
-                  text-[#2B2B2B] placeholder-[#B5B5B5]
-                  shadow-[0_4px_12px_rgba(0,0,0,0.10)]
-                  outline-none transition
-                  ${!nickValid ? "border-rose-400 ring-4 ring-rose-100" : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"}`}
-              />
+            <FormBlock
+              nickname={nickname}
+              setNickname={setNickname}
+              text={text}
+              setText={setText}
+              nickMax={nickMax}
+              textMax={textMax}
+              textWarn={textWarn}
+              nickValid={nickValid}
+              textValid={textValid}
+              submitting={submitting}
+              onSubmit={onSubmit}
+              errMsg={errMsg}
+            />
 
-              <div
-                className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
-                ${textWarn ? "border-[1.5px] border-[#F26D7D] ring-4 ring-[#FFE9ED]" : "border border-[#D7D7D7]"}`}
-              >
-                <textarea
-                  value={text}
-                  onChange={(e) => setText(e.target.value.slice(0, textMax))}
-                  className="block w-full min-h-[260px] resize-none rounded-[inherit] border-0 bg-transparent
-                    px-5 pt-5 pb-[96px] text-[18px] leading-8 text-[#2B2B2B] placeholder-[#B5B5B5] outline-none"
-                  placeholder="텍스트를 입력하세요. (공백 포함 5자 이상)"
-                  maxLength={textMax}
-                  aria-invalid={textWarn}
-                />
-                <div
-                  className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px]
-                  ${textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"}`}
-                >
-                  ({text.length}/{textMax})
-                </div>
-                <div className="absolute left-5 right-5 bottom-4">
-                  <div className="flex items-center gap-3 rounded-[10px] border border-[#E9E9E9] bg-white px-4 py-3 shadow-[0_4px_10px_rgba(0,0,0,0.06)]">
-                    <img src={CLEANBOT_IMG} alt="클린봇" className="h-6 w-6" />
-                    <span className="text-[15px] text-[#4A4A4A]">클린봇이 악성댓글을 감시합니다.</span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={!(nickValid && textValid) || submitting}
-                  className={`inline-flex items-center gap-2 rounded-[12px] px-7 py-4 text-[16px] font-bold text-white transition-all
-                    ${nickValid && textValid && !submitting
-                      ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
-                      : "bg-[#D9D9D9] cursor-not-allowed"}`}
-                >
-                  <SwapIcon /> 변환하기
-                </button>
-              </div>
-
-              {errMsg && <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{errMsg}</div>}
-            </form>
-
+            {/* 배너 */}
             <a
               href="https://instagram.com/lab_chasm"
               target="_blank"
@@ -413,6 +373,7 @@ export default function MusicConvClient({
               <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-[120px] w-full object-cover" />
             </a>
 
+            {/* 팁 */}
             <div className="mt-6 rounded-[16px] border border-[#E5E5E5] bg-white p-5 shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
               <div className="mb-3 flex items-center gap-2">
                 <img src={TIP_PIN_IMG} alt="핀" className="h-5 w-5" />
@@ -450,12 +411,14 @@ export default function MusicConvClient({
             </div>
             <hr className="mt-6 mb-8 border-t-2 border-slate-100" />
 
+            {/* 변환 성공 */}
             <div className="bg-[#e9fbfa] px-6 py-8 text-center">
               <img src={SUCCESS_ICON_IMG} alt="변환 성공" className="mx-auto h-10 w-10" />
               <div className="mt-2 text-[22px] font-extrabold text-[#27b9b3]">변환 성공!</div>
               <div className="mt-1 text-[14px] text-[#2b8e89]">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
             </div>
 
+            {/* 버튼: grid 2:3 */}
             <div className="mt-6 grid grid-cols-5 gap-4">
               <button
                 className="col-span-2 h-[56px] rounded-[10px] border border-[#9bdad7] bg-white text-[18px] font-bold text-[#24b6b1] shadow-sm"
@@ -472,7 +435,7 @@ export default function MusicConvClient({
               </button>
             </div>
 
-            {/* 결과 카드 */}
+            {/* 결과 카드 (시안 스타일) */}
             <div className="mt-6 space-y-6">
               {searchItems.map((it, idx) => {
                 let urlText = it.song_url || "";
@@ -480,34 +443,35 @@ export default function MusicConvClient({
                 return (
                   <article
                     key={idx}
-                    className="rounded-[16px] border border-[#E7E7E7] p-6 shadow-[0_12px_28px_rgba(0,0,0,0.07)]"
-                    style={{ background: "#FFFFFF" }}
+                    className="rounded-[18px] border border-[#EAEAEA] bg-white p-6 sm:p-7 shadow-[0_14px_28px_rgba(0,0,0,0.07)]"
                   >
-                    <div className="text-[22px] font-semibold text-slate-900">
-                      {it.artist_name} - {it.song_name}
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="text-[28px] sm:text-[30px] font-semibold leading-tight text-[#1F2937] tracking-[-0.3px]">
+                        {it.artist_name} - {it.song_name}
+                      </h3>
+                      {it.song_url && (
+                        <a
+                          href={it.song_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          aria-label={`${it.song_name} 링크 열기`}
+                          className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-[#E6E6E6] hover:bg-[#F7F7F7] transition"
+                          title={urlText}
+                          style={{ pointerEvents: "auto" }}
+                        >
+                          <ExternalLinkIcon className="h-4 w-4 text-[#7B7B7B]" />
+                        </a>
+                      )}
                     </div>
 
-                    {it.song_url && (
-                      <a
-                        href={it.song_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-1 inline-flex items-center gap-1 break-all text-[13px] text-[#20b2aa] underline underline-offset-2"
-                        style={{ pointerEvents: "auto" }}
-                        title={urlText}
-                      >
-                        {urlText}
-                        <ExternalLinkIcon className="h-3.5 w-3.5" />
-                      </a>
-                    )}
+                    <div className="mt-2 text-[18px] font-bold text-[#FF5A7A]">유사도 {it.similarity}%</div>
+                    <hr className="mt-5 mb-4 border-t border-[#ECECEC]" />
 
-                    <div className="mt-2 text-[14px] font-semibold text-[#ff5a5a]">유사도 {it.similarity}%</div>
-                    <hr className="mt-5 mb-3 border-t border-slate-200" />
-                    <div className="flex items-center gap-2 text-[15px] font-semibold text-slate-700">
-                      <img src={AI_SUMMARY_ICON_IMG} alt="가사 AI 요약" className="h-4 w-4" />
-                      <span>가사 AI 요약</span>
+                    <div className="flex items-center gap-2">
+                      <img src={AI_SUMMARY_ICON_IMG} alt="" className="h-5 w-5" />
+                      <span className="text-[18px] font-semibold text-[#2F2F2F]">가사 AI 요약</span>
                     </div>
-                    <p className="mt-2 text-[15px] leading-[1.9] text-slate-700">
+                    <p className="mt-3 text-[20px] leading-[1.9] text-[#6B6B6B]">
                       {it.summary_3 || it.summary_1}
                     </p>
                   </article>
@@ -515,6 +479,7 @@ export default function MusicConvClient({
               })}
             </div>
 
+            {/* 하단 배너 */}
             <a
               href="https://instagram.com/lab_chasm"
               target="_blank"
@@ -526,7 +491,7 @@ export default function MusicConvClient({
           </section>
         )}
 
-        {/* ===== SAVED / GUESTBOOK ===== */}
+        {/* ===== SAVED ===== */}
         {view === "saved" && (
           <section className="mt-6">
             <div className="rounded-xl border border-pink-200 bg-pink-50 p-6 text-center">
@@ -536,8 +501,7 @@ export default function MusicConvClient({
               </h2>
               <p className="mt-2 text-[13px] leading-relaxed text-slate-600">
                 다른 사람들의 방명록을 보고 감상을 나누어 보세요.
-                <br />
-                인스타그램 이벤트를 참여하시면 ‘내 결과 공유하기’를 눌러주세요.
+                <br /> 인스타그램 이벤트를 참여하시면 ‘내 결과 공유하기’를 눌러주세요.
               </p>
             </div>
 
@@ -589,7 +553,75 @@ export default function MusicConvClient({
   );
 }
 
-/* 아이콘 */
+/** 폼 블록 분리(가독) */
+function FormBlock({
+  nickname, setNickname, text, setText,
+  nickMax, textMax, textWarn, nickValid, textValid,
+  submitting, onSubmit, errMsg,
+}: {
+  nickname: string;
+  setNickname: (s: string) => void;
+  text: string;
+  setText: (s: string) => void;
+  nickMax: number; textMax: number; textWarn: boolean;
+  nickValid: boolean; textValid: boolean;
+  submitting: boolean; onSubmit: (e: React.FormEvent) => void;
+  errMsg: string | null;
+}) {
+  return (
+    <form onSubmit={onSubmit} className="space-y-6">
+      <input
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value.slice(0, nickMax))}
+        placeholder="닉네임 (공백 포함 16자 이내)"
+        maxLength={nickMax}
+        className={`w-full rounded-[12px] border px-5 py-4 text-[16px] leading-6 text-[#2B2B2B] placeholder-[#B5B5B5]
+          shadow-[0_4px_12px_rgba(0,0,0,0.10)] outline-none transition
+          ${!nickValid ? "border-rose-400 ring-4 ring-rose-100" : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"}`}
+      />
+
+      <div className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
+        ${textWarn ? "border-[1.5px] border-[#F26D7D] ring-4 ring-[#FFE9ED]" : "border border-[#D7D7D7]"}`}>
+        <textarea
+          value={text}
+          onChange={(e) => setText(e.target.value.slice(0, textMax))}
+          className="block w-full min-h-[260px] resize-none rounded-[inherit] border-0 bg-transparent
+            px-5 pt-5 pb-[96px] text-[18px] leading-8 text-[#2B2B2B] placeholder-[#B5B5B5] outline-none"
+          placeholder="텍스트를 입력하세요. (공백 포함 5자 이상)"
+          maxLength={textMax}
+          aria-invalid={textWarn}
+        />
+        <div className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px]
+          ${textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"}`}>
+          ({text.length}/{textMax})
+        </div>
+        <div className="absolute left-5 right-5 bottom-4">
+          <div className="flex items-center gap-3 rounded-[10px] border border-[#E9E9E9] bg-white px-4 py-3 shadow-[0_4px_10px_rgba(0,0,0,0.06)]">
+            <img src={CLEANBOT_IMG} alt="클린봇" className="h-6 w-6" />
+            <span className="text-[15px] text-[#4A4A4A]">클린봇이 악성댓글을 감시합니다.</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end">
+        <button
+          type="submit"
+          disabled={!(nickValid && textValid) || submitting}
+          className={`inline-flex items-center gap-2 rounded-[12px] px-7 py-4 text-[16px] font-bold text-white transition-all
+            ${nickValid && textValid && !submitting
+              ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
+              : "bg-[#D9D9D9] cursor-not-allowed"}`}
+        >
+          <SwapIcon /> 변환하기
+        </button>
+      </div>
+
+      {errMsg && <div className="rounded-md border border-rose-200 bg-rose-50 p-3 text-sm text-rose-700">{errMsg}</div>}
+    </form>
+  );
+}
+
+/** 아이콘 */
 function SwapIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden>
@@ -597,7 +629,6 @@ function SwapIcon() {
     </svg>
   );
 }
-
 function ExternalLinkIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden>
