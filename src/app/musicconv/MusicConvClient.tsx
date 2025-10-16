@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import LikeButton from "./guestbook/LikeButton";
 
 /** 이미지 경로 */
 const TITLE_IMG = "/musicconv/musicconv-title.png";
@@ -13,7 +14,13 @@ const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
 const SUCCESS_ICON_IMG = "/musicconv/success-icon.png";
 const AI_SUMMARY_ICON_IMG = "/musicconv/ai-summary.png";
 
-/** 타입 */
+/** 방명록 / 저장 화면 전용 아이콘 */
+const GB_HEADER_IMG = "/musicconv/gb-header.png";
+const GB_CHECK_IMG = "/musicconv/gb-check.png";
+const ICO_USER = "/musicconv/ico-user.png";
+const ICO_BUBBLE = "/musicconv/ico-bubble.png";
+const ICO_NOTE = "/musicconv/ico-note.png";
+
 type View = "form" | "loading" | "result" | "saved";
 interface SearchItem {
   artist_name: string;
@@ -31,6 +38,7 @@ interface ReadGuestbookItem {
   title: string;
   artist: string;
   aiLyricsSummary: string;
+  createTime?: string; // "YYYY-MM-DD HH:mm:ss"
 }
 enum SortBy {
   LATEST = "LATEST",
@@ -45,17 +53,24 @@ type Props = {
   initialText?: string;
 };
 
-/** 유틸 */
 const BASE = "/musicconv";
-const LS_KEY = "musicconv:last"; // { sid, q, n }
+const LS_KEY = "musicconv:last";
 const genSid = () =>
   (typeof window !== "undefined" && window.crypto?.getRandomValues
     ? (() => {
         const b = new Uint8Array(6);
         window.crypto.getRandomValues(b);
-        return Array.from(b).map(x => x.toString(36)).join("").slice(0, 8);
+        return Array.from(b).map((x) => x.toString(36)).join("").slice(0, 8);
       })()
     : Math.random().toString(36).slice(2, 10));
+
+function formatTimeKST(s?: string) {
+  if (!s) return "";
+  const m = s.match(/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/);
+  if (!m) return s;
+  const yy = m[1].slice(2);
+  return `${yy}.${m[2]}.${m[3]} ${m[4]}:${m[5]}`;
+}
 
 export default function MusicConvClient({
   initialView,
@@ -66,20 +81,16 @@ export default function MusicConvClient({
 }: Props) {
   const router = useRouter();
 
-  /** 입력값 */
   const [nickname, setNickname] = useState(initialNickname);
   const [text, setText] = useState(initialText);
 
-  /** 화면/상태 */
   const [view, setView] = useState<View>(initialView);
   const [sid, setSid] = useState<string | null>(initSid);
   const [submitting, setSubmitting] = useState(false);
   const [errMsg, setErrMsg] = useState<string | null>(null);
 
-  /** 검색 결과 */
   const [searchItems, setSearchItems] = useState<SearchItem[]>([]);
 
-  /** 방명록 */
   const [sortBy, setSortBy] = useState<SortBy>(SortBy.LATEST);
   const [guestItems, setGuestItems] = useState<ReadGuestbookItem[]>([]);
   const [lastId, setLastId] = useState<number | null>(null);
@@ -89,11 +100,13 @@ export default function MusicConvClient({
   const [savedId, setSavedId] = useState<number | null>(initSavedId);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  /** API 프록시 */
+  /** ✅ loadMore 동시 진입 차단 게이트 */
+  const loadingGateRef = useRef(false);
+
+  /** 좋아요 프록시 경로(/api/likes)는 LikeButton이 직접 사용 */
   const SEARCH_URL = "/api/search";
   const GUESTBOOK_PROXY = "/api/guestbook";
 
-  /** 유효성 */
   const nickMax = 16;
   const textMin = 5;
   const textMax = 120;
@@ -103,7 +116,6 @@ export default function MusicConvClient({
   const textWarn =
     (text.length > 0 && text.length < textMin) || text.length === textMax;
 
-  /** 제출 */
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
@@ -114,29 +126,39 @@ export default function MusicConvClient({
     const newsid = genSid();
     setSid(newsid);
 
-    // 새로고침 대비 상태 저장
     try {
-      localStorage.setItem(LS_KEY, JSON.stringify({ sid: newsid, q: text, n: nickname }));
+      localStorage.setItem(
+        LS_KEY,
+        JSON.stringify({ sid: newsid, q: text, n: nickname })
+      );
     } catch {}
 
-    // 1) 로딩 라우트로 이동
     setView("loading");
-    router.replace(`${BASE}/loading/${newsid}?q=${encodeURIComponent(text)}&n=${encodeURIComponent(nickname)}`);
+    router.replace(
+      `${BASE}/loading/${newsid}?q=${encodeURIComponent(
+        text
+      )}&n=${encodeURIComponent(nickname)}`
+    );
 
     try {
-      // 2) 검색
       const res = await fetch(SEARCH_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ user_input: text }),
       });
-      if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
+      if (!res.ok)
+        throw new Error(
+          (await res.text().catch(() => "")) || `검색 실패 (${res.status})`
+        );
       const data = (await res.json()) as { data?: SearchItem[] };
       setSearchItems(Array.isArray(data?.data) ? data.data! : []);
 
-      // 3) 결과 라우트로 이동
       setView("result");
-      router.replace(`${BASE}/result/${newsid}?q=${encodeURIComponent(text)}&n=${encodeURIComponent(nickname)}`);
+      router.replace(
+        `${BASE}/result/${newsid}?q=${encodeURIComponent(
+          text
+        )}&n=${encodeURIComponent(nickname)}`
+      );
     } catch (err: any) {
       setErrMsg(err?.message || "요청 실패");
       setView("form");
@@ -151,7 +173,9 @@ export default function MusicConvClient({
     setSid(null);
     setSearchItems([]);
     setErrMsg(null);
-    try { localStorage.removeItem(LS_KEY); } catch {}
+    try {
+      localStorage.removeItem(LS_KEY);
+    } catch {}
     router.replace(`${BASE}`);
   }
 
@@ -184,13 +208,17 @@ export default function MusicConvClient({
 
       let newId: number | null = null;
       try {
-        const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
+        const json = (await res.json()) as {
+          readGuestbookResponses?: ReadGuestbookItem[];
+        };
         newId = json.readGuestbookResponses?.[0]?.id ?? null;
       } catch {}
 
       setSavedId(newId);
       setView("saved");
-      router.replace(newId ? `${BASE}/guestbook/${newId}` : `${BASE}/guestbook`);
+      router.replace(
+        newId ? `${BASE}/guestbook/${newId}` : `${BASE}/guestbook`
+      );
       setGuestItems([]);
       setFirstLoad(true);
       setLastId(null);
@@ -202,9 +230,10 @@ export default function MusicConvClient({
     }
   }
 
-  /** 방명록 무한 스크롤 */
+  /** ✅ 방명록 더 불러오기 (이중 호출 차단 게이트) */
   async function loadMore() {
-    if (loadingMore || !hasMore) return;
+    if (loadingGateRef.current || loadingMore || !hasMore) return;
+    loadingGateRef.current = true;
     setLoadingMore(true);
 
     try {
@@ -215,19 +244,16 @@ export default function MusicConvClient({
       }
       params.set("sortBy", sortBy);
 
-      const res = await fetch(`/api/guestbook?${params.toString()}`, { cache: "no-store" });
+      const url = `${GUESTBOOK_PROXY}?${params.toString()}`;
+      const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) throw new Error("목록 조회 실패");
 
-      const json = (await res.json()) as { readGuestbookResponses?: ReadGuestbookItem[] };
+      const json = (await res.json()) as {
+        readGuestbookResponses?: ReadGuestbookItem[];
+      };
       const next = json.readGuestbookResponses || [];
 
-      setGuestItems((prev) => {
-        const map = new Map<number, ReadGuestbookItem>();
-        prev.forEach((i) => map.set(i.id, i));
-        next.forEach((i) => { if (!map.has(i.id)) map.set(i.id, i); });
-        return Array.from(map.values());
-      });
-
+      setGuestItems((prev) => [...prev, ...next]);
       const tail = next[next.length - 1];
       if (tail) setLastId(tail.id);
 
@@ -236,11 +262,12 @@ export default function MusicConvClient({
     } catch {
       setHasMore(false);
     } finally {
+      loadingGateRef.current = false;
       setLoadingMore(false);
     }
   }
 
-  /** 새로고침 복원: URL 쿼리가 비어 있으면 LS로 보강 (네비게이션 없음!) */
+  /** 새로고침 복원 */
   useEffect(() => {
     if (initialView !== "loading" && initialView !== "result") return;
     const hasQ = !!initialText && initialText.length >= 1;
@@ -248,16 +275,19 @@ export default function MusicConvClient({
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return;
-      const saved = JSON.parse(raw) as { sid?: string; q?: string; n?: string };
+      const saved = JSON.parse(raw) as {
+        sid?: string;
+        q?: string;
+        n?: string;
+      };
       if (saved?.q) setText(saved.q);
       if (saved?.n) setNickname(saved.n || "");
       if (saved?.sid) setSid(saved.sid);
     } catch {}
-    // 여기서 절대 router.replace 호출하지 않음
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  /** 결과 화면: 검색 자동 실행(네비 X) */
+  /** 결과 화면 자동 검색 */
   useEffect(() => {
     const q =
       initialView === "result" || initialView === "loading"
@@ -275,7 +305,10 @@ export default function MusicConvClient({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ user_input: q }),
         });
-        if (!res.ok) throw new Error((await res.text().catch(() => "")) || `검색 실패 (${res.status})`);
+        if (!res.ok)
+          throw new Error(
+            (await res.text().catch(() => "")) || `검색 실패 (${res.status})`
+          );
         const data = (await res.json()) as { data?: SearchItem[] };
         setSearchItems(Array.isArray(data?.data) ? data.data! : []);
       } catch (e: any) {
@@ -287,16 +320,17 @@ export default function MusicConvClient({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, text]);
 
-  /** 방명록: 첫 로드 */
+  /** 방명록: 첫 로드 (옵저버와 동시 호출 줄이기 위해 셋타임아웃) */
   useEffect(() => {
-    if (view !== "saved" || !firstLoad) return;
-    loadMore();
+    if (view !== "saved") return;
+    const t = setTimeout(() => loadMore(), 0);
+    return () => clearTimeout(t);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, firstLoad]);
+  }, [view]);
 
-  /** 방명록: 무한스크롤 옵저버 */
+  /** 방명록: 무한 스크롤 옵저버 */
   useEffect(() => {
-    if (view !== "saved" || firstLoad) return;
+    if (view !== "saved") return;
     const el = sentinelRef.current;
     if (!el) return;
     const io = new IntersectionObserver(
@@ -306,7 +340,7 @@ export default function MusicConvClient({
     io.observe(el);
     return () => io.disconnect();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, sortBy, lastId, hasMore, firstLoad]);
+  }, [view, sortBy, lastId, hasMore]);
 
   /** 방명록: 정렬 변경 시 리셋 */
   useEffect(() => {
@@ -317,7 +351,6 @@ export default function MusicConvClient({
     setLastId(null);
   }, [sortBy, view]);
 
-  /** UI */
   return (
     <main className="min-h-[100dvh] w-full bg-white">
       {/* 상단 바 */}
@@ -345,7 +378,7 @@ export default function MusicConvClient({
           </header>
         )}
 
-        {/* ===== FORM ===== */}
+        {/* FORM */}
         {view === "form" && (
           <section className="mt-6">
             <FormBlock
@@ -380,15 +413,26 @@ export default function MusicConvClient({
                 <div className="text-[15px] font-semibold text-[#3B3B3B]">문장입력 Tip</div>
               </div>
               <ul className="space-y-3 text-[15px] leading-7 text-[#4A4A4A]">
-                <li className="flex items-start gap-3"><img src={TIP_CHECK_PINK_IMG} alt="" className="mt-1 h-4 w-4" /><span>나만의 ‘페스티벌 법칙’을 정해 보세요.</span></li>
-                <li className="flex items-start gap-3"><img src={TIP_CHECK_PINK_IMG} alt="" className="mt-1 h-4 w-4" /><span>오늘 그만페를 한마디로 요약해 보세요.</span></li>
-                <li className="flex items-start gap-3"><img src={TIP_CHECK_GRAY_IMG} alt="" className="mt-1 h-4 w-4" /><span className="text-[#8C8C8C] line-through decoration-[#3BA6FF] decoration-2">사실 아무 말이나 해도 됩니다.</span></li>
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_PINK_IMG} alt="" className="mt-1 h-4 w-4" />
+                  <span>나만의 ‘페스티벌 법칙’을 정해 보세요.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_PINK_IMG} alt="" className="mt-1 h-4 w-4" />
+                  <span>오늘 그만페를 한마디로 요약해 보세요.</span>
+                </li>
+                <li className="flex items-start gap-3">
+                  <img src={TIP_CHECK_GRAY_IMG} alt="" className="mt-1 h-4 w-4" />
+                  <span className="text-[#8C8C8C] line-through decoration-[#3BA6FF] decoration-2">
+                    사실 아무 말이나 해도 됩니다.
+                  </span>
+                </li>
               </ul>
             </div>
           </section>
         )}
 
-        {/* ===== LOADING ===== */}
+        {/* LOADING */}
         {view === "loading" && (
           <section className="mt-10 flex flex-col items-center text-center">
             <div className="text-[84px] leading-none text-pink-400">ᛗ</div>
@@ -400,7 +444,7 @@ export default function MusicConvClient({
           </section>
         )}
 
-        {/* ===== RESULT ===== */}
+        {/* RESULT */}
         {view === "result" && (
           <section className="mt-1">
             <div className="text-center">
@@ -418,15 +462,17 @@ export default function MusicConvClient({
               <div className="mt-1 text-[14px] text-[#2b8e89]">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
             </div>
 
-            {/* 버튼: grid 2:3 */}
+            {/* 버튼 */}
             <div className="mt-6 grid grid-cols-5 gap-4">
               <button
+                type="button"
                 className="col-span-2 h-[56px] rounded-[10px] border border-[#9bdad7] bg-white text-[18px] font-bold text-[#24b6b1] shadow-sm"
                 onClick={onReset}
               >
                 다시 입력
               </button>
               <button
+                type="button"
                 className="col-span-3 h-[56px] rounded-[10px] bg-[#3BC9C7] text-[18px] font-bold text-white shadow-sm disabled:opacity-60"
                 onClick={saveGuestbook}
                 disabled={submitting}
@@ -435,11 +481,13 @@ export default function MusicConvClient({
               </button>
             </div>
 
-            {/* 결과 카드 (시안 스타일) */}
+            {/* 결과 카드 */}
             <div className="mt-6 space-y-6">
               {searchItems.map((it, idx) => {
                 let urlText = it.song_url || "";
-                try { urlText = decodeURIComponent(it.song_url || ""); } catch {}
+                try {
+                  urlText = decodeURIComponent(it.song_url || "");
+                } catch {}
                 return (
                   <article
                     key={idx}
@@ -471,9 +519,7 @@ export default function MusicConvClient({
                       <img src={AI_SUMMARY_ICON_IMG} alt="" className="h-5 w-5" />
                       <span className="text-[18px] font-semibold text-[#2F2F2F]">가사 AI 요약</span>
                     </div>
-                    <p className="mt-3 text-[20px] leading-[1.9] text-[#6B6B6B]">
-                      {it.summary_3 || it.summary_1}
-                    </p>
+                    <p className="mt-3 text-[20px] leading-[1.9] text-[#6B6B6B]">{it.summary_3 || it.summary_1}</p>
                   </article>
                 );
               })}
@@ -491,61 +537,113 @@ export default function MusicConvClient({
           </section>
         )}
 
-        {/* ===== SAVED ===== */}
+        {/* SAVED (방명록) */}
         {view === "saved" && (
-          <section className="mt-6">
-            <div className="rounded-xl border border-pink-200 bg-pink-50 p-6 text-center">
-              <div className="text-sm text-slate-500">{new Date().getFullYear()} 고민패 페이버딜의 방명록!</div>
-              <h2 className="mt-2 text-xl font-bold">
-                <span className="text-pink-600">{nickname || "익명"}</span>님의 문장이 방명록에 등록되었어요.
+          <section className="mt-2">
+            <div className="flex flex-col items-center text-center">
+              <img src={GB_HEADER_IMG} alt="" className="mb-2 h-14 w-14" />
+              <h2 className="text-[22px] sm:text-[24px] font-extrabold tracking-tight text-[#222]">
+                {new Date().getFullYear()} 고민페 페이버딜의 방명록!
               </h2>
-              <p className="mt-2 text-[13px] leading-relaxed text-slate-600">
+              <hr className="mt-4 w-full border-t border-[#e9e9e9]" />
+            </div>
+
+            <div className="mt-6 rounded-[10px] border border-[#ffd6de] bg-[#fff0f3] px-4 py-5 text-[#444]">
+              <div className="flex items-center justify-center gap-2 text-[15px] font-semibold">
+                <img src={GB_CHECK_IMG} className="h-5 w-5" alt="ok" />
+                <span>
+                  <span className="font-bold text-[#ff2a6d]">{nickname || "익명"}</span>
+                  님의 문장이 방명록에 등록되었어요.
+                </span>
+              </div>
+              <p className="mt-3 text-center text-[14px] leading-6 text-slate-600">
                 다른 사람들의 방명록을 보고 감상을 나누어 보세요.
-                <br /> 인스타그램 이벤트를 참여하시면 ‘내 결과 공유하기’를 눌러주세요.
+                <br />
+                인스타그램 이벤트를 참여하시면 <span className="font-bold">‘내 결과 공유하기’</span>를 눌러주세요.
               </p>
-            </div>
 
-            <div className="mt-6">
-              <div className="mb-3 flex items-center justify-between">
-                <div className="text-sm font-semibold">정렬</div>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as SortBy)}
-                  className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              <div className="mt-4 flex items-center justify-center gap-3">
+                <button
+                  type="button"
+                  className="rounded-[10px] border-2 border-[#ff9bb2] bg-white px-5 py-2.5 text-[15px] font-semibold text-[#ff2a6d] shadow-sm"
+                  onClick={() => setSortBy(SortBy.LIKES)}
                 >
-                  <option value={SortBy.LATEST}>최신순</option>
-                  <option value={SortBy.LIKES}>좋아요순</option>
-                </select>
+                  베스트 글 보기
+                </button>
+                <button
+                  type="button"
+                  className="rounded-[10px] bg-[#ef5f86] px-6 py-2.5 text-[15px] font-bold text-white hover:bg-[#e6527a] shadow"
+                  onClick={() => {
+                    if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
+                    else window.location.href = `/musicconv/guestbook`;
+                  }}
+                >
+                  내 결과 공유하기
+                </button>
               </div>
-
-              <div className="space-y-4">
-                {guestItems.map((g, idx) => (
-                  <article key={`${g.id}-${idx}`} className="rounded-xl border border-slate-200 bg-white p-4">
-                    <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
-                      <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-pink-100">🎵</span>
-                      {g.nickname}
-                    </div>
-                    <p className="mt-2 text-sm text-slate-700">{g.comment}</p>
-                    <div className="mt-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
-                      <div className="text-xs font-semibold text-teal-600">변환 TOP1 음악</div>
-                      <div className="mt-1 text-sm font-medium">
-                        {g.title} — {g.artist}
-                      </div>
-                      <div className="text-sm text-slate-700">{g.aiLyricsSummary}</div>
-                    </div>
-                    <div className="mt-2 text-right text-xs text-slate-500">❤ {g.likeCount.toLocaleString()}</div>
-                  </article>
-                ))}
-                <div ref={sentinelRef} />
-                {!hasMore && guestItems.length === 0 && (
-                  <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-600">
-                    아직 글이 없습니다.
-                  </div>
-                )}
-              </div>
-
-              {loadingMore && <div className="mt-4 text-center text-sm text-slate-500">불러오는 중...</div>}
             </div>
+
+            <div className="mt-8 mb-3 flex items-center justify-between">
+              <div className="text-[14px] font-semibold text-slate-700">• 최신순</div>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortBy)}
+                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm"
+              >
+                <option value={SortBy.LATEST}>최신순</option>
+                <option value={SortBy.LIKES}>좋아요순</option>
+              </select>
+            </div>
+
+            {/* ✅ 여기서 LikeButton 사용 */}
+            <div className="space-y-5">
+              {guestItems.map((g, idx) => (
+                <article
+                  key={`${g.id}-${idx}`}
+                  className="rounded-[12px] border border-[#e7e7e7] bg-[#fff] p-4 shadow-[0_4px_14px_rgba(0,0,0,0.06)]"
+                >
+                  <div className="flex items-center gap-2 text-[14px] font-semibold text-[#333]">
+                    <img src={ICO_USER} alt="" className="h-5 w-5" />
+                    {g.nickname}
+                  </div>
+                  <div className="mt-2 flex items-start gap-2 text-[15px] leading-7 text-[#4b4b4b]">
+                    <img src={ICO_BUBBLE} alt="" className="mt-[2px] h-4 w-4" />
+                    <p className="whitespace-pre-wrap">{g.comment}</p>
+                  </div>
+
+                  <div className="mt-4 rounded-[10px] border border-[#e9e9e9] bg-[#f9fafb] p-3">
+                    <div className="flex items-center gap-2 text-[13px] font-semibold text-[#17a2a2]">
+                      <img src={ICO_NOTE} className="h-4 w-4" alt="" />
+                      변환 TOP1 음악
+                    </div>
+                    <div className="mt-1 text-[15px] font-semibold text-[#2b2b2b]">
+                      {g.title} - {g.artist}
+                    </div>
+                    <div className="mt-1 text-[14px] leading-6 text-[#555]">{g.aiLyricsSummary}</div>
+                  </div>
+
+                  <div className="mt-3 flex items-center justify-between">
+                    <div className="text-[12px] text-[#999]">{formatTimeKST(g.createTime)}</div>
+                    <LikeButton
+                      gid={g.id}
+                      initialCount={g.likeCount}
+                      initiallyLiked={false}
+                      onSynced={(count) => {
+                        // 부모 상태와 동기화(선택)
+                        // 필요 시 서버 응답 기반으로 목록도 최신화 가능
+                      }}
+                    />
+                  </div>
+                </article>
+              ))}
+
+              <div ref={sentinelRef} />
+              {!hasMore && guestItems.length === 0 && (
+                <div className="rounded-xl border border-slate-200 bg-white p-6 text-center text-sm text-slate-600">아직 글이 없습니다.</div>
+              )}
+            </div>
+
+            {loadingMore && <div className="mt-4 text-center text-sm text-slate-500">불러오는 중...</div>}
           </section>
         )}
       </div>
@@ -553,19 +651,32 @@ export default function MusicConvClient({
   );
 }
 
-/** 폼 블록 분리(가독) */
+/** ===== FormBlock ===== */
 function FormBlock({
-  nickname, setNickname, text, setText,
-  nickMax, textMax, textWarn, nickValid, textValid,
-  submitting, onSubmit, errMsg,
+  nickname,
+  setNickname,
+  text,
+  setText,
+  nickMax,
+  textMax,
+  textWarn,
+  nickValid,
+  textValid,
+  submitting,
+  onSubmit,
+  errMsg,
 }: {
   nickname: string;
   setNickname: (s: string) => void;
   text: string;
   setText: (s: string) => void;
-  nickMax: number; textMax: number; textWarn: boolean;
-  nickValid: boolean; textValid: boolean;
-  submitting: boolean; onSubmit: (e: React.FormEvent) => void;
+  nickMax: number;
+  textMax: number;
+  textWarn: boolean;
+  nickValid: boolean;
+  textValid: boolean;
+  submitting: boolean;
+  onSubmit: (e: React.FormEvent) => void;
   errMsg: string | null;
 }) {
   return (
@@ -577,11 +688,17 @@ function FormBlock({
         maxLength={nickMax}
         className={`w-full rounded-[12px] border px-5 py-4 text-[16px] leading-6 text-[#2B2B2B] placeholder-[#B5B5B5]
           shadow-[0_4px_12px_rgba(0,0,0,0.10)] outline-none transition
-          ${!nickValid ? "border-rose-400 ring-4 ring-rose-100" : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"}`}
+          ${
+            !nickValid
+              ? "border-rose-400 ring-4 ring-rose-100"
+              : "border-[#D7D7D7] focus:border-[#A8E5E5] focus:ring-4 focus:ring-[#DBF4F4]"
+          }`}
       />
 
-      <div className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
-        ${textWarn ? "border-[1.5px] border-[#F26D7D] ring-4 ring-[#FFE9ED]" : "border border-[#D7D7D7]"}`}>
+      <div
+        className={`relative overflow-hidden rounded-[12px] bg-white shadow-[0_4px_12px_rgba(0,0,0,0.10)]
+        ${textWarn ? "border-[1.5px] border-[#F26D7D] ring-4 ring-[#FFE9ED]" : "border border-[#D7D7D7]"}`}
+      >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value.slice(0, textMax))}
@@ -591,8 +708,7 @@ function FormBlock({
           maxLength={textMax}
           aria-invalid={textWarn}
         />
-        <div className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px]
-          ${textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"}`}>
+        <div className={`pointer-events-none absolute right-5 bottom-[86px] text-[14px] ${textWarn ? "text-[#F26D7D]" : "text-[#9A9A9A]"}`}>
           ({text.length}/{textMax})
         </div>
         <div className="absolute left-5 right-5 bottom-4">
@@ -608,9 +724,11 @@ function FormBlock({
           type="submit"
           disabled={!(nickValid && textValid) || submitting}
           className={`inline-flex items-center gap-2 rounded-[12px] px-7 py-4 text-[16px] font-bold text-white transition-all
-            ${nickValid && textValid && !submitting
-              ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
-              : "bg-[#D9D9D9] cursor-not-allowed"}`}
+            ${
+              nickValid && textValid && !submitting
+                ? "bg-[#79E0E1] hover:bg-[#66CFD1] active:translate-y-[1px] shadow-[0_6px_16px_rgba(0,0,0,0.12)]"
+                : "bg-[#D9D9D9] cursor-not-allowed"
+            }`}
         >
           <SwapIcon /> 변환하기
         </button>
@@ -621,7 +739,6 @@ function FormBlock({
   );
 }
 
-/** 아이콘 */
 function SwapIcon() {
   return (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5" aria-hidden>
