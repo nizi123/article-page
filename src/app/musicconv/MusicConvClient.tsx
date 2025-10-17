@@ -573,15 +573,13 @@ useEffect(() => {
     )}
 
     {/* 하단 배너 */}
-    <div className="mx-auto mt-6 w-full max-w-[680px] rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)] overflow-hidden">
-  <div className="relative w-full" style={{ aspectRatio: "17 / 3" }}>
+  <div className="relative w-full mt-10" style={{ aspectRatio: "17 / 3" }}>
     <img
       src={IG_BANNER_IMG}
       alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기"
       className="absolute inset-0 h-full w-full object-contain"
     />
   </div>
-</div>
             </section>
         )}
 
