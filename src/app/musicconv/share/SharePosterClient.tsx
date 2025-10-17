@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-// QR 코드:  npm i qrcode
 import QRCode from "qrcode";
 
 type Props = {
@@ -11,15 +10,15 @@ type Props = {
   top3: { title: string; artist: string; summary?: string }[];
 };
 
-const BG = "/musicconv/share-bg.png";            // 핑크 배경 (첨부 이미지)
-const IG_BANNER = "/images/instagram-banner.png";
+const BG = "/musicconv/share-bg.png";
+const AI_ICON = "/musicconv/ai-icon.png"; 
 
 export default function SharePosterClient({ gid, nickname, comment, top3 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [qr, setQr] = useState<string | null>(null);
   const [isDesktop, setIsDesktop] = useState(false);
 
-  // 공유 페이지 URL & 다운로드 파라미터
+  // ?dl=1 로 모바일 자동저장
   const shareUrl = useMemo(() => {
     if (typeof window === "undefined") return "";
     const u = new URL(window.location.href);
@@ -27,132 +26,310 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
     return u.toString();
   }, []);
 
-  // 데스크탑 판별 + QR 준비
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsDesktop(window.innerWidth >= 768);
-    }
+    if (typeof window !== "undefined") setIsDesktop(window.innerWidth >= 768);
   }, []);
+
   useEffect(() => {
     if (!isDesktop || !shareUrl) return;
-    QRCode.toDataURL(shareUrl, { width: 180, margin: 1, color: { dark: "#000000", light: "#ffffff00" } })
+    QRCode.toDataURL(shareUrl, {
+      width: 180,
+      margin: 1,
+      color: { dark: "#000000", light: "#ffffff00" },
+    })
       .then(setQr)
       .catch(() => setQr(null));
   }, [isDesktop, shareUrl]);
 
-  // 모바일에서 ?dl=1 들어오면 자동 다운로드
   useEffect(() => {
     if (typeof window === "undefined") return;
     const dl = new URL(window.location.href).searchParams.get("dl");
-    if (dl === "1") {
-      // 약간의 렌더 시간 후 저장
-      setTimeout(() => download(), 500);
-    }
+    if (dl === "1") setTimeout(() => download(), 500);
   }, []);
 
-  // 캔버스 렌더(1080x1920)
+  // ======================= 캔버스 렌더 =======================
   useEffect(() => {
     const c = canvasRef.current;
     if (!c) return;
 
-    const W = 1080, H = 1920;
-    c.width = W; c.height = H;
+    const W = 1080;
+    const H = 1920;
+    c.width = W;
+    c.height = H;
+
     const ctx = c.getContext("2d")!;
     ctx.clearRect(0, 0, W, H);
 
+    // ------- 유틸 -------
+    const setFont = (font: string, color = "#333") => {
+      ctx.font = font;
+      ctx.fillStyle = color;
+      ctx.textBaseline = "alphabetic";
+      ctx.textAlign = "left";
+    };
+
+    const drawText = (
+      text: string,
+      x: number,
+      y: number,
+      font: string,
+      color = "#333",
+      align: CanvasTextAlign = "left",
+      baseline: CanvasTextBaseline = "alphabetic"
+    ) => {
+      ctx.save();
+      ctx.textAlign = align;
+      ctx.textBaseline = baseline;
+      setFont(font, color);
+      ctx.fillText(text, Math.round(x) + 0.5, Math.round(y) + 0.5);
+      ctx.restore();
+    };
+
+    const measureWidth = (text: string, font: string) => {
+      ctx.save();
+      ctx.font = font;
+      const w = ctx.measureText(text).width;
+      ctx.restore();
+      return w;
+    };
+
+    const wrapLines = (text: string, maxW: number, font: string) => {
+      ctx.save();
+      ctx.font = font;
+      const words = String(text ?? "").split(/\s+/);
+      const lines: string[] = [];
+      let line = "";
+      for (const w of words) {
+        const t = line ? line + " " + w : w;
+        if (ctx.measureText(t).width > maxW) {
+          if (line) lines.push(line);
+          line = w;
+        } else {
+          line = t;
+        }
+      }
+      if (line) lines.push(line);
+      ctx.restore();
+      return lines;
+    };
+
+    const drawWrapped = (
+      lines: string[],
+      x: number,
+      y: number,
+      lineH: number,
+      font: string,
+      color = "#333",
+      maxLines?: number
+    ) => {
+      ctx.save();
+      setFont(font, color);
+      const count = maxLines ? Math.min(lines.length, maxLines) : lines.length;
+      for (let i = 0; i < count; i++) {
+        ctx.fillText(lines[i], Math.round(x) + 0.5, Math.round(y + i * lineH) + 0.5);
+      }
+      ctx.restore();
+      return count * lineH;
+    };
+
+    const drawRect = (x: number, y: number, w: number, h: number, fill: string, stroke = "#E5E5E5") => {
+      ctx.save();
+      ctx.fillStyle = fill;
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.rect(Math.round(x) + 0.5, Math.round(y) + 0.5, Math.round(w), Math.round(h));
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+    };
+
+    let __aiIconImg: HTMLImageElement | null = null;
+
+    // #1 카드 왼쪽 아이콘 (간단한 ‘마법봉’ 벡터)
+    const drawAISummaryIcon = (x: number, y: number, size = 48) => {
+      // 캐시된 이미지 재사용
+      if (!__aiIconImg) {
+        __aiIconImg = new Image();
+        __aiIconImg.src = AI_ICON;
+      }
+
+      const img = __aiIconImg;
+
+        // 실제 그리기 함수
+  const paint = () => {
+    // 살짝 정수 정렬(번짐 방지)
+    const dx = Math.round(x);
+    const dy = Math.round(y);
+    ctx.drawImage(img!, dx, dy, size, size);
+  };
+
+  // 로딩 상태에 따라 처리
+  if (img!.complete) {
+    paint();
+  } else {
+    img!.onload = paint;
+  }
+};
+
+    // 배경 로드 후 그리기
     const bg = new Image();
     bg.src = BG;
     bg.onload = () => {
+      // 배경
       ctx.drawImage(bg, 0, 0, W, H);
 
-      // 공통 스타일
-      const drawRound = (x: number, y: number, w: number, h: number, r: number, fill: string, stroke?: string) => {
+      // ===== 민트 박스 (고정) =====
+      drawRect(80, 630, 900, 260, "#38CED4", "#38CED4");
+      drawText(
+        `“ ${nickname}님의 문장 ”`,
+        100,
+        700,
+        "900 36px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "#254a45"
+      );
+      {
+        const commentFont = "500 30px Pretendard, Apple SD Gothic Neo, sans-serif";
+        const lines = wrapLines(comment, 760, commentFont);
+        drawWrapped(lines, 105, 765, 40, commentFont, "#254a45", 5);
+      }
+
+      // 섹션 타이틀
+      drawText(
+        "변환된 음악을 추천드려요",
+        80,
+        1040,
+        "1000 44px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "#2B2B2B"
+      );
+
+      // ===== 카드 배치 공통 =====
+      const cardX = 150; // 카드의 좌측
+      const numberRight = cardX - 24; // 랭크 텍스트의 '오른쪽 끝' 위치(카드 왼쪽과 수평 끝점 맞춤)
+      const cardW = 860;
+
+      // === 1번 카드 ===
+      let y = 1088;
+
+      // 제목
+      const title1 = `${top3?.[0]?.artist ?? ""} - ${top3?.[0]?.title ?? ""}`;
+      const titleFont = "700 42px Pretendard";
+      const titleLines = wrapLines(title1, cardW - 40, titleFont);
+      const titleH = Math.max(42, (titleLines.length || 1) * 50);
+
+      // 요약
+      const labelFont = "700 34px Pretendard, Apple SD Gothic Neo, sans-serif";
+      const bodyFont = "400 32px Pretendard, Apple SD Gothic Neo, sans-serif";
+      const summaryLines = wrapLines(top3?.[0]?.summary ?? "", cardW - (40 + 56), bodyFont);
+      const summaryH = Math.min(summaryLines.length, 6) * 44;
+
+      // 카드 높이 계산 (라운드 없음)
+      const topPad = 26;
+      const bottomPad = 26;
+      const dividerGap = 18;
+      const labelGap = 16;
+      const iconSize = 48; // 아이콘 영역 높이
+      const iconLabelGap = 16;
+
+      const card1H =
+        topPad +
+        titleH +
+        dividerGap +
+        1 + // divider
+        labelGap +
+        Math.max(iconSize, 34) + // 아이콘/라벨 라인
+        18 + // 라인과 본문 사이 여백
+        summaryH +
+        bottomPad;
+
+      // 카드 사각형
+      drawRect(cardX, y, cardW, card1H, "#FFFFFF");
+
+      // 랭크 텍스트 (#1) — 카드의 세로 중앙 맞춤 + 오른쪽 끝을 카드 왼쪽 끝과 맞춤
+      const rankFont = "900 60px Pretendard, Apple SD Gothic Neo, sans-serif";
+      const rankText = "#1";
+      const rankW = measureWidth(rankText, rankFont);
+      const rankX = numberRight - rankW;
+      const rankY = y + 60 ; // 중앙
+      drawText(rankText, rankX, rankY, rankFont, "#111", "left", "middle");
+
+      // 제목
+      drawWrapped(titleLines, cardX + 20, y + topPad + 40, 50, titleFont, "#222");
+
+      // 구분선
+      {
+        const yy = y + topPad + titleH + dividerGap;
         ctx.save();
+        ctx.strokeStyle = "#E5E5E5";
+        ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.moveTo(x + r, y);
-        ctx.arcTo(x + w, y, x + w, y + h, r);
-        ctx.arcTo(x + w, y + h, x, y + h, r);
-        ctx.arcTo(x, y + h, x, y, r);
-        ctx.arcTo(x, y, x + w, y, r);
-        ctx.closePath();
-        ctx.fillStyle = fill;
-        ctx.fill();
-        if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = 4; ctx.stroke(); }
+        ctx.moveTo(Math.round(cardX + 20) + 0.5, Math.round(yy) + 0.5);
+        ctx.lineTo(Math.round(cardX + cardW - 20) + 0.5, Math.round(yy) + 0.5);
+        ctx.stroke();
         ctx.restore();
-      };
-      const drawText = (text: string, x: number, y: number, font: string, color="#333", align: CanvasTextAlign="left") => {
-        ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "top"; ctx.fillText(text, x, y); ctx.restore();
-      };
-      const wrap = (text: string, x: number, y: number, maxW: number, lineH: number, font: string, color="#333") => {
-        ctx.save(); ctx.font = font; ctx.fillStyle = color; ctx.textBaseline = "top";
-        const words = text.split(/\s+/);
-        let line = "", yy = y;
-        for (let i=0;i<words.length;i++){
-          const test = line ? line + " " + words[i] : words[i];
-          if (ctx.measureText(test).width > maxW) {
-            ctx.fillText(line, x, yy);
-            line = words[i]; yy += lineH;
-          } else {
-            line = test;
-          }
-        }
-        if (line) ctx.fillText(line, x, yy);
-        ctx.restore();
-      };
 
-      // 1) 민트 박스: 닉네임 + 입력 문장
-      drawRound(135, 675, 810, 260, 18, "#B8F3EC");
-      drawText(`“ ${nickname}님의 문장 ”`, 165, 705, "bold 36px Pretendard, Apple SD Gothic Neo, sans-serif", "#254a45");
-      wrap(comment, 165, 755, 760, 40, "500 30px Pretendard, Apple SD Gothic Neo, sans-serif", "#254a45");
+        // 아이콘 + 라벨
+        const rowY = yy + labelGap; // 라벨 라인 top 기준
+        drawAISummaryIcon(cardX + 20, rowY - 5); // 살짝 내려서 균형
+        drawText("가사 AI 요약", cardX + 20 + 56 + iconLabelGap, rowY + 30, labelFont, "#2D2D2D", "left", "middle");
 
-      // 2) 추천 TOP3
-      drawText("변환된 음악을 추천드려요", 165, 1010, "bold 36px Pretendard, Apple SD Gothic Neo, sans-serif", "#2b2b2b");
+        // 본문
+        const bodyStartY = rowY + Math.max(iconSize, 34) + 18;
+        drawWrapped(summaryLines, cardX + 90, bodyStartY + 15, 44, bodyFont, "#3C3C3C", 6);
+      }
 
-      const rowH = 158;
-      const boxW = 720, boxH = 120;
+      y += card1H + 28;
 
-      top3.slice(0, 3).forEach((s, idx) => {
-        const baseY = 1075 + idx * rowH;
-        drawText(`#${idx + 1}`, 135, baseY + 20, "bold 30px Pretendard, sans-serif", "#C02C50");
+      // === 2번, 3번 카드 ===
+      const smallH = 110;
+      const smallTitleFont = "700 40px Pretendard, Apple SD Gothic Neo, sans-serif";
 
-        // 곡 박스
-        drawRound(195, baseY, boxW, boxH, 8, "#fff", "#f0f0f0");
-        drawText(`${s.artist} - ${s.title}`, 215, baseY + 12, "600 26px Pretendard, sans-serif", "#2f2f2f");
+      [2, 3].forEach((rank, i) => {
+        // 카드
+        drawRect(cardX, y, cardW, smallH, "#FFFFFF");
 
-        if (idx === 0 && s.summary) {
-          drawText("가사 AI 요약", 215, baseY + 52, "600 22px Pretendard, sans-serif", "#4a4a4a");
-          wrap(s.summary, 215, baseY + 78, 680, 30, "400 22px Pretendard, sans-serif", "#4a4a4a");
-        }
+        // 랭크 텍스트
+        const text = `#${rank}`;
+        const w = measureWidth(text, rankFont);
+        const rx = numberRight - w;
+        const ry = y + smallH / 2;
+        drawText(text, rx, ry, rankFont, "#111", "left", "middle");
+
+        // 제목(한 줄)
+        const item = top3?.[i + 1];
+        const line = wrapLines(`${item?.artist ?? ""} - ${item?.title ?? ""}`, cardW - 40, smallTitleFont)[0] ?? "";
+        drawText(line, cardX + 20, y + smallH / 2, smallTitleFont, "#222", "left", "middle");
+
+        y += smallH + 28;
       });
-
-      // 하단 배너(선택) — PNG에는 포함시키고 싶으면 주석 해제
-      // const ig = new Image();
-      // ig.src = IG_BANNER;
-      // ig.onload = () => ctx.drawImage(ig, (W-660)/2, H-220, 660, 120);
     };
   }, [nickname, comment, top3]);
 
   const download = () => {
     const c = canvasRef.current;
     if (!c) return;
-    const link = document.createElement("a");
-    link.download = `musicconv_${gid}.png`;
-    link.href = c.toDataURL("image/png");
-    link.click();
+
+    const fileName = `GMF_LAB_CHASM_${gid}.png`;
+
+    const a = document.createElement("a");
+    a.download = fileName;
+    a.href = c.toDataURL("image/png");
+    a.click();
   };
 
   return (
     <div className="mx-auto max-w-[920px] px-4 py-8">
-      {/* 상단 안내 / PC 전용 QR */}
+      {/* 안내 + PC 전용 QR */}
       <div className="text-center">
-        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#e8fbf7]">🎉</div>
-        <h2 className="text-[18px] font-extrabold text-[#47a8a0] tracking-[-0.01em]">EVENT</h2>
+        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#fde2ea]">
+          🎉
+        </div>
+        <h2 className="text-[18px] font-extrabold text-[#ef5f86] tracking-[-0.01em]">EVENT</h2>
         <p className="mt-2 text-[13px] leading-6 text-[#444]">
-          이미지를 꼭 받아 보관하세요! <br />
-          PC에서는 아래 QR코드로 휴대폰에서 저장하면 편해요.
+          이미지를 꼭 저장해 주세요!
+          <br />
+          PC에서는 아래 QR로 휴대폰에서 저장하면 편해요.
         </p>
-
-        {/* PC에서만 QR */}
         {isDesktop && qr && (
           <div className="mt-3 flex justify-center">
             <img src={qr} alt="포스터 다운로드 QR" className="h-44 w-44" />
@@ -160,9 +337,12 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
         )}
       </div>
 
-      {/* 포스터 미리보기 */}
+      {/* 포스터 미리보기 + 다운로드 */}
       <div className="mt-8 flex flex-col items-center">
-        <canvas ref={canvasRef} className="h-[640px] w-auto rounded-lg shadow-[0_20px_60px_rgba(0,0,0,0.12)]" />
+        <canvas
+          ref={canvasRef}
+          className="h-[640px] w-auto shadow-[0_20px_60px_rgba(0,0,0,0.12)]"
+        />
         <div className="mt-5 flex gap-3">
           <button
             onClick={download}
@@ -170,13 +350,6 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
           >
             PNG 다운로드
           </button>
-          <a
-            href="/images/instagram-banner.png"
-            target="_blank"
-            className="rounded-[10px] border border-slate-300 bg-white px-5 py-3 text-[15px] font-semibold text-slate-700"
-          >
-            인스타그램 배너 보기
-          </a>
         </div>
       </div>
     </div>
