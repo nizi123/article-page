@@ -12,7 +12,7 @@ const TIP_PIN_IMG = "/musicconv/pin.png";
 const TIP_CHECK_PINK_IMG = "/musicconv/check.png";
 const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
 const SUCCESS_ICON_IMG = "/musicconv/success-icon.png";
-const AI_SUMMARY_ICON_IMG = "/musicconv/ai-summary.png";
+const AI_SUMMARY_ICON_IMG = "/musicconv/ai-icon.png";
 
 /** 방명록 / 저장 화면 전용 아이콘 */
 const GB_HEADER_IMG = "/musicconv/gb-header.png";
@@ -456,24 +456,24 @@ export default function MusicConvClient({
             <hr className="mt-6 mb-8 border-t-2 border-slate-100" />
 
             {/* 변환 성공 */}
-            <div className="bg-[#e9fbfa] px-6 py-8 text-center">
+            <div className="bg-[rgba(56,206,212,0.1)] px-6 py-8 text-center">
               <img src={SUCCESS_ICON_IMG} alt="변환 성공" className="mx-auto h-10 w-10" />
-              <div className="mt-2 text-[22px] font-extrabold text-[#27b9b3]">변환 성공!</div>
-              <div className="mt-1 text-[14px] text-[#2b8e89]">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
+              <div className="mt-2 text-[24px] font-extrabold text-[#38CED4]">변환 성공!</div>
+              <div className="mt-1 text-[16px] text-black tracking-[-0.05em]">가장 유사한 감정과 내용의 음악으로 변환 성공</div>
             </div>
 
             {/* 버튼 */}
             <div className="mt-6 grid grid-cols-5 gap-4">
               <button
                 type="button"
-                className="col-span-2 h-[56px] rounded-[10px] border border-[#9bdad7] bg-white text-[18px] font-bold text-[#24b6b1] shadow-sm"
+                className="col-span-2 h-[56px] rounded-[10px] border border-[#9bdad7] bg-white text-[20px] font-bold text-[#24b6b1] shadow-sm"
                 onClick={onReset}
               >
                 다시 입력
               </button>
               <button
                 type="button"
-                className="col-span-3 h-[56px] rounded-[10px] bg-[#3BC9C7] text-[18px] font-bold text-white shadow-sm disabled:opacity-60"
+                className="col-span-3 h-[56px] rounded-[10px] bg-[#3BC9C7] text-[20px] font-bold text-white shadow-sm disabled:opacity-60"
                 onClick={saveGuestbook}
                 disabled={submitting}
               >
@@ -491,35 +491,22 @@ export default function MusicConvClient({
                 return (
                   <article
                     key={idx}
-                    className="rounded-[18px] border border-[#EAEAEA] bg-white p-6 sm:p-7 shadow-[0_14px_28px_rgba(0,0,0,0.07)]"
+                    className="rounded-[4px] border border-[#EAEAEA] bg-[#F9F9F9] p-6 sm:p-7 shadow-[0_14px_28px_rgba(0,0,0,0.07)]"
                   >
                     <div className="flex items-start justify-between gap-3">
-                      <h3 className="text-[28px] sm:text-[30px] font-semibold leading-tight text-[#1F2937] tracking-[-0.3px]">
+                      <h3 className="text-[20px] sm:text-[20px] font-semibold leading-tight text-[#1F2937] tracking-[-0.3px]">
                         {it.artist_name} - {it.song_name}
                       </h3>
-                      {it.song_url && (
-                        <a
-                          href={it.song_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          aria-label={`${it.song_name} 링크 열기`}
-                          className="shrink-0 inline-flex h-9 w-9 items-center justify-center rounded-full ring-1 ring-[#E6E6E6] hover:bg-[#F7F7F7] transition"
-                          title={urlText}
-                          style={{ pointerEvents: "auto" }}
-                        >
-                          <ExternalLinkIcon className="h-4 w-4 text-[#7B7B7B]" />
-                        </a>
-                      )}
                     </div>
 
-                    <div className="mt-2 text-[18px] font-bold text-[#FF5A7A]">유사도 {it.similarity}%</div>
-                    <hr className="mt-5 mb-4 border-t border-[#ECECEC]" />
+                    <div className="mt-2 text-[16px] font-bold text-[#FF5A8B]">유사도 {it.similarity}%</div>
+                    <hr className="mt-3 mb-3 border-t border-[#ECECEC]" />
 
                     <div className="flex items-center gap-2">
                       <img src={AI_SUMMARY_ICON_IMG} alt="" className="h-5 w-5" />
-                      <span className="text-[18px] font-semibold text-[#2F2F2F]">가사 AI 요약</span>
+                      <span className="text-[16px] font-semibold text-[#2F2F2F]">가사 AI 요약</span>
                     </div>
-                    <p className="mt-3 text-[20px] leading-[1.9] text-[#6B6B6B]">{it.summary_3 || it.summary_1}</p>
+                    <p className="mt-3 text-[16px] leading-[1.9] text-[#6B6B6B] tracking-[-0.05em]">{it.summary_3 || it.summary_1}</p>
                   </article>
                 );
               })}
