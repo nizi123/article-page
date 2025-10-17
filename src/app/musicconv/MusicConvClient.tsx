@@ -550,14 +550,14 @@ export default function MusicConvClient({
             {/* 등록 안내 섹션 - NEW */}
 <section className="mt-8">
   {/* 상단 알림 배너 */}
-  <div className="rounded-[18px] border border-[#ffd4df] bg-[#fff1f5] px-6 py-8">
+  <div className="bg-[#fff1f5] px-6 py-8">
     <div className="flex flex-col items-center text-center">
     <span className="flex h-10 w-10 items-center justify-center">
 
 <img src={GB_CHECK_IMG} alt="ok" className="h-5 w-5" />
 </span>
       <div className="flex items-center gap-3">
-        <h3 className="text-center text-[24px] sm:text-[16px] font-bold tracking-tight text-[#3a3a3a]">
+        <h3 className="text-center text-[16px] sm:text-[16px] font-bold tracking-tight text-[#3a3a3a]">
           <span className="text-[#ff2a6d] display-block">{nickname || "익명"}</span>
           님의 문장이 방명록에 등록되었어요.
         </h3>
@@ -566,42 +566,41 @@ export default function MusicConvClient({
   </div>
 
   {/* 설명문 */}
-  <p className="mt-8 text-center text-[18px] sm:text-[22px] leading-[1.9] text-[#4b4b4b]">
+  <p className="mt-8 text-center text-[16px] sm:text-[16px] leading-[1.9] text-[#4b4b4b]">
     다른 사람들의 방명록을 보고 감상을 나누어 보세요.
     <br />
-    인스타그램 이벤트를 참여하시면 <span className="font-extrabold">‘내 결과 공유하기’</span>를 눌러주세요.
+    인스타그램 이벤트를 참여하시려면 <br/><span className="font-extrabold">‘내 결과 공유하기’</span>를 눌러주세요.
   </p>
 
   {/* CTA 버튼들 */}
-  <div className="mx-auto mt-10 grid w-full max-w-[1100px] grid-cols-12 gap-6">
-    {/* 베스트 글 보기 (작게 / 아웃라인) */}
-    <button
-      type="button"
-      onClick={() => setSortBy(SortBy.LIKES)}
-      className="col-span-12 sm:col-span-4 h-[82px] rounded-[18px] border-2 border-[#ff87a6] bg-white
-                 text-[22px] sm:text-[26px] font-extrabold text-[#ff5b8a]
-                 shadow-[0_8px_0_#ffd3df] hover:translate-y-[1px] hover:shadow-[0_6px_0_#ffd3df]
-                 active:translate-y-[2px] active:shadow-[0_4px_0_#ffd3df]"
-    >
-      베스트 글 보기
-    </button>
+  <div className="mx-auto mt-6 grid w-full max-w-[980px] grid-cols-12 gap-4">
+  {/* 베스트 글 보기 (4/12) */}
+  <button
+    type="button"
+    onClick={() => setSortBy(SortBy.LIKES)}
+    className="col-span-5 min-h-[56px] rounded-[4px] border border-[#f29ab0] bg-white
+               text-[20px] font-extrabold text-[#ef5f86] whitespace-nowrap tracking-[-0.1em]
+               shadow-[0_6px_10px_rgba(239,95,134,0.18)]
+               hover:bg-[#fff6f8] active:translate-y-[1px] transition"
+  >
+    베스트 글 보기
+  </button>
 
-    {/* 내 결과 공유하기 (크게 / 가득) */}
-    <button
-      type="button"
-      onClick={() => {
-        if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
-        else window.location.href = `/musicconv/guestbook`;
-      }}
-      className="col-span-12 sm:col-span-8 h-[82px] rounded-[18px] bg-[#ef5f86]
-                 text-[24px] sm:text-[30px] font-extrabold text-white
-                 shadow-[0_10px_0_#d6577b] hover:bg-[#e6527a]
-                 hover:translate-y-[1px] hover:shadow-[0_8px_0_#d6577b]
-                 active:translate-y-[2px] active:shadow-[0_6px_0_#d6577b]"
-    >
-      내 결과 공유하기
-    </button>
-  </div>
+  {/* 내 결과 공유하기 (8/12) */}
+  <button
+    type="button"
+    onClick={() => {
+      if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
+      else window.location.href = `/musicconv/guestbook`;
+    }}
+    className="col-span-7 min-h-[56px] rounded-[4px] bg-[#ef5f86]
+               text-[20px] font-extrabold text-white whitespace-nowrap tracking-[-0.1em]
+               shadow-[0_6px_12px_rgba(239,95,134,0.25)]
+               hover:bg-[#e65980] active:translate-y-[1px] transition"
+  >
+    내 결과 공유하기
+  </button>
+</div>
 </section>
 
             <div className="mt-8 mb-3 flex items-center justify-between">
