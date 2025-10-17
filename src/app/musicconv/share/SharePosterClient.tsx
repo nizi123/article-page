@@ -51,6 +51,9 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
 
   // ======================= 캔버스 렌더 =======================
   useEffect(() => {
+    let cancelled = false;
+
+    (async () => {
     const c = canvasRef.current;
     if (!c) return;
 
@@ -305,6 +308,8 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
         y += smallH + 28;
       });
     };
+  })();
+    return () => { cancelled = true; };
   }, [nickname, comment, top3]);
 
   const download = () => {
