@@ -627,7 +627,7 @@ export default function MusicConvClient({
                     <img src={ICO_USER} alt="" className="h-5 w-5" />
                     {g.nickname}
                   </div>
-                  <div className="mt-2 flex items-start gap-2 text-[15px] leading-7 text-[#4b4b4b]">
+                  <div className="mt-5 flex items-start gap-2 text-[15px] leading-7 text-[#4b4b4b]">
                     <img src={ICO_BUBBLE} alt="" className="mt-[2px] h-4 w-4" />
                     <p className="whitespace-pre-wrap">{g.comment}</p>
                   </div>
