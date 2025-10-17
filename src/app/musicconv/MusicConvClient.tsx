@@ -13,6 +13,7 @@ const TIP_CHECK_PINK_IMG = "/musicconv/check.png";
 const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
 const SUCCESS_ICON_IMG = "/musicconv/success-icon.png";
 const AI_SUMMARY_ICON_IMG = "/musicconv/ai-icon.png";
+const POPUP_WARNING_IMG = "/musicconv/warning.png";
 
 /** 방명록 / 저장 화면 전용 아이콘 */
 const GB_HEADER_IMG = "/musicconv/gb-header.png";
@@ -72,6 +73,37 @@ function formatTimeKST(s?: string) {
   return `${yy}.${m[2]}.${m[3]} ${m[4]}:${m[5]}`;
 }
 
+/** ==== Profanity Filter ==== */
+function normalizeForFilter(s: string) {
+    return (s || "")
+      .toLowerCase()
+      .normalize("NFKD")
+      .replace(/\s+/g, "")               // 공백 제거
+      .replace(/[\u200B-\u200D\uFEFF]/g, "") // 제로폭 등
+      .replace(/[~`!@#$%^&*()+={}\[\]\\|;:'",.<>/?_-]/g, ""); // 특수문자 제거
+  }
+  
+  const PROFANITY_PATTERNS: RegExp[] = [
+    // 한국어 (여러 변형/줄임 대응)
+    /씨+발|시+발|쉬발|샤발|ㅅ\s*ㅂ/i,
+    /병+신|ㅂ\s*ㅅ/i,
+    /좆|존+나|씹/i,
+    /개\s*(새|색)\s*끼?/i,
+    /니미|꺼져/i,
+    // 영어 (특수문자 끼워넣기, 대소문자 변형)
+    /f[\W_]*u[\W_]*c[\W_]*k/i,
+    /s[\W_]*h[\W_]*i[\W_]*t/i,
+    /b[\W_]*i[\W_]*t[\W_]*c[\W_]*h/i,
+    /a[\W_]*s[\W_]*s[\W_]*h[\W_]*o[\W_]*l[\W_]*e/i,
+  ];
+  
+  function hasProfanity(input: string) {
+    if (!input) return false;
+    const raw = input;
+    const norm = normalizeForFilter(input);
+    return PROFANITY_PATTERNS.some((re) => re.test(raw) || re.test(norm));
+  }
+
 export default function MusicConvClient({
   initialView,
   sid: initSid = null,
@@ -80,6 +112,9 @@ export default function MusicConvClient({
   initialText = "",
 }: Props) {
   const router = useRouter();
+
+
+  const [showBadwordModal, setShowBadwordModal] = useState(false);
 
   const [nickname, setNickname] = useState(initialNickname);
   const [text, setText] = useState(initialText);
@@ -119,6 +154,12 @@ export default function MusicConvClient({
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!canSubmit) return;
+
+      // 비속어 감지되면 팝업만 띄우고 즉시 중단
+    if (hasProfanity(nickname) || hasProfanity(text)) {
+        setShowBadwordModal(true);
+        return;
+      }
 
     setErrMsg(null);
     setSubmitting(true);
@@ -429,7 +470,7 @@ useEffect(() => {
                 </li>
                 <li className="flex items-start gap-3">
                   <img src={TIP_CHECK_PINK_IMG} alt="" className="mt-1 h-4 w-4" />
-                  <span>오늘 그만페를 한마디로 요약해 보세요.</span>
+                  <span>오늘 그민페를 한마디로 요약해 보세요.</span>
                 </li>
                 <li className="flex items-start gap-3">
                   <img src={TIP_CHECK_GRAY_IMG} alt="" className="mt-1 h-4 w-4" />
@@ -659,6 +700,30 @@ useEffect(() => {
           </section>
         )}
       </div>
+
+
+{/* 비속어 차단 팝업 */}
+{showBadwordModal && (
+  <div className="fixed inset-0 z-[1000] flex items-center justify-center bg-black/40">
+    <div className="w-[560px] max-w-[90vw] rounded-[4px] bg-white p-6 text-center shadow-2xl">
+      <div className="mx-auto flex h-10 w-10 items-center justify-center">
+      <img src={POPUP_WARNING_IMG} alt="" className="mt-1 h-8 w-8" />
+      </div>
+      <p className="mt-4 text-[18px] font-semibold leading-7 text-[#333] tracking-[-0.03em]">
+        비속어가 감지되어 변환이 불가합니다.
+        <br />다시 시도해주세요.
+      </p>
+      <button
+        type="button"
+        onClick={() => setShowBadwordModal(false)}
+        className="mt-5 inline-flex h-[44px] w-full items-center justify-center rounded-[4px] bg-[#3BC9C7] text-[20px] font-bold text-white shadow-sm active:translate-y-[1px]"
+      >
+        확인
+      </button>
+    </div>
+  </div>
+)}
+
     </main>
   );
 }
