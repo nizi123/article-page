@@ -12,6 +12,8 @@ type Props = {
 
 const BG = "/musicconv/share-bg.png";
 const AI_ICON = "/musicconv/ai-icon.png"; 
+const EV_TITLE = "/musicconv/event-title.png";  // 'EVENT' 타이틀 이미지
+const EV_ARROW = "/musicconv/event-arrow.png";  // 아래 화살표 이미지
 
 export default function SharePosterClient({ gid, nickname, comment, top3 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -318,18 +320,38 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
   };
 
   return (
+
+    <main className="min-h-[100dvh] w-full bg-white">
+    {/* 상단 바 */}
+    <div className="border-b border-slate-200 bg-white/80 backdrop-blur">
+      <div className="mx-auto max-w-5xl px-4 py-5">
+        <div className="flex items-center justify-center">
+          <span className="text-xl font-black tracking-widest text-[#ff2a6d]">Mu</span>
+          <span className="text-xl font-black tracking-widest text-slate-900">sic</span>
+          <span className="text-xl font-black tracking-widest text-[#20c997]">C</span>
+          <span className="text-xl font-black tracking-widest text-slate-900">onv</span>
+        </div>
+      </div>
+    </div>
+
     <div className="mx-auto max-w-[920px] px-4 py-8">
       {/* 안내 + PC 전용 QR */}
       <div className="text-center">
-        <div className="mx-auto mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full bg-[#fde2ea]">
-          🎉
+        <div className="">
+                       {/* EVENT 타이틀 이미지 */}
+  <img src={EV_TITLE} alt="EVENT" className="mx-auto h-30 mb-8" />
         </div>
-        <h2 className="text-[18px] font-extrabold text-[#ef5f86] tracking-[-0.01em]">EVENT</h2>
-        <p className="mt-2 text-[13px] leading-6 text-[#444]">
-          이미지를 꼭 저장해 주세요!
-          <br />
-          PC에서는 아래 QR로 휴대폰에서 저장하면 편해요.
-        </p>
+        <p className="mt-2 text-[13px] leading-6 text-[#525252]">
+    이미지를 꼭 눌러 다운 받아보세요!
+    <br />(PC 버전은 QR코드로 찍어주세요)
+    <br /><span className="font-semibold">@lab_chasm</span>을 태그해 스토리에 올려주시면
+    <br />추첨을 통해 선물을 드립니다
+    <br />인스타그램 비공개 계정은 참여 확인이 어렵습니다.
+  </p>
+
+    {/* 화살표 이미지 */}
+    <img src={EV_ARROW} alt="" className="mx-auto mt-2 h-4 w-auto" />
+
         {isDesktop && qr && (
           <div className="mt-3 flex justify-center">
             <img src={qr} alt="포스터 다운로드 QR" className="h-44 w-44" />
@@ -353,5 +375,6 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
         </div>
       </div>
     </div>
+    </main>
   );
 }
