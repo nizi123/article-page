@@ -7,7 +7,7 @@ import LikeButton from "./guestbook/LikeButton";
 import dynamic from "next/dynamic";
 
 //개발
-import { useSearchParams } from "next/navigation";
+//import { useSearchParams } from "next/navigation";
 
 /** 이미지 경로 */
 const TITLE_IMG = "/musicconv/musicconv-title.png";
@@ -150,15 +150,15 @@ export default function MusicConvClient({
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
 //개발
-const searchParams = useSearchParams();
-const preview = searchParams.get("preview");
+//const searchParams = useSearchParams();
+//const preview = searchParams.get("preview");
 
-useEffect(() => {
-  if (process.env.NODE_ENV !== "development") return; // 배포차단
-  if (preview === "loading") setView("loading");
-  if (preview === "result") setView("result");
-  if (preview === "saved") setView("saved");
-}, [preview]);
+//useEffect(() => {
+//  if (process.env.NODE_ENV !== "development") return; // 배포차단
+//  if (preview === "loading") setView("loading");
+//  if (preview === "result") setView("result");
+//  if (preview === "saved") setView("saved");
+//}, [preview]);
 
 // 로딩창 로직
 const [lottieData, setLottieData] = useState<any>(null);
