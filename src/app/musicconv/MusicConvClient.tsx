@@ -502,16 +502,6 @@ useEffect(() => {
               errMsg={errMsg}
             />
 
-            {/* 배너 */}
-            <a
-              href="https://instagram.com/lab_chasm"
-              target="_blank"
-              rel="noreferrer"
-              className="mx-auto mt-6 block w-full max-w-[680px] overflow-hidden rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
-            >
-              <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-[120px] w-full object-cover" />
-            </a>
-
             {/* 팁 */}
             <div className="mt-6 rounded-[16px] border border-[#E5E5E5] bg-white p-5 shadow-[0_6px_18px_rgba(0,0,0,0.06)]">
               <div className="mb-3 flex items-center gap-2">
@@ -535,6 +525,16 @@ useEffect(() => {
                 </li>
               </ul>
             </div>
+
+                        {/* 배너 */}
+                        <a
+              href="https://instagram.com/lab_chasm"
+              target="_blank"
+              rel="noreferrer"
+              className="mx-auto mt-6 block w-full max-w-[680px] overflow-hidden shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
+            >
+              <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-[120px] w-full object-cover" />
+            </a>
           </section>
         )}
 
@@ -573,18 +573,15 @@ useEffect(() => {
     )}
 
     {/* 하단 배너 */}
-    <a
-      href="https://instagram.com/lab_chasm"
-      target="_blank"
-      rel="noreferrer"
-      className="mx-auto mt-6 block w-full max-w-[680px] overflow-hidden rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
-    >
-      <img
-        src={IG_BANNER_IMG}
-        alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기"
-        className="h-[120px] w-full object-cover"
-      />
-    </a>
+    <div className="mx-auto mt-6 w-full max-w-[680px] rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)] overflow-hidden">
+  <div className="relative w-full" style={{ aspectRatio: "17 / 3" }}>
+    <img
+      src={IG_BANNER_IMG}
+      alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기"
+      className="absolute inset-0 h-full w-full object-contain"
+    />
+  </div>
+</div>
             </section>
         )}
 
@@ -661,7 +658,7 @@ useEffect(() => {
               href="https://instagram.com/lab_chasm"
               target="_blank"
               rel="noreferrer"
-              className="mx-auto mt-8 block w-full max-w-[680px] overflow-hidden rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
+              className="mx-auto mt-8 block w-full max-w-[680px] overflow-hidden shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
             >
               <img src={IG_BANNER_IMG} alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기" className="h-[120px] w-full object-cover" />
             </a>
