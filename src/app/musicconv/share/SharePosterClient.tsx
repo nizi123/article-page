@@ -309,7 +309,7 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
     const c = canvasRef.current;
     if (!c) return;
 
-    const fileName = `GMF_LAB_CHASM_${gid}.png`;
+    const fileName = `GMF_LAB_CHASM.png`;
 
     const a = document.createElement("a");
     a.download = fileName;
