@@ -34,7 +34,7 @@ export default function Footer() {
 
           <div className="flex space-x-6">
             <Link
-              href="https://www.youtube.com/lab_chasm"
+              href="https://www.youtube.com/@Lab_CHASM"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube 채널"
