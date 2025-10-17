@@ -590,8 +590,8 @@ export default function MusicConvClient({
   <button
     type="button"
     onClick={() => {
-      if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
-      else window.location.href = `/musicconv/guestbook`;
+        if (savedId) window.location.href = `/musicconv/share/${savedId}`;
+        else window.location.href = `/musicconv/guestbook`;
     }}
     className="col-span-7 min-h-[56px] rounded-[4px] bg-[#ef5f86]
                text-[20px] font-extrabold text-white whitespace-nowrap tracking-[-0.1em]
