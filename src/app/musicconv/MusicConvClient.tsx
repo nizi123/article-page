@@ -4,6 +4,11 @@ import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import LikeButton from "./guestbook/LikeButton";
 
+import dynamic from "next/dynamic";
+
+//개발
+import { useSearchParams } from "next/navigation";
+
 /** 이미지 경로 */
 const TITLE_IMG = "/musicconv/musicconv-title.png";
 const CLEANBOT_IMG = "/musicconv/cleanbot.png";
@@ -14,6 +19,12 @@ const TIP_CHECK_GRAY_IMG = "/musicconv/noncheck.png";
 const SUCCESS_ICON_IMG = "/musicconv/success-icon.png";
 const AI_SUMMARY_ICON_IMG = "/musicconv/ai-icon.png";
 const POPUP_WARNING_IMG = "/musicconv/warning.png";
+
+const LOADING_GIF = "/musicconv/gmf.gif";
+
+/** 로딩 */
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
+const LOADING_LOTTIE = "/musicconv/gmf.json";
 
 /** 방명록 / 저장 화면 전용 아이콘 */
 const GB_HEADER_IMG = "/musicconv/gb-header.png";
@@ -137,6 +148,55 @@ export default function MusicConvClient({
   const [firstLoad, setFirstLoad] = useState(true);
   const [savedId, setSavedId] = useState<number | null>(initSavedId);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
+
+//개발
+const searchParams = useSearchParams();
+const preview = searchParams.get("preview");
+
+useEffect(() => {
+  if (process.env.NODE_ENV !== "development") return; // 배포차단
+  if (preview === "loading") setView("loading");
+  if (preview === "result") setView("result");
+  if (preview === "saved") setView("saved");
+}, [preview]);
+
+// 로딩창 로직
+const [lottieData, setLottieData] = useState<any>(null);
+
+useEffect(() => {
+  let alive = true;
+  (async () => {
+    try {
+      const res = await fetch(LOADING_LOTTIE);
+      const json = await res.json();
+
+      // (선택) 색상을 우리 핑크(#ff2a6d)로 맞추고 싶으면 주석 해제
+      const patched = tintLottie(json, "#ff2a6d");
+      if (alive) setLottieData(patched);
+
+      if (alive) setLottieData(json);
+    } catch {
+      // 실패 시 무시(공백 렌더 → 배너/텍스트는 그대로)
+    }
+  })();
+  return () => { alive = false; };
+}, []);
+
+function tintLottie(data: any, hex: string) {
+    const d = JSON.parse(JSON.stringify(data));
+    const [r,g,b] = hex.replace("#","").match(/.{2}/g)!.map(x => parseInt(x,16)/255);
+    const walk = (o: any) => {
+      if (Array.isArray(o)) o.forEach(walk);
+      else if (o && typeof o === "object") {
+        if (o.ty === "fl" && o.c?.k) o.c.k = [r, g, b, 1];
+        Object.values(o).forEach(walk);
+      }
+    };
+    walk(d);
+    return d;
+  }
+  
+
 
   /** ✅ loadMore 동시 진입 차단 게이트 */
   const loadingGateRef = useRef(false);
@@ -420,7 +480,7 @@ useEffect(() => {
       </div>
 
       <div className="mx-auto max-w-3xl px-4 py-10">
-        {(view === "form" || view === "loading") && (
+        {(view === "form") && (
           <header className="text-center">
             <img src={TITLE_IMG} alt="텍스트 음악 변환기" className="mx-auto h-auto w-[260px] sm:w-[340px]" />
             <p className="mt-5 text-[15px] leading-7 text-[#3B3B3B]">
@@ -488,14 +548,52 @@ useEffect(() => {
 
         {/* LOADING */}
         {view === "loading" && (
-          <section className="mt-10 flex flex-col items-center text-center">
-            <div className="text-[84px] leading-none text-pink-400">ᛗ</div>
-            <div className="mt-6 text-lg font-semibold text-slate-800">
-              <span className="text-pink-500">{nickname || "익명"}</span>님이
-            </div>
-            <div className="mt-1 text-2xl font-extrabold">입력하신 문장을 딱 맞는 음악으로</div>
-            <div className="text-2xl font-extrabold">변환하고 있습니다.</div>
-          </section>
+              <section className="mt-10 flex flex-col items-center text-center">
+              {/* JSON 애니메이션 */}
+              {lottieData ? (
+                <Lottie
+                  animationData={lottieData}
+                  loop
+                  autoplay
+                  style={{ width: 96, height: 96 }}
+                />
+              ) : (
+                <div style={{ width: 96, height: 96 }} />
+              )}
+          
+               {/* 상단 문구 */}
+    <div className="mt-20 text-[24px] font-bold text-slate-800">
+      <span className="text-[#FF5A8B] font-bold text-[24px]">{nickname || "익명"}</span>님이
+    </div>
+    <div className="mt-1 text-[24px] font-bold leading-tight text-[#333]">
+      입력하신 문장을 딱 맞는 음악으로
+    </div>
+    <div className="mb-10 text-[24px] font-bold leading-tight text-[#333]">
+      변환하고 있습니다.
+    </div>
+
+    {/* 입력 문장 카드 (배너 위에 위치) */}
+    {text && (
+      <div className="mx-auto mt-8 w-full max-w-[680px] rounded-[4px] border border-slate-200 bg-white p-4 text-left">
+        <div className="text-[16px] font-semibold text-slate-500">입력 문장</div>
+        <p className="mt-2 text-[16px] font-regular leading-7 text-slate-800">{text}</p>
+      </div>
+    )}
+
+    {/* 하단 배너 */}
+    <a
+      href="https://instagram.com/lab_chasm"
+      target="_blank"
+      rel="noreferrer"
+      className="mx-auto mt-6 block w-full max-w-[680px] overflow-hidden rounded-[14px] shadow-[0_10px_24px_rgba(0,0,0,0.12)]"
+    >
+      <img
+        src={IG_BANNER_IMG}
+        alt="랩 캐즘 인스타그램 팔로우 하고 소식 받기"
+        className="h-[120px] w-full object-cover"
+      />
+    </a>
+            </section>
         )}
 
         {/* RESULT */}
