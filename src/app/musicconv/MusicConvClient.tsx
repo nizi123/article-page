@@ -541,47 +541,68 @@ export default function MusicConvClient({
         {view === "saved" && (
           <section className="mt-2">
             <div className="flex flex-col items-center text-center">
-              <img src={GB_HEADER_IMG} alt="" className="mb-2 h-14 w-14" />
+              <img src={GB_HEADER_IMG} alt="" className="" />
               <h2 className="text-[22px] sm:text-[24px] font-extrabold tracking-tight text-[#222]">
-                {new Date().getFullYear()} 고민페 페이버딜의 방명록!
               </h2>
               <hr className="mt-4 w-full border-t border-[#e9e9e9]" />
             </div>
 
-            <div className="mt-6 rounded-[10px] border border-[#ffd6de] bg-[#fff0f3] px-4 py-5 text-[#444]">
-              <div className="flex items-center justify-center gap-2 text-[15px] font-semibold">
-                <img src={GB_CHECK_IMG} className="h-5 w-5" alt="ok" />
-                <span>
-                  <span className="font-bold text-[#ff2a6d]">{nickname || "익명"}</span>
-                  님의 문장이 방명록에 등록되었어요.
-                </span>
-              </div>
-              <p className="mt-3 text-center text-[14px] leading-6 text-slate-600">
-                다른 사람들의 방명록을 보고 감상을 나누어 보세요.
-                <br />
-                인스타그램 이벤트를 참여하시면 <span className="font-bold">‘내 결과 공유하기’</span>를 눌러주세요.
-              </p>
+            {/* 등록 안내 섹션 - NEW */}
+<section className="mt-8">
+  {/* 상단 알림 배너 */}
+  <div className="rounded-[18px] border border-[#ffd4df] bg-[#fff1f5] px-6 py-8">
+    <div className="flex flex-col items-center text-center">
+    <span className="flex h-10 w-10 items-center justify-center">
 
-              <div className="mt-4 flex items-center justify-center gap-3">
-                <button
-                  type="button"
-                  className="rounded-[10px] border-2 border-[#ff9bb2] bg-white px-5 py-2.5 text-[15px] font-semibold text-[#ff2a6d] shadow-sm"
-                  onClick={() => setSortBy(SortBy.LIKES)}
-                >
-                  베스트 글 보기
-                </button>
-                <button
-                  type="button"
-                  className="rounded-[10px] bg-[#ef5f86] px-6 py-2.5 text-[15px] font-bold text-white hover:bg-[#e6527a] shadow"
-                  onClick={() => {
-                    if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
-                    else window.location.href = `/musicconv/guestbook`;
-                  }}
-                >
-                  내 결과 공유하기
-                </button>
-              </div>
-            </div>
+<img src={GB_CHECK_IMG} alt="ok" className="h-5 w-5" />
+</span>
+      <div className="flex items-center gap-3">
+        <h3 className="text-center text-[24px] sm:text-[16px] font-bold tracking-tight text-[#3a3a3a]">
+          <span className="text-[#ff2a6d] display-block">{nickname || "익명"}</span>
+          님의 문장이 방명록에 등록되었어요.
+        </h3>
+      </div>
+    </div>
+  </div>
+
+  {/* 설명문 */}
+  <p className="mt-8 text-center text-[18px] sm:text-[22px] leading-[1.9] text-[#4b4b4b]">
+    다른 사람들의 방명록을 보고 감상을 나누어 보세요.
+    <br />
+    인스타그램 이벤트를 참여하시면 <span className="font-extrabold">‘내 결과 공유하기’</span>를 눌러주세요.
+  </p>
+
+  {/* CTA 버튼들 */}
+  <div className="mx-auto mt-10 grid w-full max-w-[1100px] grid-cols-12 gap-6">
+    {/* 베스트 글 보기 (작게 / 아웃라인) */}
+    <button
+      type="button"
+      onClick={() => setSortBy(SortBy.LIKES)}
+      className="col-span-12 sm:col-span-4 h-[82px] rounded-[18px] border-2 border-[#ff87a6] bg-white
+                 text-[22px] sm:text-[26px] font-extrabold text-[#ff5b8a]
+                 shadow-[0_8px_0_#ffd3df] hover:translate-y-[1px] hover:shadow-[0_6px_0_#ffd3df]
+                 active:translate-y-[2px] active:shadow-[0_4px_0_#ffd3df]"
+    >
+      베스트 글 보기
+    </button>
+
+    {/* 내 결과 공유하기 (크게 / 가득) */}
+    <button
+      type="button"
+      onClick={() => {
+        if (savedId) window.location.href = `/musicconv/guestbook/${savedId}`;
+        else window.location.href = `/musicconv/guestbook`;
+      }}
+      className="col-span-12 sm:col-span-8 h-[82px] rounded-[18px] bg-[#ef5f86]
+                 text-[24px] sm:text-[30px] font-extrabold text-white
+                 shadow-[0_10px_0_#d6577b] hover:bg-[#e6527a]
+                 hover:translate-y-[1px] hover:shadow-[0_8px_0_#d6577b]
+                 active:translate-y-[2px] active:shadow-[0_6px_0_#d6577b]"
+    >
+      내 결과 공유하기
+    </button>
+  </div>
+</section>
 
             <div className="mt-8 mb-3 flex items-center justify-between">
               <div className="text-[14px] font-semibold text-slate-700">• 최신순</div>
