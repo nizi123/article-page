@@ -267,22 +267,23 @@ export default function MusicConvClient({
     }
   }
 
-  /** 새로고침 복원 */
-  useEffect(() => {
-    if (initialView !== "loading" && initialView !== "result") return;
-    const hasQ = !!initialText && initialText.length >= 1;
-    if (hasQ) return;
+  /** 새로고침 복원 (닉네임은 모든 화면, 텍스트/세션은 result/loading에서만) */
+useEffect(() => {
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return;
-      const saved = JSON.parse(raw) as {
-        sid?: string;
-        q?: string;
-        n?: string;
-      };
-      if (saved?.q) setText(saved.q);
-      if (saved?.n) setNickname(saved.n || "");
-      if (saved?.sid) setSid(saved.sid);
+      const saved = JSON.parse(raw) as { sid?: string; q?: string; n?: string };
+  
+      // 1) 닉네임은 어디서든 복원
+      if (!nickname && saved?.n) setNickname(saved.n);
+  
+      // 2) result/loading일 때만 q/sid 복원
+      const isResultOrLoading = initialView === "result" || initialView === "loading";
+      const hasQFromServer = !!initialText && initialText.length >= 1;
+      if (isResultOrLoading && !hasQFromServer) {
+        if (saved?.q) setText(saved.q);
+        if (saved?.sid) setSid(saved.sid);
+      }
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -423,7 +424,7 @@ export default function MusicConvClient({
                 </li>
                 <li className="flex items-start gap-3">
                   <img src={TIP_CHECK_GRAY_IMG} alt="" className="mt-1 h-4 w-4" />
-                  <span className="text-[#8C8C8C] line-through decoration-[#3BA6FF] decoration-2">
+                  <span className="text-[#8C8C8C] line-through decoration-1">
                     사실 아무 말이나 해도 됩니다.
                   </span>
                 </li>
@@ -529,8 +530,6 @@ export default function MusicConvClient({
           <section className="mt-2">
             <div className="flex flex-col items-center text-center">
               <img src={GB_HEADER_IMG} alt="" className="" />
-              <h2 className="text-[22px] sm:text-[24px] font-extrabold tracking-tight text-[#222]">
-              </h2>
               <hr className="mt-4 w-full border-t border-[#e9e9e9]" />
             </div>
 
@@ -563,15 +562,17 @@ export default function MusicConvClient({
   <div className="mx-auto mt-6 grid w-full max-w-[980px] grid-cols-12 gap-4">
   {/* 베스트 글 보기 (4/12) */}
   <button
-    type="button"
-    onClick={() => setSortBy(SortBy.LIKES)}
-    className="col-span-5 min-h-[56px] rounded-[4px] border border-[#f29ab0] bg-white
-               text-[20px] font-extrabold text-[#ef5f86] whitespace-nowrap tracking-[-0.1em]
-               shadow-[0_6px_10px_rgba(239,95,134,0.18)]
-               hover:bg-[#fff6f8] active:translate-y-[1px] transition"
-  >
-    베스트 글 보기
-  </button>
+  type="button"
+  onClick={() =>
+    setSortBy(sortBy === SortBy.LIKES ? SortBy.LATEST : SortBy.LIKES)
+  }
+  className="col-span-5 min-h-[56px] rounded-[4px] border border-[#f29ab0] bg-white
+             text-[20px] font-extrabold text-[#ef5f86] whitespace-nowrap tracking-[-0.1em]
+             shadow-[0_6px_10px_rgba(239,95,134,0.18)]
+             hover:bg-[#fff6f8] active:translate-y-[1px] transition"
+>
+  {sortBy === SortBy.LIKES ? "내가 쓴 글 보기" : "베스트 글 보기"}
+</button>
 
   {/* 내 결과 공유하기 (8/12) */}
   <button
@@ -590,47 +591,42 @@ export default function MusicConvClient({
 </div>
 </section>
 
-            <div className="mt-8 mb-3 flex items-center justify-between">
-              <div className="text-[14px] font-semibold text-slate-700">• 최신순</div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as SortBy)}
-                className="rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm"
-              >
-                <option value={SortBy.LATEST}>최신순</option>
-                <option value={SortBy.LIKES}>좋아요순</option>
-              </select>
-            </div>
+<div className="mt-8 mb-3 flex items-center justify-between">
+  <div className="text-[16px] font-regular text-slate-700 tracking-[-0.02em]">
+    ▾  {sortBy === SortBy.LATEST ? "최신순" : "좋아요순"}
+  </div>
+</div>
 
             {/* ✅ 여기서 LikeButton 사용 */}
             <div className="space-y-5">
               {guestItems.map((g, idx) => (
                 <article
                   key={`${g.id}-${idx}`}
-                  className="rounded-[12px] border border-[#e7e7e7] bg-[#fff] p-4 shadow-[0_4px_14px_rgba(0,0,0,0.06)]"
+                  className="rounded-[4px] border border-[#e7e7e7] bg-[#F9F9F9] p-4 shadow-[0_4px_14px_rgba(0,0,0,0.06)]"
                 >
-                  <div className="flex items-center gap-2 text-[14px] font-semibold text-[#333]">
+                  <div className="flex items-center gap-2 text-[16px] font-semibold text-[#333]">
                     <img src={ICO_USER} alt="" className="h-5 w-5" />
                     {g.nickname}
                   </div>
-                  <div className="mt-5 flex items-start gap-2 text-[15px] leading-7 text-[#4b4b4b]">
-                    <img src={ICO_BUBBLE} alt="" className="mt-[2px] h-4 w-4" />
+                  <div className="mt-3 flex items-start gap-2 text-[16px] leading-7 text-[#4b4b4b]">
+                    <img src={ICO_BUBBLE} alt="" className="mt-[3px] h-5 w-5" />
                     <p className="whitespace-pre-wrap">{g.comment}</p>
                   </div>
 
-                  <div className="mt-4 rounded-[10px] border border-[#e9e9e9] bg-[#f9fafb] p-3">
-                    <div className="flex items-center gap-2 text-[13px] font-semibold text-[#17a2a2]">
+                  <div className="mt-4 rounded-[4px] border border-[#e9e9e9] bg-[#fff] p-3">
+                    <div className="flex items-center gap-2 text-[16px] font-semibold text-[#38CED4]">
                       <img src={ICO_NOTE} className="h-4 w-4" alt="" />
                       변환 TOP1 음악
                     </div>
-                    <div className="mt-1 text-[15px] font-semibold text-[#2b2b2b]">
+                    <hr className="m-2"></hr>
+                    <div className="mt-1 ml-5 text-[16px] font-semibold text-[#2b2b2b] tracking-[-0.02em]">
                       {g.title} - {g.artist}
                     </div>
-                    <div className="mt-1 text-[14px] leading-6 text-[#555]">{g.aiLyricsSummary}</div>
+                    <div className="mt-1 ml-5 text-[16px] leading-6 text-[#555] tracking-[-0.02em]">{g.aiLyricsSummary}</div>
                   </div>
 
                   <div className="mt-3 flex items-center justify-between">
-                    <div className="text-[12px] text-[#999]">{formatTimeKST(g.createTime)}</div>
+                    <div className="text-[14px] text-[#999]">{formatTimeKST(g.createTime)}</div>
                     <LikeButton
                       gid={g.id}
                       initialCount={g.likeCount}
