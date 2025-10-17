@@ -10,7 +10,7 @@ export default function Footer() {
     className="mt-[100px] h-[230px] bg-black text-white px-20 py-10 flex flex-col">
       {/* 상단 로고 */}
       <div>
-        <Link href="/">
+        <Link href="https://labchasm.framer.website/">
           <Image
             src="/footerlogo.png"
             alt="Lab CHASM Logo"
@@ -34,7 +34,7 @@ export default function Footer() {
 
           <div className="flex space-x-6">
             <Link
-              href="https://www.youtube.com/your-channel"
+              href="https://www.youtube.com/lab_chasm"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="YouTube 채널"
@@ -42,7 +42,7 @@ export default function Footer() {
               <Youtube className="w-6 h-6" />
             </Link>
             <Link
-              href="https://www.instagram.com/your-profile"
+              href="https://www.instagram.com/lab_chasm"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Instagram 프로필"

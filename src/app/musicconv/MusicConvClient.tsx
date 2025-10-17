@@ -467,18 +467,6 @@ useEffect(() => {
 
   return (
     <main className="min-h-[100dvh] w-full bg-white">
-      {/* 상단 바 */}
-      <div className="border-b border-slate-200 bg-white/80 backdrop-blur">
-        <div className="mx-auto max-w-5xl px-4 py-5">
-          <div className="flex items-center justify-center">
-            <span className="text-xl font-black tracking-widest text-[#ff2a6d]">Mu</span>
-            <span className="text-xl font-black tracking-widest text-slate-900">sic</span>
-            <span className="text-xl font-black tracking-widest text-[#20c997]">C</span>
-            <span className="text-xl font-black tracking-widest text-slate-900">onv</span>
-          </div>
-        </div>
-      </div>
-
       <div className="mx-auto max-w-3xl px-4 py-10">
         {(view === "form") && (
           <header className="text-center">

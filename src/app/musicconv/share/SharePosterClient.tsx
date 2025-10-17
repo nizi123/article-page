@@ -322,17 +322,6 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
   return (
 
     <main className="min-h-[100dvh] w-full bg-white">
-    {/* 상단 바 */}
-    <div className="border-b border-slate-200 bg-white/80 backdrop-blur">
-      <div className="mx-auto max-w-5xl px-4 py-5">
-        <div className="flex items-center justify-center">
-          <span className="text-xl font-black tracking-widest text-[#ff2a6d]">Mu</span>
-          <span className="text-xl font-black tracking-widest text-slate-900">sic</span>
-          <span className="text-xl font-black tracking-widest text-[#20c997]">C</span>
-          <span className="text-xl font-black tracking-widest text-slate-900">onv</span>
-        </div>
-      </div>
-    </div>
 
     <div className="mx-auto max-w-[920px] px-4 py-8">
       {/* 안내 + PC 전용 QR */}
@@ -342,7 +331,7 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
   <img src={EV_TITLE} alt="EVENT" className="mx-auto h-30 mb-8" />
         </div>
         <p className="mt-2 text-[13px] leading-6 text-[#525252]">
-    이미지를 꼭 눌러 다운 받아보세요!
+    이미지를 꾹 눌러 다운 받아보세요!
     <br />(PC 버전은 QR코드로 찍어주세요)
     <br /><span className="font-semibold">@lab_chasm</span>을 태그해 스토리에 올려주시면
     <br />추첨을 통해 선물을 드립니다

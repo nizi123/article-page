@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Script from 'next/script'
-import Header from "@/components/Header";
+import GlobalHeader from "@/components/GlobalHeater";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
@@ -40,7 +40,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-black dark:bg-white dark:text-black overflow-x-hidden`}
       >
-        <Header />
+        <GlobalHeader />
         <div>
         {children}
         </div>
