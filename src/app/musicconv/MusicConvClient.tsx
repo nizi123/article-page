@@ -267,23 +267,21 @@ export default function MusicConvClient({
     }
   }
 
-  /** 새로고침 복원 (닉네임은 모든 화면, 텍스트/세션은 result/loading에서만) */
+ /** 새로고침 복원 (result / loading 화면일 때만) */
 useEffect(() => {
+    if (initialView !== "loading" && initialView !== "result") return;
+  
+    const hasQ = !!initialText && initialText.length >= 1;
+    if (hasQ) return;
+  
     try {
       const raw = localStorage.getItem(LS_KEY);
       if (!raw) return;
       const saved = JSON.parse(raw) as { sid?: string; q?: string; n?: string };
   
-      // 1) 닉네임은 어디서든 복원
-      if (!nickname && saved?.n) setNickname(saved.n);
-  
-      // 2) result/loading일 때만 q/sid 복원
-      const isResultOrLoading = initialView === "result" || initialView === "loading";
-      const hasQFromServer = !!initialText && initialText.length >= 1;
-      if (isResultOrLoading && !hasQFromServer) {
-        if (saved?.q) setText(saved.q);
-        if (saved?.sid) setSid(saved.sid);
-      }
+      if (saved?.q) setText(saved.q);
+      if (saved?.n) setNickname(saved.n || "");
+      if (saved?.sid) setSid(saved.sid);
     } catch {}
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -351,6 +349,17 @@ useEffect(() => {
     setFirstLoad(true);
     setLastId(null);
   }, [sortBy, view]);
+
+/** saved 화면에서도 닉네임 유지 (익명으로 초기화 방지용) */
+useEffect(() => {
+    if (initialView !== "saved") return;
+    try {
+      const raw = localStorage.getItem(LS_KEY);
+      if (!raw) return;
+      const saved = JSON.parse(raw) as { n?: string };
+      if (saved?.n && !nickname) setNickname(saved.n);
+    } catch {}
+  }, [initialView, nickname]);
 
   return (
     <main className="min-h-[100dvh] w-full bg-white">
