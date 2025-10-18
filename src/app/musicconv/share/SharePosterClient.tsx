@@ -15,6 +15,21 @@ const AI_ICON = "/musicconv/ai-icon.png";
 const EV_TITLE = "/musicconv/event-title.png";  // 'EVENT' 타이틀 이미지
 const EV_ARROW = "/musicconv/event-arrow.png";  // 아래 화살표 이미지
 
+async function ensureFonts(fonts: string[]) {
+  const set = (document as any).fonts as FontFaceSet | undefined;
+
+  if (set?.load) {
+    // 모든 폰트/가중치/크기를 미리 로드
+    await Promise.all(fonts.map(f => set.load(f, "한")));
+    // Safari 안정화: ready도 기다리기
+    try { await set.ready; } catch {}
+  } else {
+    // 폰트 API 없는 구형 브라우저용 최소 대기
+    await new Promise(r => setTimeout(r, 200));
+  }
+}
+
+
 export default function SharePosterClient({ gid, nickname, comment, top3 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [qr, setQr] = useState<string | null>(null);
@@ -54,6 +69,17 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
     let cancelled = false;
 
     (async () => {
+      await ensureFonts([
+        "900 60px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "700 42px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "700 40px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "700 34px Pretendard, Apple SD Gothic Neo, sans-serif",
+        "400 32px Pretendard, Apple SD Gothic Neo, sans-serif",
+      ]);
+      if (cancelled) return;
+  
+
+  //  (async () => {
     const c = canvasRef.current;
     if (!c) return;
 
@@ -221,7 +247,7 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
       const titleFont = "700 42px Pretendard";
       const titleLines = wrapLines(title1, cardW - 40, titleFont);
       const titleH = Math.max(42, (titleLines.length || 1) * 50);
-
+      
       // 요약
       const labelFont = "700 34px Pretendard, Apple SD Gothic Neo, sans-serif";
       const bodyFont = "400 32px Pretendard, Apple SD Gothic Neo, sans-serif";
@@ -257,9 +283,13 @@ export default function SharePosterClient({ gid, nickname, comment, top3 }: Prop
       const rankX = numberRight - rankW;
       const rankY = y + 60 ; // 중앙
       drawText(rankText, rankX, rankY, rankFont, "#111", "left", "middle");
+      drawText(rankText, rankX, rankY, rankFont, "#111", "left", "middle");
+
 
       // 제목
       drawWrapped(titleLines, cardX + 20, y + topPad + 40, 50, titleFont, "#222");
+      drawWrapped(titleLines, cardX + 20, y + topPad + 40, 50, titleFont, "#222");
+
 
       // 구분선
       {
