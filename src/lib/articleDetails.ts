@@ -4085,6 +4085,7 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
   author: '배수현, 노가은',
   bodyImage: '/placeholder.png',
   content: `
+### **{{#0769B3|서브 장르 씬 아카이브 Vol.1 슈게이즈 : 잠, 비둘기우유, 파란노을, 히피토끼}}**
 ## =={#0769B3}신발 아래를 보던 사람들, 한국 슈게이즈 씬의 어제와 오늘==
 **슈게이즈(Shoegaze)**. 무대 위에서 관객과 눈을 맞추는 대신 신발 아래를 내려다보며 기타 이펙터를 조작하는 뮤지션들의 모습에서 붙은 이름이다. 1990년대 초 영국의 ‘마이 블러디 발렌타인(My Bloody Valentine)’, ‘슬로우다이브(Slowdive)’, ‘라이드(Ride)’로 대표되는 이 장르는 **두꺼운 기타 레이어와 몽환적인 보컬, 노이즈와 멜로디의 경계를 허무는 사운드**로 정의된다.
   
@@ -4106,7 +4107,7 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 **파란노을 :** **1인 밴드**로 활동하고 있는 **파란노을**이다.
 
-**제임스**: 홍대 라이브클럽 **히피토끼**의 대표이자 문화기획자로 활동하고 있다. 슈게이즈, 노이즈 계열의 **‘딜레이 릴레이 페스티벌’**를 주최했다.
+**제임스**: 홍대 라이브클럽 **히피토끼**의 대표이자 문화기획자로 활동하고 있다. 슈게이즈, 노이즈 계열의 **‘딜레이 릴레이 페스티벌’** 를 주최했다.
 
 ---
 <iframe width="560" height="315" src="https://www.youtube.com/embed/r-EKu6Pwlk0?si=5HQAEv3TA1OIPuA9" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
