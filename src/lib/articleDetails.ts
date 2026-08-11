@@ -5138,6 +5138,14 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
   **무더위에 아지랑이가 피어오르던 아스팔트 위, 오전 11시에 만난 Snake Chicken Soup.** 얼굴이 붉게 익고 온몸이 땀에 젖어도 뛰어노는 데에는 별다른 이유가 없다. 그냥 그 순간이 재밌으니까. 계산보다 재미를, 고민보다 본능을 좇는 이들의 음악은 우릴 기어코 끓어오르게 한다. 여름은 짧다. 일단 뛰자!
 
+  <iframe
+  src="https://www.youtube.com/embed/hWmUCUJ_XlY"
+  width="100%"
+  style="aspect-ratio: 16 / 9; border: 0;"
+  title="YouTube video player"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
 
   **=={#ce514a}만나 뵙게 되어 반갑습니다. 간단한 자기소개 부탁드려요.==**
 
@@ -5400,6 +5408,45 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 **DR** : 볼 때마다 생각은 똑같아요. “저렇게 하지 말아야지.”, “계속 저러네”.
 
 ![](/scs/25.jpg)
+
+**=={#ce514a}이번 화보에서 '더더더'를 리릭 비디오로 담아냈어요. 이 곡의 어떤 점이 '무더위에 피어오르는 아지랑이'과 가장 잘 닿아 있다고 생각하시나요?==**
+
+**DR** : 소속사 대표님이 주신 아이디어인데, ‘더더더’를 “무더더더워.”로 연결하면 재밌겠더라고요. 그리고 ‘더더더’ 무대 영상을 보면 가장 반응이 좋고, 저희도 제일 더워 보여요.
+
+**{{#ce514a|의외로(?) 대표님 말 잘 듣는 밴드네요.}}**
+
+**최석** : 저희 완전 말 잘 들어요. (웃음)
+
+**리릭비디오에서 주목해 줬으면 하는 가사 한 구절이 있다면요?**
+
+**최원빈** : “내가 원한 건 다 갖고 싶어 다 가지고 싶어”, “오늘 지나도 다시 오늘이 와 내일도 언젠가 오겠지?”. 이렇게 솔직한 가사가 있을까요?
+
+**DR** : 저는 가사를 잘 몰라요. 저 가사 어디서 들어본 것 같네요. (웃음)
+
+**{{#ce514a|‘더더더’랑 어울리는 여름의 소리를 하나 꼽는다면요?}}**
+
+**최원빈** : 매미 소리, 쨍쨍하니 잘 어울릴 거 같아요.
+
+<iframe
+  src="https://www.youtube.com/embed/CCvSI1bgrbg"
+  width="100%"
+  style="aspect-ratio: 16 / 9; border: 0;"
+  title="YouTube video player"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+  allowfullscreen>
+</iframe>
+
+**=={#ce514a}Snake Chicken Soup 활동 중 가장 기억에 남는 여름의 추억이 있다면 들려주세요.==**
+
+**최원빈** : 이디오테잎 합주실에서 에어컨 틀고 커피 마시면서 수다 떨기. 사실 뭐 특별한 게 없어요.
+
+**DR** : 여름에 집에서 잘 안 나가요.
+
+**최석** : 공연할 때 말고 잘 안 본다니까요! (웃음)
+
+**{{#ce514a|앞으로 여름의 추억을 꼭 만드시길 바랄게요…}}**
+
+![](/scs/26-small.png)
 
 
 
