@@ -5519,6 +5519,22 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 ,
 
 
+{
+  id: 26,
+  title: '무더위에 핀 아지랑이의 Snake Chicken Soup',
+  subtitle: 'Summer, Summer, Summer! 들끓는 여름의 Snake Chicken Soup',
+  category: 'Interview',
+  tagColor: '#ce514a',
+  imageUrl: '/scs/card.png',
+  date: '2026-08-12',
+  author: '노가은',
+  bodyImage: '/placeholder.png',
+  content: `
+
+  `
+
+}
+
 
     // 다른 아티클들도 여기에 추가
   ];
