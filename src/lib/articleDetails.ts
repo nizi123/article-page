@@ -5099,14 +5099,14 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 ## **{{#235230|Credit}}**
 
-- **Interviewee :** 12BH
+- **Interviewee :** [12BH](https://www.instagram.com/12bh_official/)
     - 정선(V), 정기가(G), 권그린(B), 전결(D)
-- **Director&Interviewer :** Lab CHASM 노가은
-- **Designer** : Lab CHASM 방서연
-- **Photographer :** 김세환
-- **Photo Assistant :** 김민준
-- **Videographer** : 김지오
-- **Stylist :** Lab CHASM 노가은
+- **Director&Interviewer :** Lab CHASM [노가은](https://www.instagram.com/sselrevil/)
+- **Designer** : Lab CHASM [방서연](https://www.instagram.com/isooplll/)
+- **Photographer :** [김세환](https://www.instagram.com/kkwwann_/)
+- **Photo Assistant :** [김민준](https://www.instagram.com/withe.jay/)
+- **Videographer** : [김지오](https://www.instagram.com/kim210walker/)
+- **Stylist :** Lab CHASM [노가은](https://www.instagram.com/sselrevil/)
 
 `
 
@@ -5500,16 +5500,16 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 ## **{{#ce514a|Credit}}**
 
-- **Interviewee : Snake Chicken Soup**
+- **Interviewee : [Snake Chicken Soup](https://www.instagram.com/snakechickensoupofficial/)**
     - 최원빈(V), 최석(B), DR(D)
-- **Director&Interviewer :** Lab CHASM 노가은
-- **Designer** : Lab CHASM 방서연
-- **Photographer :** 김세환
+- **Director&Interviewer :** Lab CHASM [노가은](https://www.instagram.com/sselrevil/)
+- **Designer** : Lab CHASM [방서연](https://www.instagram.com/isooplll/)
+- **Photographer :** [김세환](https://www.instagram.com/kkwwann_/)
 - **Photo Assistant :** Lab CHASM 유희곤
-- **Videographer** : 김지오
-- **Hair&Make-up :** 권정연
-- **Hair&Make-up Assistant** : 한서우
-- **Stylist :** 1ndependent shop
+- **Videographer** : [김지오](https://www.instagram.com/yhgoni_/)
+- **Hair&Make-up :** [권정연](https://www.instagram.com/kwonitall/)
+- **Hair&Make-up Assistant** : [한서우](https://www.instagram.com/s_h.eoo/)
+- **Stylist :** [1ndependent shop](https://www.instagram.com/1ndependentshop/?hl=ko)
 
 `
 
@@ -5639,6 +5639,15 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 
 ![](/saysueme/11.jpg)
+
+
+**=={#367ec8}지니어스(Genius)의 ‘One Question’을 비롯해 <It's Just a Short Walk!>, 10주년 기념 <10>커버 앨범까지. 세이수미는 꾸준히 다양한 커버곡을 선보여왔죠. 원곡을 그대로 재현하기보다 전혀 다른 장르로 편곡하는 경우도 많은데, 커버곡을 고르고 편곡하는 기준이 있나요?==**
+
+**김병규** : 단순히 원곡이 좋아서 커버하는 경우는 오히려 많지 않아요. 음악 공부도 보통 카피에서 시작하잖아요. 저희에게 커버는 한 곡을 다른 장르로 바꿔보면서 음악을 공부하는 과정이기도 해서 재밌게 작업하고 있어요. 커버곡은 대부분 제가 고르고 편곡의 큰 틀도 잡는 편이에요. 먼저 해보고 싶은 장르를 정한 뒤 어울리는 곡을 찾기도 하고, 노래를 듣다가 전혀 다른 장르로 바꾸면 재밌겠다는 생각이 번쩍 떠오를 때도 있어요.
+
+**그중 가장 공부가 많이 됐던 커버곡을 꼽는다면요?**
+
+**김병규** : **Pavement - Elevate Me Later**. 90년대 미국 너드들이 하던 조악한 인디 록을 보사노바로 완전히 바꿨어요. 처음에는 컨트리로 절반 정도 만들다가 전부 갈아엎고 보사노바로 다시 작업했죠. 지금까지 한 커버 중 원곡의 장르를 가장 과감하게 바꾼 곡이라 작업하면서 많이 배웠어요.
 
 
 
