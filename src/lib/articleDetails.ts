@@ -6604,7 +6604,7 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 ## **Credit**
 
-- **Interviewee: [가재발](https://www.instagram.com/gazaebal.official/), [디구루](https://www.instagram.com/dguru/), [힙노시스테라피](https://www.instagram.com/hypnosistherapy_/?hl=ko)( [짱유](https://www.instagram.com/xockstar/)&[Jflow](https://www.instagram.com/jflo____/) ), [oddeen](https://www.instagram.com/odd.een/), [시봉새](https://www.instagram.com/c_bong_sae/)([ACS](https://www.instagram.com/festivalfestivalseoul/))
+- **Interviewee:** [가재발](https://www.instagram.com/gazaebal.official/), [디구루](https://www.instagram.com/dguru/), [힙노시스테라피](https://www.instagram.com/hypnosistherapy_/?hl=ko)( [짱유](https://www.instagram.com/xockstar/)&[Jflow](https://www.instagram.com/jflo____/) ), [oddeen](https://www.instagram.com/odd.een/), [시봉새](https://www.instagram.com/c_bong_sae/)([ACS](https://www.instagram.com/festivalfestivalseoul/))
 - **Interviewer:** Lab CHASM [노가은](https://www.instagram.com/sselrevil/), [김동겸](https://www.instagram.com/3.14.1.4.5030/)
 - **Director:** Lab CHASM [노가은](https://www.instagram.com/sselrevil/)
 - **Editor:** Lab CHASM [김동겸](https://www.instagram.com/3.14.1.4.5030/)
