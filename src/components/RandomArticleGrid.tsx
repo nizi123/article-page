@@ -3,16 +3,16 @@
 
 import { useMemo } from 'react';
 import ArticleCard, { Article as CardArticle } from './ArticleCard';
-import { articleDetails } from '@/lib/articleDetails';
+import type { Article as ArticleDetail } from '@/lib/notion/articles';
 
 // 원본 articleDetails 배열 아이템 타입 추출
-type ArticleDetail = typeof articleDetails[number];
+
 
 interface RandomArticleGridProps {
   /** 전체 아티클 상세 배열 (articleDetails) */
   articles: ArticleDetail[];
   /** 현재 보고 있는 아티클 ID (옵션) */
-  currentId?: number;
+  currentId?: number | string;
   /** 뿌려줄 카드 개수 */
   count?: number;
 }

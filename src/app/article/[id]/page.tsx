@@ -1,6 +1,10 @@
 // src/app/article/[id]/page.tsx
 
-import { articleDetails } from '@/lib/articleDetails';
+import { getArticles, getArticle } from '@/lib/notion/articles';
+import { notFound } from 'next/navigation';
+import NotionContent from '@/components/NotionContent';
+
+export const dynamic = 'force-dynamic';
 import ScrollProgressBar from '@/components/ScrollProgressBar';
 import ArticleNavigator from '@/components/ArticleNavigator';
 import RandomArticleGrid from '@/components/RandomArticleGrid';
@@ -15,13 +19,6 @@ import remarkImageToFigure from '@/lib/remarkImageToFigure';
 import { remarkHighlight } from '@/lib/remarkHightlight';
 import remarkTextColor from '@/lib/remarkTextColor';
 
-// ✅ 정적 생성 경로 (params는 여전히 동기적으로 id:string 배열을 리턴)
-export async function generateStaticParams(): Promise<Array<{ id: string }>> {
-  return articleDetails.map((article) => ({
-    id: article.id.toString(),
-  }));
-}
-
 // ✅ 메타데이터 함수 (params를 Promise<{ id: string }>로 받습니다)
 export async function generateMetadata({
   params,
@@ -29,7 +26,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const article = articleDetails.find((a) => a.id === parseInt(id, 10));
+  const article = await getArticle(id);
 
   return {
     title: article?.title || 'Lab Chasm',
@@ -43,11 +40,13 @@ export default async function ArticleContentView({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const articleId = parseInt(id, 10);
-  const article = articleDetails.find((a) => a.id === articleId);
+  const article = await getArticle(id);
+  if (!article) notFound();
+  const articleId = article.id;
+  const articleDetails = await getArticles();
 
   // Article Navi 사용을 위한 소팅
-  const sorted = [...articleDetails].sort((a, b) => a.id - b.id);
+  const sorted = [...articleDetails].sort((a, b) => a.date.localeCompare(b.date));
   const idx = sorted.findIndex(a => a.id === articleId);
   const prevArticle = sorted[idx - 1];
   const nextArticle = sorted[idx + 1];
@@ -71,6 +70,7 @@ export default async function ArticleContentView({
       id = "article-top-image"
       className="relative h-[300px] sm:h-[800px] w-full mb-10">
         <Image
+          unoptimized={Boolean(article.notionPageId)}
           src={article.imageUrl}
           alt={article.title}
           fill
@@ -153,7 +153,7 @@ export default async function ArticleContentView({
 
       {/* 본문 내용 */}
       <div className="max-w-5xl mx-auto px-4 pb-20">
-        <div className="prose space-y-6 leading-[1.8]">
+        {article.notionHtml !== undefined ? <NotionContent html={article.notionHtml} /> : <div className="prose space-y-6 leading-[1.8]">
           <ReactMarkdown
              components={{
               h2: ({node, ...props}) => <h1 className="text-2xl font-bold my-4 text-black mt-20" {...props} />,
@@ -185,6 +185,7 @@ export default async function ArticleContentView({
             </ReactMarkdown>
         </div>
 
+        }
         {/* 구분선 */}
         <div className="h-px w-full bg-gray-100 mt-20" />
 
@@ -196,7 +197,7 @@ export default async function ArticleContentView({
       />
 
       <RandomArticleGrid
-        articles={articleDetails}
+        articles={articleDetails.map(a => ({ ...a, content: '' }))}
         currentId={articleId}
         count={3}
       />

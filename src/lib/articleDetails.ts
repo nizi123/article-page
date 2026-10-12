@@ -7248,9 +7248,7 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 <iframe src="https://www.youtube.com/embed/gEdEuNOMiOA" width="100%" style="aspect-ratio: 16 / 9; border: 0;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-![](/hardcore/4.jpg)
-
-스핀 앤 그라인드에서 소장하고 있는 당시 하드코어 공연 VHS 테이프
+![스핀 앤 그라인드에서 소장하고 있는 당시 하드코어 공연 VHS 테이프](/hardcore/4.jpg)
 
 **=={#9900FF}2000년 서태지의 6집을 계기로 ‘하드코어’라는 이름이 대중들에게 알려지기 시작했다. 당시 씬에서는 이를 어떻게 받아들였나?==**
 
@@ -7319,10 +7317,9 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 **장성건:** 명동의 카페 마리 철거 현장의 집회. 한여름에 에어컨도 없이 장비를 다 직접 옮겨서 공연했는데, 진짜 하드코어 같은 공간이었다.
 
 ---
+[*\*두리반: 2006년 홍대입구역 경의선·공항철도 신역사 건설로 퇴거 위기에 놓였던 인근 식당. 2009년 강제 철거 집행 이후 음악가들이 ‘두리반 농성’에 연대하며 공연과 문화행사를 이어갔다.*]()
 
-*두리반: 2006년 홍대입구역 경의선·공항철도 신역사 건설로 퇴거 위기에 놓였던 인근 식당. 2009년 강제 철거 집행 이후 음악가들이 ‘두리반 농성’에 연대하며 공연과 문화행사를 이어갔다.*
-
-*카페 마리: 2011년 서울 명동3구역 재개발 과정에서 이주·생계 대책을 요구한 상가 세입자들의 농성장. 같은 해 9월 시행사와 세입자 간 협상이 타결되며 농성이 마무리됐다.*
+[*\*카페 마리: 2011년 서울 명동3구역 재개발 과정에서 이주·생계 대책을 요구한 상가 세입자들의 농성장. 같은 해 9월 시행사와 세입자 간 협상이 타결되며 농성이 마무리됐다.*]()
 
 <iframe src="https://www.youtube.com/embed/PgOPrp1aU40" width="100%" style="aspect-ratio: 16 / 9; border: 0;" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -7386,6 +7383,8 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 **양승희:** 나는 그날 공연도 하고 비슬라 인터뷰도 하러 갔는데, 사람들이 그냥 구석에 누워있더라. 운동기구 하면서 보기도 하고.
 
+[비슬라 웹사이트](https://visla.kr/feature/321190/)
+
 **=={#9900FF}이외에도 하드코어 공연을 해보고 싶은 공간이 있다면?==**
 
 **Victor:** 우리 막내처럼 희귀난치성 질환을 가진 아동들을 위한 하루짜리 자선 공연을 해보고 싶다. 베뉴는 초등학교 체육관을 생각하고 있다. 무대에 악기만 올려두고 농구 코트 같은 마룻바닥에서 모싱하는 거다. 허가만 받을 수 있으면 너무 좋을 것 같다.
@@ -7446,13 +7445,13 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 ---
 
- *ZINE(진): 개인이 직접 만들고 인쇄해 배포하는 소규모 독립 출판물
+ [*\*ZINE(진): 개인이 직접 만들고 인쇄해 배포하는 소규모 독립 출판물*]()
 
 ![](/hardcore/16.jpg)
 
 **=={#9900FF}특히 기억에 남는 하드코어 진이 있다면?==**
 
-**Victor:** 내가 만들었던 하드코어 팬진 <Break the Shell>, 초창기에는 부산 하드코어 밴드 All I Have의 보컬이 만든 <Faithful Youth>도 기억에 남는다. 군대에 가서도 진을 만들겠다는 의미로 만든 <Army Life>, 집구석 레코드의 <구속구석> 팬진처럼 재밌는 것들이 많았다.
+**Victor:** 내가 만들었던 하드코어 팬진 <Break the Shell> , 초창기에는 부산 하드코어 밴드 All I Have의 보컬이 만든 <Faithful Youth> 도 기억에 남는다. 군대에 가서도 진을 만들겠다는 의미로 만든 <Army Life>, 집구석 레코드의 <구속구석> 팬진처럼 재밌는 것들이 많았다.
 
 **장성건:** 나도 <구속구석> 엄청 좋아했었다.
 
@@ -7494,11 +7493,11 @@ Live 영상으로 노래가 재조명된 사례 그 첫 번째는 우즈(WOODZ, 
 
 ---
 
-*모싱(Moshing): 공연장에서 관객들이 팔을 허공에 휘두르거나 다른 관객과 몸을 부딪히는 등 격렬하게 움직이는 행위. 하드코어 펑크 씬에서 시작되어 다양한 장르로 확산되었다.*
+[*\*모싱(Moshing): 공연장에서 관객들이 팔을 허공에 휘두르거나 다른 관객과 몸을 부딪히는 등 격렬하게 움직이는 행위. 하드코어 펑크 씬에서 시작되어 다양한 장르로 확산되었다.*]()
 
-*Sing-along(싱어롱): 공연 중 관객이 보컬과 함께 가사를 따라 부르는 행위.*
+[*\*Sing-along(싱어롱): 공연 중 관객이 보컬과 함께 가사를 따라 부르는 행위.*]()
 
-*Two-step(투스텝): 하드코어 공연에서 특정 리듬에 맞춰 스텝을 밟으며 추는 춤의 일종.*
+[*\*Two-step(투스텝): 하드코어 공연에서 특정 리듬에 맞춰 스텝을 밟으며 추는 춤의 일종.*]()
 
 ![](/hardcore/20.jpg)
 

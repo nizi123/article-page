@@ -1,11 +1,16 @@
-// Usage: node scripts/compress-large-images.cjs /absolute/backup-directory
+// Usage: node scripts/compress-large-images.cjs /absolute/backup-directory [public/subdirectory]
 // Keeps public URLs and formats intact; original files and report go outside public.
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const sharp = require('sharp');
 const root = path.resolve(__dirname, '..');
 const backup = process.argv[2] && path.resolve(process.argv[2]);
-if (!backup || backup.startsWith(path.join(root, 'public') + path.sep)) {
+const publicRoot = path.join(root, 'public');
+const source = process.argv[3] ? path.resolve(process.argv[3]) : publicRoot;
+if (source !== publicRoot && !source.startsWith(publicRoot + path.sep)) {
+  throw new Error('Source must be public or a subdirectory of public.');
+}
+if (!backup || backup === publicRoot || backup.startsWith(publicRoot + path.sep)) {
   throw new Error('Provide a backup directory outside public.');
 }
 async function walk(dir) {
@@ -19,7 +24,7 @@ async function walk(dir) {
 }
 (async () => {
   const results = [];
-  for (const file of await walk(path.join(root, 'public'))) {
+  for (const file of await walk(source)) {
     const before = (await fs.stat(file)).size;
     if (before <= 1024 * 1024) continue;
     const meta = await sharp(file).metadata();

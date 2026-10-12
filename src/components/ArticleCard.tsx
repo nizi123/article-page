@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 
 export type Article = {
-  id: number;
+  id: number | string;
   title: string;
   summary: string;
   category: string;

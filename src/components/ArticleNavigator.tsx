@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 
 interface Article {
-  id: number;
+  id: number | string;
   title: string;
   subtitle?: string;
 }

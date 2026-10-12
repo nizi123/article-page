@@ -6,6 +6,12 @@ Run from the project root:
 node scripts/compress-large-images.cjs "$PWD/.image-backups/$(date +%Y%m%d-%H%M%S)"
 ```
 
+To process only one new article's images, append its directory:
+
+```sh
+node scripts/compress-large-images.cjs "$PWD/.image-backups/$(date +%Y%m%d-%H%M%S)-hardcore" public/hardcore
+```
+
 Requires `sharp` (available in the current Next.js installation). Use a new backup
 folder for every run. The script considers JPEG/PNG files larger than 1 MiB,
 keeps their existing public paths and formats, and replaces only smaller results.

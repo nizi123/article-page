@@ -99,7 +99,7 @@ const ITEMS_PER_PAGE = 9;
 
 export default function HomePage() {
   const [page, setPage] = useState(1);
-  const sortedArticles = [...sampleArticles].sort((a, b) => b.id - a.id);
+  const sortedArticles = [...sampleArticles].sort((a, b) => Number(b.id) - Number(a.id));
   const totalPages = Math.ceil(sortedArticles.length / ITEMS_PER_PAGE);
   const currentItems = sortedArticles.slice(
     (page - 1) * ITEMS_PER_PAGE,
